@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Moz Ads JS Demo Page" />
+  <script src="../../dist/iife.global.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      mozAds.renderPlacement(document.getElementById('placement-1'), {
+        placementId: 'newtab_tile_1',
+        fixedSize: { width: 200, height: 200 }
+      });
+      mozAds.renderPlacement('placement-2', {
+        placementId: 'mock_pocket_billboard_1',
+        fixedSize: mozAds.FixedSize.Billboard
+      });
+      mozAds.renderPlacement('placement-3', {
+        placementId: 'mock_pocket_skyscraper_1'
+      });
+    });
+  </script>
+  <title>MARS Ads Preview - MAJC Edition</title>
+  <style>
+    .tiles,
+    .spocs,
+    .rectangles {
+      display: flex;
+      flex-wrap: wrap;
+      column-gap: 32px;
+      row-gap: 24px;
+    }
+
+    .tile {
+      text-align: center;
+    }
+
+    .tile-outer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      background: white;
+      margin: 0 auto;
+      height: 80px;
+      width: 80px;
+    }
+
+    .tile-image {
+      width: 48px;
+      height: 48px;
+    }
+
+    .tile-title {
+      width: 88px;
+      padding-top: 8px;
+      text-align: center;
+      line-height: normal;
+    }
+
+    .tile-title span {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <main role="main">
+    <h1>MARS Ads Preview - MAJC Edition</h1>
+
+    <h2>Tiles</h2>
+
+    <!-- This is the templated version of the preview page (from Shepherd Preview)
+      This shows how the DOM should end up for tiles after showAd is done
+        // <a href="{{ tile.url }}" target="_blank" rel="noopener noreferrer">
+        <div class="tile">
+          <div class="tile-outer">
+            <img
+              class="tile-image"
+              src="{{ tile.image_url }}"
+              alt="{{ tile.name }}"
+            />
+          </div>
+          <div class="tile-title">
+            <span>{{ tile.name }}</span>
+            <span class="sponsored-label">{{ tile.sponsored }}</span>
+          </div>
+        </div>
+      </a> -->
+
+    <div class="tiles">
+      <div id="placement-1"></div>
+    </div>
+
+    <h2>SPOCs</h2>
+    <div class="spocs"></div>
+
+    <h2>Rectangles</h2>
+    <div class="rectangles">
+      <div id="placement-2"></div>
+      <div id="placement-3"></div>
+    </div>
+  </main>
+</body>
+</html>

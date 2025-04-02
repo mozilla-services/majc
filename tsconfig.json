@@ -1,0 +1,69 @@
+{
+  "compilerOptions": {
+    "target": "ESnext",
+    "module": "ESnext",
+    "lib": [
+      "DOM",
+      "ESNext"
+    ],
+    "importHelpers": true,
+    "outDir": "dist",
+    // output .d.ts declaration files for consumers
+    "declaration": true,
+    // stricter type-checking for stronger correctness. Recommended by TS
+    "strict": true,
+    // linter checks for common issues
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    // noUnused* overlap with @typescript-eslint/no-unused-vars, can disable if duplicative
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    // use Node's module resolution algorithm, instead of the legacy TS one
+    "moduleResolution": "Node",
+    // transpile JSX to React.createElement
+    "jsx": "react-jsx",
+    // allow plain JSON files to be imported as modules
+    "resolveJsonModule": true,
+    // interop between ESM and CJS modules. Recommended by TS
+    "esModuleInterop": true,
+    // significant perf increase by skipping checking .d.ts files, particularly those in node_modules. Recommended by TS
+    "skipLibCheck": true,
+    // error out if import and file system have a casing mismatch. Recommended by TS
+    "forceConsistentCasingInFileNames": true,
+    // ensure that each file can be safely transpiled by babel (etc.) without relying on other imports
+    "isolatedModules": true,
+    "downlevelIteration": false,
+    "allowSyntheticDefaultImports": true,
+    "emitDeclarationOnly": true,
+    "paths": {
+      "@/jest.setup": [
+        "./jest.setup.ts"
+      ],
+      "@/package.json": [
+        "./package.json"
+      ],
+      "@core/*": [
+        "./packages/core/src/*"
+      ],
+      "@heyapi": [
+        "./packages/heyapi/src/index"
+      ],
+      "@iife/*": [
+        "./packages/iife/src/*"
+      ],
+      "@react/*": [
+        "./packages/react/src/*"
+      ]
+    },
+  },
+  "include": [
+    "packages/core/src",
+    "packages/core/test",
+    "packages/heyapi/src",
+    "packages/iife/src",
+    "packages/iife/test",
+    "packages/react/src",
+    "packages/react/test",
+    "jest.setup.ts",
+  ]
+}

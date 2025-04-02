@@ -1,0 +1,65 @@
+{
+  "name": "@mozilla-services/majc",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mozilla-services/majc.git"
+  },
+  "private": true,
+  "files": [
+    "dist/"
+  ],
+  "license": "MPL-2.0",
+  "exports": {
+    "./package.json": "./package.json",
+    "./dist/core": {
+      "types": "./dist/core.d.ts",
+      "default": "./dist/core.js"
+    },
+    "./dist/heyapi": {
+      "types": "./dist/heyapi.d.ts",
+      "default": "./dist/heyapi.js"
+    },
+    "./dist/react": {
+      "types": "./dist/react.d.ts",
+      "default": "./dist/react.js"
+    }
+  },
+  "dependencies": {
+    "@hey-api/client-fetch": "^0.8.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.21.0",
+    "@hey-api/openapi-ts": "^0.64.10",
+    "@stylistic/eslint-plugin": "^2.13.0",
+    "@testing-library/react": "^16.2.0",
+    "@types/jest": "^29.5.14",
+    "@types/react": "^19.0.10",
+    "eslint": "^9.21.0",
+    "husky": "^9.1.7",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "jest-fetch-mock": "^3.0.3",
+    "ts-jest": "^29.2.6",
+    "tslib": "^2.8.1",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.25.0"
+  },
+  "scripts": {
+    "build": "tsup",
+    "clean": "rm -rf dist",
+    "clean:mars-api": "rm -rf .mars-api-temp && rm -rf packages/heyapi/src",
+    "example:iife": "cd examples/iife && npm install && npm run dev",
+    "example:react": "cd examples/react && npm install && npm run dev",
+    "generate:mars-api": "openapi-ts && cp packages/heyapi/templates/client.gen.ts.template packages/heyapi/src/client.gen.ts && cp packages/heyapi/templates/index.ts.template packages/heyapi/src/index.ts",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "prepare": "husky",
+    "test": "NODE_ENV=TEST jest --coverage",
+    "update:mars-api": "git clone --depth 1 https://github.com/mozilla-services/mars.git .mars-api-temp && cp .mars-api-temp/openapi/openapi.yml packages/heyapi/mars.yml && npm run clean:mars-api && npm run generate:mars-api"
+  }
+}

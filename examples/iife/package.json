@@ -1,0 +1,11 @@
+{
+    "name": "@mozilla-services/majc-iife-example",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+      "dev": "http-server ../../ -c-1 -o /examples/iife"
+    },
+    "devDependencies": {
+      "http-server": "^14.1.1"
+    }
+  }
