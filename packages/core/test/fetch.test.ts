@@ -1,6 +1,7 @@
 /* eslint @stylistic/quote-props: 0 */
 
 import * as heyapi from '@heyapi'
+import * as fallback from '../src/fallback'
 import { mockGetAdsResponse } from './mocks/mockGetAdsResponse'
 import { buildPlacementsRequest, fetchAds, FetchAdsError, FetchAdsParams } from '../src/fetch'
 import { MozAdsPlacements, MozAdsPlacementWithContent } from '../src/types'
@@ -77,20 +78,55 @@ describe('core/fetch.ts', () => {
 
   test('fetchAds with error response', async () => {
     const getAdsMock = jest.spyOn(heyapi, 'getAds').mockRejectedValueOnce(new Error('test-error'))
+    const getFallbackAdsMock = jest.spyOn(fallback, 'getFallbackAds')
+    const consoleErrorMock = jest.spyOn(globalThis.console, 'error')
+    const placementsWithContent = await fetchAds(params)
+    // Fallback should still resolve on error
+    await expect(placementsWithContent).resolves
+    expect(getAdsMock).toHaveBeenCalledWith(request)
+    expect(getFallbackAdsMock).toHaveBeenCalledTimes(1)
+    expect(consoleErrorMock).toHaveBeenCalledWith('test-error')
+  })
+
+  test('fetchAds with error response and failed fallback', async () => {
+    const getAdsMock = jest.spyOn(heyapi, 'getAds').mockRejectedValueOnce(new Error('test-error'))
+    const getFallbackAdsMock = jest.spyOn(fallback, 'getFallbackAds').mockImplementationOnce(() => {
+      throw new Error('test-error')
+    })
     const consoleErrorMock = jest.spyOn(globalThis.console, 'error')
     const placementsWithContent = fetchAds(params)
+    // Fallback should still resolve on error
     await expect(placementsWithContent).rejects.toThrow(FetchAdsError)
     expect(getAdsMock).toHaveBeenCalledWith(request)
+    expect(getFallbackAdsMock).toHaveBeenCalledTimes(1)
     expect(consoleErrorMock).toHaveBeenCalledWith('test-error')
   })
 
   test('fetchAds with invalid response', async () => {
     // @ts-expect-error Jest types create difficult to resolve union for test code
     const getAdsMock = jest.spyOn(heyapi, 'getAds').mockResolvedValueOnce({})
+    const getFallbackAdsMock = jest.spyOn(fallback, 'getFallbackAds')
+    const consoleErrorMock = jest.spyOn(globalThis.console, 'error')
+    const placementsWithContent = await fetchAds(params)
+    // Fallback should still resolve on invalid response
+    await expect(placementsWithContent).resolves
+    expect(getAdsMock).toHaveBeenCalledWith(request)
+    expect(getFallbackAdsMock).toHaveBeenCalledTimes(1)
+    expect(consoleErrorMock).toHaveBeenCalledWith('getAds failed with response: undefined. Error: undefined')
+  })
+
+  test('fetchAds with invalid response and fallback failure', async () => {
+    // @ts-expect-error Jest types create difficult to resolve union for test code
+    const getAdsMock = jest.spyOn(heyapi, 'getAds').mockResolvedValueOnce({})
+    const getFallbackAdsMock = jest.spyOn(fallback, 'getFallbackAds').mockImplementationOnce(() => {
+      throw new Error('Something went wrong')
+    })
     const consoleErrorMock = jest.spyOn(globalThis.console, 'error')
     const placementsWithContent = fetchAds(params)
+    // Fallback should still resolve on invalid response
     await expect(placementsWithContent).rejects.toThrow(FetchAdsError)
     expect(getAdsMock).toHaveBeenCalledWith(request)
+    expect(getFallbackAdsMock).toHaveBeenCalledTimes(1)
     expect(consoleErrorMock).toHaveBeenCalledWith('getAds failed with response: undefined. Error: undefined')
   })
 

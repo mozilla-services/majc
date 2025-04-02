@@ -30,7 +30,7 @@ describe('react/hooks/useMozAdsPlacement.ts', () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        'pocket_billboard_1': [
+        'pocket_billboard_0': [
           {
             format: 'billboard',
             url: 'https://getpocket.com/',
@@ -48,12 +48,12 @@ describe('react/hooks/useMozAdsPlacement.ts', () => {
     }))
 
     const { result: result1 } = renderHook(() => useMozAdsPlacement({
-      placementId: 'pocket_billboard_1',
+      placementId: 'pocket_billboard_0',
       iabContentCategoryIds: ['IAB1'],
     }))
 
     expect(result1.current).toEqual({
-      placementId: 'pocket_billboard_1',
+      placementId: 'pocket_billboard_0',
       iabContentCategoryIds: ['IAB1'],
     })
 
@@ -62,7 +62,7 @@ describe('react/hooks/useMozAdsPlacement.ts', () => {
     })
 
     expect(result1.current).toEqual({
-      placementId: 'pocket_billboard_1',
+      placementId: 'pocket_billboard_0',
       iabContentCategoryIds: ['IAB1'],
       content: {
         format: 'billboard',
@@ -79,7 +79,7 @@ describe('react/hooks/useMozAdsPlacement.ts', () => {
     })
 
     const { result: result2 } = renderHook(() => useMozAdsPlacement({
-      placementId: 'pocket_billboard_1',
+      placementId: 'pocket_billboard_0',
       iabContentCategoryIds: ['IAB1'],
     }))
 
