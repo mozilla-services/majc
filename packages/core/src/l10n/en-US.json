@@ -1,0 +1,13 @@
+{
+  "ad_image_default_alt": "Mozilla Ad",
+  "loading_spinner_tooltip": "Loading",
+  "report_ad_button_tooltip": "Report ad",
+  "report_form_close_button_tooltip": "Close",
+  "report_form_title_default": "Why are you reporting this ad?",
+  "report_form_title_success": "Thank you for your feedback.",
+  "report_form_select_reason_option_none": "Select a reason",
+  "report_form_select_reason_option_inappropriate": "Inappropriate",
+  "report_form_select_reason_option_seen_multiple_times": "Seen multiple times",
+  "report_form_select_reason_option_not_interested": "Not interested",
+  "report_form_submit_button": "Submit"
+}
