@@ -229,6 +229,14 @@ const spinnerHtml = `
   </div>
 `
 
+const erroredAdHtml = `
+  ${styleHtml}
+  <div class="moz-ads-placement-container">
+    <div class="moz-ads-placement-inner" aria-live="polite" aria-atomic="true">
+    </div>
+  </div>
+`
+
 const adHtml = `
   ${styleHtml}
   <div class="moz-ads-placement-container">
@@ -288,8 +296,22 @@ export function renderPlacement(element: HTMLElement, { placement, onClick, onEr
   }
 
   async function renderAd() {
+    const content = placement.content
     const imageUrl = placement.content?.image_url
+
+    if (!content) {
+      return
+    }
+
     if (!imageUrl) {
+      onError?.({
+        placement,
+        error: new Error(`No imageURL found for advertisement: ${placement.placementId}`),
+      })
+      element.innerHTML = erroredAdHtml
+
+      updateContainerSize()
+
       return
     }
 
