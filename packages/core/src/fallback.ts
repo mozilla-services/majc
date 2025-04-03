@@ -1,6 +1,6 @@
 import { AdResponse, ImageAd } from '@heyapi'
 import { IABAdUnitFormatType, MozAdsPlacementConfig, MozAdsPlacements, MozAdsPlacementWithContent, MozAdsSize } from './types'
-import { IABFixedSize } from './constants'
+import { FallbackAdURL, IABFixedSize } from './constants'
 import { FALLBACK_BILLBOARD_SVG, FALLBACK_MRECTANGLE_SVG, FALLBACK_SKYSCRAPER_SVG } from './images'
 
 function isAdFormat(format: IABAdUnitFormatType, size: MozAdsSize): boolean {
@@ -10,7 +10,7 @@ function isAdFormat(format: IABAdUnitFormatType, size: MozAdsSize): boolean {
 export function getFallbackAds(placements: MozAdsPlacements): AdResponse {
   const reducer = (acc: AdResponse, placement: [string, MozAdsPlacementConfig | MozAdsPlacementWithContent]): AdResponse => {
     const placementName = placement[0]
-    const adSize = placement[1].fixedSize
+    const adSize = placement[1]?.fixedSize
 
     if (!adSize) {
       // If we don't have an adSize specificed, there isn't a reliable way to decide what size backup ad to return... so we return nothing.
@@ -54,56 +54,32 @@ export function getFallbackAds(placements: MozAdsPlacements): AdResponse {
 
 export function getFallbackBillboard(): ImageAd {
   return {
-    url: 'https://foundation.mozilla.org/?form=Donate_New_Tab&utm_source=newtab&utm_medium=firefox-desktop&utm_campaign=25-fund-nta&utm_content=Billboard-1940x500&utm_term=en',
+    url: FallbackAdURL['Billboard'],
     format: 'Billboard',
     image_url: getSvgUri(FALLBACK_BILLBOARD_SVG),
-    alt_text: 'advertisement',
-    callbacks: {
-      click: '',
-      report: '',
-      impression: '',
-    },
   }
 }
 
 export function getFallbackSkyscraper(): ImageAd {
   return {
-    url: 'https://foundation.mozilla.org/?form=Donate_New_Tab&utm_source=newtab&utm_medium=firefox-desktop&utm_campaign=25-fund-nta&utm_content=Skyscraper-120x600&utm_term=en',
+    url: FallbackAdURL['Skyscraper'],
     format: 'Skyscraper',
     image_url: getSvgUri(FALLBACK_SKYSCRAPER_SVG),
-    alt_text: 'advertisement',
-    callbacks: {
-      click: '',
-      report: '',
-      impression: '',
-    },
   }
 }
 
 export function getFallbackMediumRectancle(): ImageAd {
   return {
-    url: 'https://foundation.mozilla.org/?form=Donate_New_Tab&utm_source=newtab&utm_medium=firefox-desktop&utm_campaign=25-fund-nta&utm_content=MREC-300x250&utm_term=en',
+    url: FallbackAdURL['MediumRectangle'],
     format: 'MediumRectangle',
     image_url: getSvgUri(FALLBACK_MRECTANGLE_SVG),
-    alt_text: 'advertisement',
-    callbacks: {
-      click: '',
-      report: '',
-      impression: '',
-    },
   }
 }
 
 export function getFallbackSquareDefault(): ImageAd {
   return {
-    url: 'https://foundation.mozilla.org/?form=Donate_New_Tab&utm_source=newtab&utm_medium=firefox-desktop&utm_campaign=25-fund-nta&utm_content=MREC-300x250&utm_term=en',
+    url: FallbackAdURL['MediumRectangle'],
     image_url: getSvgUri(FALLBACK_MRECTANGLE_SVG),
-    alt_text: 'advertisement',
-    callbacks: {
-      click: '',
-      report: '',
-      impression: '',
-    },
   }
 }
 

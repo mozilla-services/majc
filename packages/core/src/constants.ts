@@ -79,6 +79,12 @@ export const FixedSize: Record<IABAdUnitFormatType | NonIABAdUnitFormatType, Moz
   ...NonIABFixedSize,
 } as const
 
+export const FallbackAdURL: Partial<Record<IABAdUnitFormatType, string>> = {
+  Billboard: 'https://foundation.mozilla.org/?form=Donate_New_Tab&utm_source=newtab&utm_medium=firefox-desktop&utm_campaign=25-fund-nta&utm_content=Billboard-1940x500&utm_term=en',
+  Skyscraper: 'https://foundation.mozilla.org/?form=Donate_New_Tab&utm_source=newtab&utm_medium=firefox-desktop&utm_campaign=25-fund-nta&utm_content=Skyscraper-120x600&utm_term=en',
+  MediumRectangle: 'https://foundation.mozilla.org/?form=Donate_New_Tab&utm_source=newtab&utm_medium=firefox-desktop&utm_campaign=25-fund-nta&utm_content=MREC-300x250&utm_term=en',
+} as const
+
 // Impression Settings
 export const DEFAULT_IMPRESSION_VIEW_THRESHOLD: Record<string, number> = {
   pocket_billboard: 0.3,
