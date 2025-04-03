@@ -109,10 +109,23 @@ export const fetchAds = async ({
 }
 
 export function buildPlacementsRequest(placements: MozAdsPlacements): AdPlacement[] {
-  return Object.values(placements).map(placementConfig => ({
-    placement: placementConfig.placementId,
-    count: 1, // Each placement should be unique and result in only one ad returned
-  }))
+  return Object.values(placements).map((placementConfig) => {
+    let content
+    if (placementConfig.iabContent) {
+      content = {
+        taxonomy: placementConfig.iabContent.taxonomy,
+        categories: placementConfig.iabContent.categoryIds,
+      }
+    }
+
+    const adPlacement = {
+      placement: placementConfig.placementId,
+      count: 1, // Each placement should be unique and result in only one ad returned
+      content,
+    }
+
+    return adPlacement
+  })
 }
 
 /**

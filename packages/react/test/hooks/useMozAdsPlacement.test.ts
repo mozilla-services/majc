@@ -49,12 +49,10 @@ describe('react/hooks/useMozAdsPlacement.ts', () => {
 
     const { result: result1 } = renderHook(() => useMozAdsPlacement({
       placementId: 'pocket_billboard_0',
-      iabContentCategoryIds: ['IAB1'],
     }))
 
     expect(result1.current).toEqual({
       placementId: 'pocket_billboard_0',
-      iabContentCategoryIds: ['IAB1'],
     })
 
     await waitFor(() => {
@@ -63,7 +61,6 @@ describe('react/hooks/useMozAdsPlacement.ts', () => {
 
     expect(result1.current).toEqual({
       placementId: 'pocket_billboard_0',
-      iabContentCategoryIds: ['IAB1'],
       content: {
         format: 'billboard',
         url: 'https://getpocket.com/',
@@ -80,7 +77,6 @@ describe('react/hooks/useMozAdsPlacement.ts', () => {
 
     const { result: result2 } = renderHook(() => useMozAdsPlacement({
       placementId: 'pocket_billboard_0',
-      iabContentCategoryIds: ['IAB1'],
     }))
 
     await waitFor(() => {

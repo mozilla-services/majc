@@ -25,7 +25,10 @@ describe('core/fetch.ts', () => {
     },
     'pocket_skyscraper_1': {
       placementId: 'pocket_skyscraper_1',
-      iabContentCategoryIds: ['IAB1'],
+      iabContent: {
+        taxonomy: 'IAB-1.0',
+        categoryIds: ['IAB1-1', 'IAB1-2', 'IAB2-1'],
+      },
     },
     'pocket_skyscraper_2': {
       placementId: 'pocket_skyscraper_2',
@@ -50,9 +53,17 @@ describe('core/fetch.ts', () => {
   test('buildPlacementsRequest returns an array of placements in the correct format', () => {
     const adPlacements = buildPlacementsRequest(params.placements)
     expect(adPlacements.length).toBe(3)
+
     expect(adPlacements.find(el => el.placement === 'pocket_billboard_1')?.count).toBe(1)
+    expect(adPlacements.find(el => el.placement === 'pocket_billboard_1')?.content).toBeUndefined()
+
     expect(adPlacements.find(el => el.placement === 'pocket_skyscraper_1')?.count).toBe(1)
+    expect(adPlacements.find(el => el.placement === 'pocket_skyscraper_1')?.content).toBeDefined()
+    expect(adPlacements.find(el => el.placement === 'pocket_skyscraper_1')?.content?.taxonomy).toBe('IAB-1.0')
+    expect(adPlacements.find(el => el.placement === 'pocket_skyscraper_1')?.content?.categories?.length).toBe(3)
+
     expect(adPlacements.find(el => el.placement === 'pocket_skyscraper_2')?.count).toBe(1)
+    expect(adPlacements.find(el => el.placement === 'pocket_skyscraper_2')?.content).toBeUndefined()
   })
 
   test('fetchAds with successful response', async () => {

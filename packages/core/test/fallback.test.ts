@@ -13,19 +13,16 @@ describe('core/store.ts', () => {
       {
         placementId: 'pocket_billboard_1',
         fixedSize: IABFixedSize.Billboard,
-        iabContentCategoryIds: ['IAB1'],
       },
       pocket_billboard_2:
       {
         placementId: 'pocket_billboard_2',
         fixedSize: IABFixedSize.Billboard,
-        iabContentCategoryIds: ['IAB1'],
       },
       pocket_skyscraper_1:
       {
         placementId: 'pocket_skyscraper_1',
         fixedSize: IABFixedSize.Skyscraper,
-        iabContentCategoryIds: ['IAB1'],
       },
       pocket_medium_rectangle_1: {
         placementId: 'pocket_medium_rectangle_1',

@@ -24,7 +24,7 @@ catch (error: unknown) {
 
 export function MozAdsPlacement({
   placementId,
-  iabContentCategoryIds,
+  iabContent,
   fixedSize,
 
   onClick,
@@ -41,7 +41,7 @@ export function MozAdsPlacement({
   try {
     const placement = useMozAdsPlacement({
       placementId,
-      iabContentCategoryIds,
+      iabContent,
       fixedSize,
 
       onError,
