@@ -206,7 +206,7 @@ type AdContent = {
     /**
      * A valid taxonomy identifier recognized by MARS
      */
-    taxonomy: string;
+    taxonomy: 'IAB-1.0' | 'IAB-2.0' | 'IAB-2.1' | 'IAB-2.2' | 'IAB-3.0';
     categories: Array<string>;
 };
 /**
@@ -381,6 +381,29 @@ type GetV1tData = {
     url: '/v1/t';
 };
 type GetV1tResponses = {
+    /**
+     * Successful response
+     */
+    200: unknown;
+};
+type GetV1LogData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Identifier of the event to capture.
+         */
+        event?: 'init' | 'error';
+    };
+    url: '/v1/log';
+};
+type GetV1LogErrors = {
+    /**
+     * Bad Request. Requests are invalid if they contain unsupported or empty events.
+     */
+    400: unknown;
+};
+type GetV1LogResponses = {
     /**
      * Successful response
      */
@@ -931,6 +954,11 @@ declare const getAds: <ThrowOnError extends boolean = false>(options: Options<Ge
  */
 declare const getV1T: <ThrowOnError extends boolean = false>(options: Options<GetV1tData, ThrowOnError>) => RequestResult$1<unknown, unknown, ThrowOnError>;
 /**
+ * Record client events
+ * This endpoint can be used to persist a prometheus metric.
+ */
+declare const getV1Log: <ThrowOnError extends boolean = false>(options?: Options<GetV1LogData, ThrowOnError>) => RequestResult$1<unknown, unknown, ThrowOnError>;
+/**
  * Delete user data
  * Delete any data persisted associated with a given context_id.
  */
@@ -974,4 +1002,4 @@ declare const getTiles: <ThrowOnError extends boolean = false>(options?: Options
 type CreateClientConfig<T extends ClientOptions$1 = ClientOptions$2> = (override?: Config$2<ClientOptions$1 & T>) => Config$2<Required<ClientOptions$1> & T>;
 declare const client: Client$2;
 
-export { type AdCallbacks, type AdContent, type AdFormatBase, type AdPlacement, type AdRequest, type AdResponse, type Caps, type ClientOptions$2 as ClientOptions, type CreateClientConfig, type DeleteUserData, type DeleteUserResponses, type DeleteV1DeleteUserData, type DeleteV1DeleteUserResponses, type DomainAffinityParameterSet, type FeatureFlags, type GetAdsData, type GetAdsErrors, type GetAdsResponse, type GetAdsResponses, type GetSpocsData, type GetSpocsResponse, type GetSpocsResponses, type GetTilesData, type GetTilesErrors, type GetTilesResponse, type GetTilesResponses, type GetV1ImagesData, type GetV1ImagesResponses, type GetV1tData, type GetV1tResponses, type ImageAd, type Options, type Placement, type Settings, type Shim, type Spoc, type SpocFeed, type SpocFeedItem, type SpocFrequencyCaps, type SpocRanking, type SpocRequest, type TelemetryResponse, type Tile, type TimeSegment, type UaTile, client, deleteUser, deleteV1DeleteUser, getAds, getSpocs, getTiles, getV1Images, getV1T };
+export { type AdCallbacks, type AdContent, type AdFormatBase, type AdPlacement, type AdRequest, type AdResponse, type Caps, type ClientOptions$2 as ClientOptions, type CreateClientConfig, type DeleteUserData, type DeleteUserResponses, type DeleteV1DeleteUserData, type DeleteV1DeleteUserResponses, type DomainAffinityParameterSet, type FeatureFlags, type GetAdsData, type GetAdsErrors, type GetAdsResponse, type GetAdsResponses, type GetSpocsData, type GetSpocsResponse, type GetSpocsResponses, type GetTilesData, type GetTilesErrors, type GetTilesResponse, type GetTilesResponses, type GetV1ImagesData, type GetV1ImagesResponses, type GetV1LogData, type GetV1LogErrors, type GetV1LogResponses, type GetV1tData, type GetV1tResponses, type ImageAd, type Options, type Placement, type Settings, type Shim, type Spoc, type SpocFeed, type SpocFeedItem, type SpocFrequencyCaps, type SpocRanking, type SpocRequest, type TelemetryResponse, type Tile, type TimeSegment, type UaTile, client, deleteUser, deleteV1DeleteUser, getAds, getSpocs, getTiles, getV1Images, getV1Log, getV1T };

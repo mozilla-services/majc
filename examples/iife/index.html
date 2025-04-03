@@ -13,7 +13,9 @@
       });
       mozAds.renderPlacement('placement-2', {
         placementId: 'mock_pocket_billboard_1',
-        fixedSize: mozAds.FixedSize.Billboard
+        fixedSize: mozAds.FixedSize.Billboard,
+        iabTaxonomy: 'IAB-1.0',
+        iabContentCategoryIds: ['IAB1-1', 'IAB1-2', 'IAB2-1']
       });
       mozAds.renderPlacement('placement-3', {
         placementId: 'mock_pocket_skyscraper_1'

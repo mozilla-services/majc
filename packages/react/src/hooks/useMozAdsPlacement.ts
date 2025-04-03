@@ -55,18 +55,25 @@ export const mozAdsPlacementContext = createContext<MozAdsPlacementContextState>
 
 export const useMozAdsPlacement = ({
   placementId,
+  iabTaxonomy,
   iabContentCategoryIds,
   fixedSize,
 
   onError,
 }: MozAdsPlacementConfig): MozAdsPlacementWithContent => {
-  const [placement, setPlacement] = useState<MozAdsPlacementWithContent>({ placementId, iabContentCategoryIds, fixedSize })
+  const [placement, setPlacement] = useState<MozAdsPlacementWithContent>({
+    placementId,
+    iabTaxonomy,
+    iabContentCategoryIds,
+    fixedSize,
+  })
 
   const context = useContext(mozAdsPlacementContext)
 
   const getData = async () => {
     setPlacement(await context.getPlacementWithContent({
       placementId,
+      iabTaxonomy,
       iabContentCategoryIds,
       fixedSize,
 

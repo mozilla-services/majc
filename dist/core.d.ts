@@ -13,7 +13,7 @@ type AdContent = {
     /**
      * A valid taxonomy identifier recognized by MARS
      */
-    taxonomy: string;
+    taxonomy: 'IAB-1.0' | 'IAB-2.0' | 'IAB-2.1' | 'IAB-2.2' | 'IAB-3.0';
     categories: Array<string>;
 };
 /**
@@ -142,6 +142,7 @@ type AdResponse = {
 
 type IABAdUnitFormatType = 'Billboard' | 'SmartphoneBanner300' | 'SmartphoneBanner320' | 'Leaderboard' | 'SuperLeaderboardPushdown' | 'Portrait' | 'Skyscraper' | 'MediumRectangle' | 'TwentyBySixty' | 'MobilePhoneInterstitial640' | 'MobilePhoneInterstitial750' | 'MobilePhoneInterstitial1080' | 'FeaturePhoneSmallBanner' | 'FeaturePhoneMediumBanner' | 'FeaturePhoneLargeBanner';
 type NonIABAdUnitFormatType = 'NewTab';
+type IABTaxonomyType = 'IAB-1.0' | 'IAB-2.0' | 'IAB-2.1' | 'IAB-2.2' | 'IAB-3.0';
 type LogType = 'logReporter.init.success' | 'recordClick.clickOccurred' | 'recordClick.success' | 'recordClick.callbackResponseError' | 'recordClick.callbackNotFoundError' | 'renderPlacement.reportCallbackResponseError' | 'renderPlacement.reportCallbackNotFoundError' | 'renderPlacement.reportCallbackInvalid' | 'fetchAds.request.success' | 'fetchAds.request.error' | 'impressionObserver.recordImpression.viewed' | 'impressionObserver.recordImpression.callbackResponseError' | 'impressionObserver.recordImpression.callbackNotFoundError' | 'impressionObserver.observeAd.adNotFoundError' | 'impressionObserver.forceRecordImpression.error' | 'placementComponent.adLoad.success' | 'placementComponent.adLoad.failure' | 'placementComponent.render.error';
 type TelemetryEventLabel = 'init' | 'render_error' | 'ad_load_error' | 'fetch_error' | 'invalid_url_error';
 type HttpRequestMethod = 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'CONNECT' | 'OPTIONS' | 'TRACE' | 'PATCH';
@@ -157,6 +158,7 @@ interface MozAdsRenderPlacementErrorEvent extends MozAdsRenderPlacementEvent {
 }
 interface MozAdsPlacementConfig {
     placementId: string;
+    iabTaxonomy?: IABTaxonomyType;
     iabContentCategoryIds?: string[];
     fixedSize?: MozAdsSize;
     onClick?: (event: MozAdsRenderPlacementEvent) => void;
@@ -379,4 +381,4 @@ declare const setItemInStore: (key: MozAdsStoreKey, value: string, storeType?: S
 declare const removeItemFromStore: (key: MozAdsStoreKey, storeType?: StoreType) => void;
 declare const getOrGenerateContextId: (forceRegenerate?: boolean) => string;
 
-export { CLOSE_ICON_SVG, DEFAULT_IMPRESSION_TIME_THRESHOLD_MS, DEFAULT_IMPRESSION_VIEW_THRESHOLD, DEFAULT_SERVICE_ENDPOINT, DefaultLogReporter, type DefaultLogReporterConfig, DefaultLogger, DefaultMozAdsImpressionObserver, FALLBACK_IMPRESSION_ENDPOINT, FALLBACK_IMPRESSION_TIME_THRESHOLD, FALLBACK_IMPRESSION_VIEW_THRESHOLD, FetchAdsError, type FetchAdsParams, FixedSize, type HttpRequestMethod, type IABAdUnitFormatType, IABFixedSize, INSTRUMENT_ENDPOINT, IS_BROWSER, LOG_EMIT_FLAG_DEFAULT, LOG_TO_CONSOLE_FLAG_DEFAULT, type LogEmitterOptions, type LogFields, type LogReporter, type LogType, type Logger, type LoggerConfig, LoggerLevel, type MozAdsContent, type MozAdsImpressionObserver, type MozAdsImpressionTracker, type MozAdsLocalizedStringKey, type MozAdsPlacementConfig, type MozAdsPlacementWithContent, type MozAdsPlacements, type MozAdsRenderPlacementErrorEvent, type MozAdsRenderPlacementEvent, type MozAdsRenderPlacementProps, type MozAdsRenderPlacementReportEvent, type MozAdsSize, type MozAdsStoreKey, type MozLogMessage, type NonIABAdUnitFormatType, NonIABFixedSize, type PlacementImpressionInfo, REPORT_ICON_SVG, SeverityLevel, StoreType, type TelemetryEventLabel, buildPlacementsRequest, defaultImpressionObserver, defaultLogReporter, fetchAds, getItemFromStore, getOrGenerateContextId, l, mapResponseToPlacementsWithContent, preloadImage, recordClick, removeItemFromStore, renderPlacement, setItemInStore };
+export { CLOSE_ICON_SVG, DEFAULT_IMPRESSION_TIME_THRESHOLD_MS, DEFAULT_IMPRESSION_VIEW_THRESHOLD, DEFAULT_SERVICE_ENDPOINT, DefaultLogReporter, type DefaultLogReporterConfig, DefaultLogger, DefaultMozAdsImpressionObserver, FALLBACK_IMPRESSION_ENDPOINT, FALLBACK_IMPRESSION_TIME_THRESHOLD, FALLBACK_IMPRESSION_VIEW_THRESHOLD, FetchAdsError, type FetchAdsParams, FixedSize, type HttpRequestMethod, type IABAdUnitFormatType, IABFixedSize, type IABTaxonomyType, INSTRUMENT_ENDPOINT, IS_BROWSER, LOG_EMIT_FLAG_DEFAULT, LOG_TO_CONSOLE_FLAG_DEFAULT, type LogEmitterOptions, type LogFields, type LogReporter, type LogType, type Logger, type LoggerConfig, LoggerLevel, type MozAdsContent, type MozAdsImpressionObserver, type MozAdsImpressionTracker, type MozAdsLocalizedStringKey, type MozAdsPlacementConfig, type MozAdsPlacementWithContent, type MozAdsPlacements, type MozAdsRenderPlacementErrorEvent, type MozAdsRenderPlacementEvent, type MozAdsRenderPlacementProps, type MozAdsRenderPlacementReportEvent, type MozAdsSize, type MozAdsStoreKey, type MozLogMessage, type NonIABAdUnitFormatType, NonIABFixedSize, type PlacementImpressionInfo, REPORT_ICON_SVG, SeverityLevel, StoreType, type TelemetryEventLabel, buildPlacementsRequest, defaultImpressionObserver, defaultLogReporter, fetchAds, getItemFromStore, getOrGenerateContextId, l, mapResponseToPlacementsWithContent, preloadImage, recordClick, removeItemFromStore, renderPlacement, setItemInStore };
