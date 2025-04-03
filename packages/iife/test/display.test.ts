@@ -4,6 +4,8 @@ import fetchMock from 'jest-fetch-mock'
 import { tick } from '@/jest.setup'
 import { renderPlacement } from '../src/display'
 
+import * as fallback from '../../core/src/fallback'
+
 describe('iife/display.ts', () => {
   afterEach(() => {
     jest.clearAllMocks()
@@ -33,7 +35,20 @@ describe('iife/display.ts', () => {
     expect(consoleErrorMock).toHaveBeenLastCalledWith('Unable to render placement; Invalid element')
   })
 
-  test('renderPlacement throws an error when the fetch fails', async () => {
+  test('renderPlacement calls fallbacks on fetch error', async () => {
+    const placementElement = document.createElement('div')
+    const placementConfig = {
+      placementId: 'pocket_billboard_1',
+      iabContentCategoryIds: ['IAB1'],
+    }
+    fetchMock.mockRejectOnce(new Error('test-error'))
+    const fallbackSpy = jest.spyOn(fallback, 'getFallbackAds')
+    await renderPlacement(placementElement, placementConfig)
+    await tick()
+    expect(fallbackSpy).toHaveBeenCalledTimes(1)
+  })
+
+  test('renderPlacement throws an error when the fetch and fallback fails', async () => {
     const placementElement = document.createElement('div')
     const placementConfig = {
       placementId: 'pocket_billboard_1',
@@ -41,6 +56,9 @@ describe('iife/display.ts', () => {
     }
     const consoleErrorMock = jest.spyOn(globalThis.console, 'error')
     fetchMock.mockRejectOnce(new Error('test-error'))
+    jest.spyOn(fallback, 'getFallbackAds').mockImplementationOnce(() => {
+      throw new Error('test-error')
+    })
 
     await renderPlacement(placementElement, placementConfig)
     await tick()

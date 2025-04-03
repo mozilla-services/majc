@@ -77,6 +77,28 @@ describe('iife/display.ts', () => {
     expect(container?.style.height).toEqual('')
   })
 
+  test('renderPlacement correctly styles the DOM markup when ad content is an empty object', async () => {
+    const placementElement = document.createElement('div')
+    const placement = {
+      placementId: 'pocket_billboard_1',
+      iabContentCategoryIds: ['IAB1'],
+      fixedSize: {
+        width: undefined as unknown as number,
+        height: undefined as unknown as number,
+      },
+      content: {},
+    }
+
+    renderPlacement(placementElement, {
+      placement,
+    })
+
+    const container = placementElement.querySelector<HTMLDivElement>('.moz-ads-placement-container[data-placement-id="pocket_billboard_1"]')
+    expect(container).toBeInstanceOf(HTMLDivElement)
+    expect(container?.style.width).toEqual('')
+    expect(container?.style.height).toEqual('')
+  })
+
   test('renderPlacement correctly styles the DOM markup when a fixedSize is specified', async () => {
     const placementElement = document.createElement('div')
     const placement = {
@@ -93,6 +115,15 @@ describe('iife/display.ts', () => {
     })
 
     const container = placementElement.querySelector<HTMLDivElement>('.moz-ads-placement-container[data-placement-id="pocket_billboard_1"]')
+
+    const link = placementElement.querySelector<HTMLAnchorElement>('.moz-ads-placement-link[data-placement-id="pocket_billboard_1"]')
+    const img = link?.querySelector<HTMLImageElement>('.moz-ads-placement-img[data-placement-id="pocket_billboard_1"]')
+    const reportButton = link?.querySelector<HTMLButtonElement>('.moz-ads-placement-report-button')
+
+    expect(link).toBeFalsy()
+    expect(img).toBeFalsy()
+    expect(reportButton).toBeFalsy()
+
     expect(container).toBeInstanceOf(HTMLDivElement)
     expect(container?.style.width).toEqual('100px')
     expect(container?.style.height).toEqual('200px')

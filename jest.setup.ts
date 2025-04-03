@@ -23,4 +23,6 @@ Object.defineProperty(globalThis, 'Image', {
   value: MockImage,
 })
 
+globalThis.URL.createObjectURL = jest.fn()
+
 fetchMock.enableMocks()

@@ -2,7 +2,8 @@
 
 import fetchMock from 'jest-fetch-mock'
 import * as react from 'react'
-import { render, waitFor } from '@testing-library/react'
+import { cleanup, render, waitFor } from '@testing-library/react'
+import * as coreFetch from '@core/fetch'
 import { MockImage } from '../../../core/test/mocks/mockImage'
 import { MozAdsPlacement } from '../../src/components/MozAdsPlacement'
 import { tick } from '@/jest.setup'
@@ -14,33 +15,39 @@ jest.mock('react', () => {
   }
 })
 
+jest.mock('@core/fetch', () => {
+  return {
+    __esModule: true,
+    ...jest.requireActual('@core/fetch'),
+    fetchAds: jest.fn(),
+  }
+})
+
 describe('react/components/MozAdsPlacement.tsx', () => {
   afterEach(() => {
     jest.clearAllMocks()
+    jest.resetModules()
+    cleanup()
   })
 
   test('<MozAdsPlacement /> logs an error when an unknown error occurs', async () => {
-    fetchMock.mockResponseOnce(async () => ({
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        'pocket_billboard_1': [
-          {
-            format: 'billboard',
-            url: 'https://getpocket.com/',
-            callbacks: {
-              click: 'http://example.com/click',
-              impression: 'http://example.com/impression',
-              report: 'http://example.com/report',
-            },
-            image_url: 'http://example.com/image',
-            alt_text: 'Advertiser Name',
-            block_key: '1234567890ABCDEFGHabcdefgh',
+    jest.spyOn(coreFetch, 'fetchAds').mockResolvedValueOnce({
+      'pocket_billboard_1': {
+        placementId: 'pocket_billboard_1',
+        content: {
+          format: 'billboard',
+          url: 'https://getpocket.com/',
+          callbacks: {
+            click: 'http://example.com/click',
+            impression: 'http://example.com/impression',
+            report: 'http://example.com/report',
           },
-        ],
-      }),
-    }))
+          image_url: 'http://example.com/image',
+          alt_text: 'Advertiser Name',
+          block_key: '1234567890ABCDEFGHabcdefgh',
+        },
+      },
+    })
 
     const consoleErrorMock = jest.spyOn(globalThis.console, 'error')
     const useLayoutEffectMock = jest.spyOn(react, 'useLayoutEffect').mockImplementationOnce(() => {
@@ -63,10 +70,11 @@ describe('react/components/MozAdsPlacement.tsx', () => {
   test('<MozAdsPlacement /> logs an error when the fetch fails', async () => {
     const consoleErrorMock = jest.spyOn(globalThis.console, 'error')
     const onErrorMock = jest.fn()
-    fetchMock.mockRejectOnce(new Error('test-error'))
+
+    jest.spyOn(coreFetch, 'fetchAds').mockRejectedValueOnce(new Error('test-error'))
 
     render(
-      <MozAdsPlacement placementId="pocket_billboard_1" iabContentCategoryIds={['IAB1']} onError={onErrorMock} />,
+      <MozAdsPlacement placementId="pocket_billboard_2" iabContentCategoryIds={['IAB1']} onError={onErrorMock} />,
     )
 
     await waitFor(() => {
@@ -85,30 +93,26 @@ describe('react/components/MozAdsPlacement.tsx', () => {
 
     MockImage.dispatchErrorOnNextLoad()
 
-    fetchMock.mockResponseOnce(async () => ({
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        'pocket_billboard_1': [
-          {
-            format: 'billboard',
-            url: 'https://getpocket.com/',
-            callbacks: {
-              click: 'http://example.com/click',
-              impression: 'http://example.com/impression',
-              report: 'http://example.com/report',
-            },
-            image_url: 'http://example.com/image',
-            alt_text: 'Advertiser Name',
-            block_key: '1234567890ABCDEFGHabcdefgh',
+    jest.spyOn(coreFetch, 'fetchAds').mockResolvedValueOnce({
+      'pocket_billboard_3': {
+        placementId: 'pocket_billboard_3',
+        content: {
+          format: 'billboard',
+          url: 'https://getpocket.com/',
+          callbacks: {
+            click: 'http://example.com/click',
+            impression: 'http://example.com/impression',
+            report: 'http://example.com/report',
           },
-        ],
-      }),
-    }))
+          image_url: 'http://example.com/image',
+          alt_text: 'Advertiser Name',
+          block_key: '1234567890ABCDEFGHabcdefgh',
+        },
+      },
+    })
 
     render(
-      <MozAdsPlacement placementId="pocket_billboard_1" iabContentCategoryIds={['IAB1']} onError={onErrorMock} />,
+      <MozAdsPlacement placementId="pocket_billboard_3" iabContentCategoryIds={['IAB1']} onError={onErrorMock} />,
     )
 
     await waitFor(() => {
@@ -117,42 +121,38 @@ describe('react/components/MozAdsPlacement.tsx', () => {
   })
 
   test('<MozAdsPlacement /> produces the correct DOM markup for the requested ad placement', async () => {
-    fetchMock.mockResponseOnce(async () => ({
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        'pocket_billboard_1': [
-          {
-            format: 'billboard',
-            url: 'https://getpocket.com/',
-            callbacks: {
-              click: 'http://example.com/click',
-              impression: 'http://example.com/impression',
-              report: 'http://example.com/report',
-            },
-            image_url: 'http://example.com/image',
-            alt_text: 'Advertiser Name',
-            block_key: '1234567890ABCDEFGHabcdefgh',
+    jest.spyOn(coreFetch, 'fetchAds').mockResolvedValueOnce({
+      'pocket_billboard_4': {
+        placementId: 'pocket_billboard_4',
+        content: {
+          format: 'billboard',
+          url: 'https://getpocket.com/',
+          callbacks: {
+            click: 'http://example.com/click',
+            impression: 'http://example.com/impression',
+            report: 'http://example.com/report',
           },
-        ],
-      }),
-    }))
+          image_url: 'http://example.com/image',
+          alt_text: 'Advertiser Name',
+          block_key: '1234567890ABCDEFGHabcdefgh',
+        },
+      },
+    })
 
     const result = render(
-      <MozAdsPlacement placementId="pocket_billboard_1" iabContentCategoryIds={['IAB1']} fixedSize={{ width: 100, height: 200 }} />,
+      <MozAdsPlacement placementId="pocket_billboard_4" iabContentCategoryIds={['IAB1']} fixedSize={{ width: 100, height: 200 }} />,
     )
 
     const placementElement = result.baseElement
 
     await waitFor(() => {
-      const link = placementElement.querySelector<HTMLAnchorElement>('.moz-ads-placement-link[data-placement-id="pocket_billboard_1"]')
+      const link = placementElement.querySelector<HTMLAnchorElement>('.moz-ads-placement-link[data-placement-id="pocket_billboard_4"]')
       expect(link).toBeInstanceOf(HTMLAnchorElement)
     })
 
-    const link = placementElement.querySelector<HTMLAnchorElement>('.moz-ads-placement-link[data-placement-id="pocket_billboard_1"]')
+    const link = placementElement.querySelector<HTMLAnchorElement>('.moz-ads-placement-link[data-placement-id="pocket_billboard_4"]')
     expect(link).toBeInstanceOf(HTMLAnchorElement)
-    const img = link?.querySelector<HTMLImageElement>('.moz-ads-placement-img[data-placement-id="pocket_billboard_1"]')
+    const img = link?.querySelector<HTMLImageElement>('.moz-ads-placement-img[data-placement-id="pocket_billboard_4"]')
     expect(img).toBeInstanceOf(HTMLImageElement)
     expect(img?.alt).toEqual('Advertiser Name')
     expect(img?.src).toEqual('http://example.com/image')
@@ -167,43 +167,39 @@ describe('react/components/MozAdsPlacement.tsx', () => {
   })
 
   test('<MozAdsPlacement /> calls the onReport callback function', async () => {
-    fetchMock.mockResponseOnce(async () => ({
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        'pocket_billboard_1': [
-          {
-            format: 'billboard',
-            url: 'https://getpocket.com/',
-            callbacks: {
-              click: 'http://example.com/click',
-              impression: 'http://example.com/impression',
-              report: 'http://example.com/report',
-            },
-            image_url: 'http://example.com/image',
-            alt_text: 'Advertiser Name',
-            block_key: '1234567890ABCDEFGHabcdefgh',
+    jest.spyOn(coreFetch, 'fetchAds').mockResolvedValueOnce({
+      'pocket_billboard_5': {
+        placementId: 'pocket_billboard_5',
+        content: {
+          format: 'billboard',
+          url: 'https://getpocket.com/',
+          callbacks: {
+            click: 'http://example.com/click',
+            impression: 'http://example.com/impression',
+            report: 'http://example.com/report',
           },
-        ],
-      }),
-    }))
+          image_url: 'http://example.com/image',
+          alt_text: 'Advertiser Name',
+          block_key: '1234567890ABCDEFGHabcdefgh',
+        },
+      },
+    })
 
     const onReportMock = jest.fn()
     const result = render(
-      <MozAdsPlacement placementId="pocket_billboard_1" iabContentCategoryIds={['IAB1']} fixedSize={{ width: 100, height: 200 }} onReport={onReportMock} />,
+      <MozAdsPlacement placementId="pocket_billboard_5" iabContentCategoryIds={['IAB1']} fixedSize={{ width: 100, height: 200 }} onReport={onReportMock} />,
     )
 
     const placementElement = result.baseElement
 
     await waitFor(() => {
-      const link = placementElement.querySelector<HTMLAnchorElement>('.moz-ads-placement-link[data-placement-id="pocket_billboard_1"]')
+      const link = placementElement.querySelector<HTMLAnchorElement>('.moz-ads-placement-link[data-placement-id="pocket_billboard_5"]')
       expect(link).toBeInstanceOf(HTMLAnchorElement)
     })
 
-    const link = placementElement.querySelector<HTMLAnchorElement>('.moz-ads-placement-link[data-placement-id="pocket_billboard_1"]')
+    const link = placementElement.querySelector<HTMLAnchorElement>('.moz-ads-placement-link[data-placement-id="pocket_billboard_5"]')
     expect(link).toBeInstanceOf(HTMLAnchorElement)
-    const img = link?.querySelector<HTMLImageElement>('.moz-ads-placement-img[data-placement-id="pocket_billboard_1"]')
+    const img = link?.querySelector<HTMLImageElement>('.moz-ads-placement-img[data-placement-id="pocket_billboard_5"]')
     expect(img).toBeInstanceOf(HTMLImageElement)
     expect(img?.alt).toEqual('Advertiser Name')
     expect(img?.src).toEqual('http://example.com/image')
