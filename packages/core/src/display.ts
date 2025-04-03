@@ -304,17 +304,6 @@ export function renderPlacement(element: HTMLElement, { placement, onClick, onEr
       return
     }
 
-    if (!placement.fixedSize && !imageUrl) {
-      // If there is neither an image nor a fixedSize, then we give the space back entirely
-      onError?.({
-        placement,
-        error: new Error(`No fixedSize specified for advertisement with missing image: ${placement.placementId}`),
-      })
-      element.innerHTML = erroredAdHtml
-      updateContainerSize()
-      return
-    }
-
     if (!imageUrl) {
       // This could only happen if the API failed to supply the correct content for an ad.
       onError?.({
