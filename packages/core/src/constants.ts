@@ -73,7 +73,7 @@ export const IABFixedSizeLookup: Record<`${number}x${number}`, IABAdUnitFormatTy
     const formatName = curr[0] as IABAdUnitFormatType
     acc[`${curr[1].width}x${curr[1].height}`] = formatName
 
-    return { ...acc }
+    return acc
   }, {})
 
 export const NonIABFixedSize: Record<NonIABAdUnitFormatType, MozAdsSize> = {
