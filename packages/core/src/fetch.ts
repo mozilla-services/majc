@@ -69,18 +69,7 @@ export const fetchAds = async ({
             method: 'POST',
             errorId: `${fetchAdsError.name}`,
           })
-
-          // Try to render hardcoded fallback ads
-          try {
-            const fallbackResponse = mapResponseToPlacementsWithContent(getFallbackAds(pendingPlacements), pendingPlacements)
-            resolve(fallbackResponse)
-            return
-          }
-          // Reject if fallback fails
-          catch {
-            reject(fetchAdsError)
-            return
-          }
+          throw fetchAdsError
         }
 
         logger.info(`Succesfully fetched ads with request: ${JSON.stringify(request)}`, {
