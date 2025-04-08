@@ -1,10 +1,12 @@
 import { AdResponse, ImageAd } from '@heyapi'
-import { IABAdUnitFormatType, MozAdsPlacementConfig, MozAdsPlacements, MozAdsPlacementWithContent, MozAdsSize } from './types'
-import { FallbackAdURL, IABFixedSize } from './constants'
+import { IABAdUnitFormatType, MozAdsPlacementConfig, MozAdsPlacements, MozAdsPlacementWithContent } from './types'
+import { FallbackAdURL, IABFixedSizeLookup } from './constants'
 import { FALLBACK_BILLBOARD_SVG, FALLBACK_MRECTANGLE_SVG, FALLBACK_SKYSCRAPER_SVG } from './images'
 
-function isAdFormat(format: IABAdUnitFormatType, size: MozAdsSize): boolean {
-  return (size.height === IABFixedSize[format].height && size.width === IABFixedSize[format].width)
+const fallbackAdContentLookup: Partial<Record<IABAdUnitFormatType, ImageAd>> = {
+  Billboard: getFallbackBillboard(),
+  Skyscraper: getFallbackSkyscraper(),
+  MediumRectangle: getFallbackMediumRectangle(),
 }
 
 export function getFallbackAds(placements: MozAdsPlacements): AdResponse {
@@ -21,30 +23,11 @@ export function getFallbackAds(placements: MozAdsPlacements): AdResponse {
       }
     }
 
-    switch (true) {
-      case isAdFormat('Billboard', adSize):
-        return {
-          ...acc,
-          [placementName]: [getFallbackBillboard()],
-        }
+    const adType = IABFixedSizeLookup[adSize.width]?.[adSize.height]
 
-      case isAdFormat('Skyscraper', adSize):
-        return {
-          ...acc,
-          [placementName]: [getFallbackSkyscraper()],
-        }
-
-      case isAdFormat('MediumRectangle', adSize):
-        return {
-          ...acc,
-          [placementName]: [getFallbackMediumRectangle()],
-        }
-
-      default:
-        return {
-          ...acc,
-          [placementName]: [getFallbackSquareDefault()],
-        }
+    return {
+      ...acc,
+      [placementName]: [fallbackAdContentLookup[adType] ?? getFallbackSquareDefault()],
     }
   }
   const fallbackAdResponse: AdResponse = Object.entries(placements).reduce(reducer, {})
