@@ -23,7 +23,7 @@ export function getFallbackAds(placements: MozAdsPlacements): AdResponse {
       }
     }
 
-    const adType = IABFixedSizeLookup[adSize.width]?.[adSize.height]
+    const adType = IABFixedSizeLookup[`${adSize.width}x${adSize.height}`]
 
     return {
       ...acc,

@@ -183,7 +183,7 @@ declare function recordClick(placement: MozAdsPlacementWithContent): Promise<voi
 declare const IS_BROWSER: boolean;
 declare const DEFAULT_SERVICE_ENDPOINT = "https://ads.allizom.org/";
 declare const IABFixedSize: Record<IABAdUnitFormatType, MozAdsSize>;
-declare const IABFixedSizeLookup: Record<number, Record<number, IABAdUnitFormatType>>;
+declare const IABFixedSizeLookup: Record<`${number}x${number}`, IABAdUnitFormatType>;
 declare const NonIABFixedSize: Record<NonIABAdUnitFormatType, MozAdsSize>;
 declare const FixedSize: Record<IABAdUnitFormatType | NonIABAdUnitFormatType, MozAdsSize>;
 declare const FallbackAdURL: Partial<Record<IABAdUnitFormatType, string>>;
