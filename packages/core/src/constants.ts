@@ -67,6 +67,15 @@ export const IABFixedSize: Record<IABAdUnitFormatType, MozAdsSize> = {
   },
 } as const
 
+// Given an ad format, this allows us to go from a '${width}x${height}' to an IABAdUnitFormatType
+export const IABFixedSizeLookup: Record<`${number}x${number}`, IABAdUnitFormatType> = Object.entries(IABFixedSize).reduce(
+  (acc: typeof IABFixedSizeLookup, curr) => {
+    const formatName = curr[0] as IABAdUnitFormatType
+    acc[`${curr[1].width}x${curr[1].height}`] = formatName
+
+    return acc
+  }, {})
+
 export const NonIABFixedSize: Record<NonIABAdUnitFormatType, MozAdsSize> = {
   NewTab: {
     width: 200,
