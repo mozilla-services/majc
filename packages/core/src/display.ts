@@ -1,6 +1,6 @@
 import { ImageAd } from '@heyapi'
 import { INTER_FONT_BASE64 } from './fonts'
-import { CLOSE_ICON_SVG, REPORT_ICON_SVG } from './icons'
+import { CLOSE_ICON_SVG, REPORT_ICON_SVG } from './images'
 import { l } from './l10n'
 import { DefaultLogger } from './logger'
 import {
@@ -229,6 +229,14 @@ const spinnerHtml = `
   </div>
 `
 
+const erroredAdHtml = `
+  ${styleHtml}
+  <div class="moz-ads-placement-container">
+    <div class="moz-ads-placement-inner" aria-live="polite" aria-atomic="true">
+    </div>
+  </div>
+`
+
 const adHtml = `
   ${styleHtml}
   <div class="moz-ads-placement-container">
@@ -288,8 +296,22 @@ export function renderPlacement(element: HTMLElement, { placement, onClick, onEr
   }
 
   async function renderAd() {
+    const content = placement.content
     const imageUrl = placement.content?.image_url
+
+    if (!content) {
+      // No content likely means nothing has returned yet so we don't do anything
+      return
+    }
+
     if (!imageUrl) {
+      // This could only happen if the API failed to supply the correct content for an ad.
+      onError?.({
+        placement,
+        error: new Error(`No imageURL found for advertisement: ${placement.placementId}`),
+      })
+      element.innerHTML = erroredAdHtml
+      updateContainerSize()
       return
     }
 

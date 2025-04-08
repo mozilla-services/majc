@@ -3,6 +3,7 @@ import { DEFAULT_SERVICE_ENDPOINT } from './constants'
 import { DefaultLogger } from './logger'
 import { getOrGenerateContextId } from './store'
 import { MozAdsPlacements, MozAdsPlacementWithContent } from './types'
+import { getFallbackAds } from './fallback'
 
 const logger = new DefaultLogger({ name: 'core.fetch' })
 
@@ -68,14 +69,14 @@ export const fetchAds = async ({
             method: 'POST',
             errorId: `${fetchAdsError.name}`,
           })
-          reject(fetchAdsError)
-          return
+          throw fetchAdsError
         }
 
         logger.info(`Succesfully fetched ads with request: ${JSON.stringify(request)}`, {
           type: 'fetchAds.request.success',
           method: 'POST',
         })
+
         resolve(mapResponseToPlacementsWithContent(response, pendingPlacements))
       }
       catch (error: unknown) {
@@ -86,7 +87,15 @@ export const fetchAds = async ({
           method: 'POST',
           errorId: `${fetchAdsError.name}`,
         })
-        reject(fetchAdsError)
+        // Try to render hardcoded fallback Ads
+        try {
+          const fallbackResponse = mapResponseToPlacementsWithContent(getFallbackAds(pendingPlacements), pendingPlacements)
+          resolve(fallbackResponse)
+        }
+        // Reject if fallback fails
+        catch {
+          reject(fetchAdsError)
+        }
       }
       finally {
         // Reset our state so that future requests for placements will be fetched in their own batch
