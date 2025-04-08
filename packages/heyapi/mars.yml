@@ -66,6 +66,26 @@ paths:
         '200':
           description: Successful response
 
+  /v1/log:
+    get:
+      summary: Record client events
+      description: This endpoint can be used to persist a prometheus metric.
+      parameters:
+        - name: event
+          in: query
+          description: Identifier of the event to capture.
+          required: false
+          schema:
+            type: string
+            enum:
+              - init
+              - error
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          description: Bad Request. Requests are invalid if they contain unsupported or empty events.
+
   /v1/delete_user:
     delete:
       summary: Delete user data
@@ -667,8 +687,14 @@ components:
       properties:
         taxonomy:
           type: string
+          enum:
+            - IAB-1.0
+            - IAB-2.0
+            - IAB-2.1
+            - IAB-2.2
+            - IAB-3.0
           description: A valid taxonomy identifier recognized by MARS
-          example: iab-content-1.0
+          example: IAB-1.0
         categories:
           type: array
           items:

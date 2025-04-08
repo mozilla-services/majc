@@ -9,7 +9,7 @@ export default function Home() {
       </div>
       <div className="flex flex-row pt-20 gap-10 pl-20">
         <div className="max-w-6xl">
-          <Article iabCategories={['IAB1']} />
+          <Article />
         </div>
       </div>
     </main>

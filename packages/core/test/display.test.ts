@@ -14,7 +14,6 @@ describe('iife/display.ts', () => {
     const placementElement = document.createElement('div')
     const placement = {
       placementId: 'pocket_billboard_1',
-      iabContentCategoryIds: ['IAB1'],
       content: {
         format: 'billboard',
         url: 'https://getpocket.com/',

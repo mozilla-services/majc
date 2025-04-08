@@ -12,7 +12,6 @@ describe('core/clicks.ts', () => {
   test('recordClick logs an error and fails when no click callback URL is provided', async () => {
     const placementWithContent = {
       placementId: 'pocket_billboard_1',
-      iabContentCategoryIds: ['IAB1'],
     }
 
     const consoleErrorMock = jest.spyOn(globalThis.console, 'error')
@@ -28,7 +27,6 @@ describe('core/clicks.ts', () => {
   test('recordClick logs an error and fails when the fetch fails with an error', async () => {
     const placementWithContent = {
       placementId: 'pocket_billboard_1',
-      iabContentCategoryIds: ['IAB1'],
       content: {
         format: 'billboard',
         url: 'https://getpocket.com/',
@@ -56,7 +54,6 @@ describe('core/clicks.ts', () => {
   test('recordClick logs an error and fails when the fetch fails for an unknown reason', async () => {
     const placementWithContent = {
       placementId: 'pocket_billboard_1',
-      iabContentCategoryIds: ['IAB1'],
       content: {
         format: 'billboard',
         url: 'https://getpocket.com/',
@@ -84,7 +81,6 @@ describe('core/clicks.ts', () => {
   test('recordClick fetches the click callback successfully', async () => {
     const placementWithContent = {
       placementId: 'pocket_billboard_1',
-      iabContentCategoryIds: ['IAB1'],
       content: {
         format: 'billboard',
         url: 'https://getpocket.com/',

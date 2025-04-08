@@ -221,7 +221,7 @@ export type AdContent = {
     /**
      * A valid taxonomy identifier recognized by MARS
      */
-    taxonomy: string;
+    taxonomy: 'IAB-1.0' | 'IAB-2.0' | 'IAB-2.1' | 'IAB-2.2' | 'IAB-3.0';
     categories: Array<string>;
 };
 
@@ -411,6 +411,32 @@ export type GetV1tData = {
 };
 
 export type GetV1tResponses = {
+    /**
+     * Successful response
+     */
+    200: unknown;
+};
+
+export type GetV1LogData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Identifier of the event to capture.
+         */
+        event?: 'init' | 'error';
+    };
+    url: '/v1/log';
+};
+
+export type GetV1LogErrors = {
+    /**
+     * Bad Request. Requests are invalid if they contain unsupported or empty events.
+     */
+    400: unknown;
+};
+
+export type GetV1LogResponses = {
     /**
      * Successful response
      */

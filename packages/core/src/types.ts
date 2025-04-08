@@ -21,6 +21,18 @@ export type IABAdUnitFormatType =
 export type NonIABAdUnitFormatType =
   'NewTab'
 
+export type IABContentTaxonomyType =
+  'IAB-1.0' |
+  'IAB-2.0' |
+  'IAB-2.1' |
+  'IAB-2.2' |
+  'IAB-3.0'
+
+export interface IABContent {
+  taxonomy: IABContentTaxonomyType // https://iabtechlab.com/standards/content-taxonomy/
+  categoryIds: string[] // https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf
+}
+
 // If you are adding a new log type, remember to include it in `docs/logging.md`
 export type LogType =
   'logReporter.init.success' |
@@ -67,8 +79,8 @@ export interface MozAdsRenderPlacementErrorEvent extends MozAdsRenderPlacementEv
 
 export interface MozAdsPlacementConfig {
   placementId: string // https://github.com/mozilla-services/mars/blob/main/unified_ads_api/models/constants.go
-  iabContentCategoryIds?: string[] // https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf
   fixedSize?: MozAdsSize
+  iabContent?: IABContent
 
   onClick?: (event: MozAdsRenderPlacementEvent) => void
   onReport?: (event: MozAdsRenderPlacementReportEvent) => void

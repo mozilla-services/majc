@@ -56,7 +56,7 @@ describe('react/components/MozAdsPlacement.tsx', () => {
 
     const onErrorMock = jest.fn()
     render(
-      <MozAdsPlacement placementId="pocket_billboard_1" iabContentCategoryIds={['IAB1']} onError={onErrorMock} />,
+      <MozAdsPlacement placementId="pocket_billboard_1" onError={onErrorMock} />,
     )
 
     await waitFor(() => {
@@ -74,7 +74,7 @@ describe('react/components/MozAdsPlacement.tsx', () => {
     jest.spyOn(coreFetch, 'fetchAds').mockRejectedValueOnce(new Error('test-error'))
 
     render(
-      <MozAdsPlacement placementId="pocket_billboard_2" iabContentCategoryIds={['IAB1']} onError={onErrorMock} />,
+      <MozAdsPlacement placementId="pocket_billboard_2" onError={onErrorMock} />,
     )
 
     await waitFor(() => {
@@ -112,7 +112,7 @@ describe('react/components/MozAdsPlacement.tsx', () => {
     })
 
     render(
-      <MozAdsPlacement placementId="pocket_billboard_3" iabContentCategoryIds={['IAB1']} onError={onErrorMock} />,
+      <MozAdsPlacement placementId="pocket_billboard_3" onError={onErrorMock} />,
     )
 
     await waitFor(() => {
@@ -140,7 +140,7 @@ describe('react/components/MozAdsPlacement.tsx', () => {
     })
 
     const result = render(
-      <MozAdsPlacement placementId="pocket_billboard_4" iabContentCategoryIds={['IAB1']} fixedSize={{ width: 100, height: 200 }} />,
+      <MozAdsPlacement placementId="pocket_billboard_4" fixedSize={{ width: 100, height: 200 }} />,
     )
 
     const placementElement = result.baseElement
@@ -187,7 +187,7 @@ describe('react/components/MozAdsPlacement.tsx', () => {
 
     const onReportMock = jest.fn()
     const result = render(
-      <MozAdsPlacement placementId="pocket_billboard_5" iabContentCategoryIds={['IAB1']} fixedSize={{ width: 100, height: 200 }} onReport={onReportMock} />,
+      <MozAdsPlacement placementId="pocket_billboard_5" fixedSize={{ width: 100, height: 200 }} onReport={onReportMock} />,
     )
 
     const placementElement = result.baseElement

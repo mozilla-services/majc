@@ -14,7 +14,6 @@ describe('iife/display.ts', () => {
   test('renderPlacement logs an error and fails when an invalid element ID is passed', async () => {
     const placementConfig = {
       placementId: 'pocket_billboard_1',
-      iabContentCategoryIds: ['IAB1'],
     }
     const consoleErrorMock = jest.spyOn(globalThis.console, 'error')
 
@@ -26,7 +25,6 @@ describe('iife/display.ts', () => {
   test('renderPlacement logs an error and fails when an invalid element is passed', async () => {
     const placementConfig = {
       placementId: 'pocket_billboard_1',
-      iabContentCategoryIds: ['IAB1'],
     }
     const consoleErrorMock = jest.spyOn(globalThis.console, 'error')
 
@@ -52,7 +50,6 @@ describe('iife/display.ts', () => {
     const placementElement = document.createElement('div')
     const placementConfig = {
       placementId: 'pocket_billboard_1',
-      iabContentCategoryIds: ['IAB1'],
     }
     const consoleErrorMock = jest.spyOn(globalThis.console, 'error')
     fetchMock.mockRejectOnce(new Error('test-error'))
@@ -69,7 +66,6 @@ describe('iife/display.ts', () => {
     const placementElement = document.createElement('div')
     const placementConfig = {
       placementId: 'pocket_billboard_1',
-      iabContentCategoryIds: ['IAB1'],
     }
     fetchMock.mockResponseOnce(async () => ({
       headers: {
