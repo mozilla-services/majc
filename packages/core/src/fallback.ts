@@ -37,7 +37,7 @@ export function getFallbackAds(placements: MozAdsPlacements): AdResponse {
       case isAdFormat('MediumRectangle', adSize):
         return {
           ...acc,
-          [placementName]: [getFallbackMediumRectancle()],
+          [placementName]: [getFallbackMediumRectangle()],
         }
 
       default:
@@ -68,7 +68,7 @@ export function getFallbackSkyscraper(): ImageAd {
   }
 }
 
-export function getFallbackMediumRectancle(): ImageAd {
+export function getFallbackMediumRectangle(): ImageAd {
   return {
     url: FallbackAdURL['MediumRectangle'],
     format: 'MediumRectangle',
