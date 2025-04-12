@@ -9,7 +9,7 @@
     document.addEventListener('DOMContentLoaded', () => {
       mozAds.renderPlacement(document.getElementById('placement-1'), {
         placementId: 'newtab_tile_1',
-        fixedSize: { width: 200, height: 200 }
+        fixedSize: { width: 64, height: 64 }
       });
       mozAds.renderPlacement('placement-2', {
         placementId: 'mock_pocket_billboard_1',
@@ -22,9 +22,17 @@
       mozAds.renderPlacement('placement-3', {
         placementId: 'mock_pocket_skyscraper_1'
       });
+      mozAds.renderPlacement('placement-4', {
+        placementId: 'mock_pocket_rectangle_1',
+        fixedSize: mozAds.FixedSize.MediumRectagle,
+        iabContent: {
+          taxonomy: 'IAB-1.0',
+          categoryIds: ['IAB8-6', 'IAB9-16', 'IAB9-31']
+        }
+      });
     });
   </script>
-  <title>MARS Ads Preview - MAJC Edition</title>
+  <title>Moz Ads Examples Page, powered by MAJC</title>
   <style>
     .tiles,
     .spocs,
@@ -73,37 +81,17 @@
 </head>
 <body>
   <main role="main">
-    <h1>MARS Ads Preview - MAJC Edition</h1>
+    <h1>Moz Ads Examples Page, powered by MAJC</h1>
 
     <h2>Tiles</h2>
-
-    <!-- This is the templated version of the preview page (from Shepherd Preview)
-      This shows how the DOM should end up for tiles after showAd is done
-        // <a href="{{ tile.url }}" target="_blank" rel="noopener noreferrer">
-        <div class="tile">
-          <div class="tile-outer">
-            <img
-              class="tile-image"
-              src="{{ tile.image_url }}"
-              alt="{{ tile.name }}"
-            />
-          </div>
-          <div class="tile-title">
-            <span>{{ tile.name }}</span>
-            <span class="sponsored-label">{{ tile.sponsored }}</span>
-          </div>
-        </div>
-      </a> -->
 
     <div class="tiles">
       <div id="placement-1"></div>
     </div>
 
-    <h2>SPOCs</h2>
-    <div class="spocs"></div>
-
     <h2>Rectangles</h2>
     <div class="rectangles">
+      <div id="placement-4"></div>
       <div id="placement-2"></div>
       <div id="placement-3"></div>
     </div>

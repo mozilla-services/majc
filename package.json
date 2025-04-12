@@ -34,9 +34,11 @@
   "devDependencies": {
     "@eslint/js": "^9.21.0",
     "@hey-api/openapi-ts": "^0.64.10",
+    "@playwright/test": "^1.51.1",
     "@stylistic/eslint-plugin": "^2.13.0",
     "@testing-library/react": "^16.2.0",
     "@types/jest": "^29.5.14",
+    "@types/node": "^22.14.0",
     "@types/react": "^19.0.10",
     "eslint": "^9.21.0",
     "husky": "^9.1.7",
@@ -59,6 +61,7 @@
     "generate:mars-api": "openapi-ts && cp packages/heyapi/templates/client.gen.ts.template packages/heyapi/src/client.gen.ts && cp packages/heyapi/templates/index.ts.template packages/heyapi/src/index.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "playwright": "npx playwright test",
     "prepare": "husky",
     "test": "NODE_ENV=TEST jest --coverage",
     "update:mars-api": "git clone --depth 1 https://github.com/mozilla-services/mars.git .mars-api-temp && cp .mars-api-temp/openapi/openapi.yml packages/heyapi/mars.yml && npm run clean:mars-api && npm run generate:mars-api"
