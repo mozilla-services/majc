@@ -1,3 +1,4 @@
+import { parse as agentParse } from 'woothee'
 import { LOG_EMIT_FLAG_DEFAULT, LOG_TO_CONSOLE_FLAG_DEFAULT } from './constants'
 import { defaultLogReporter, SeverityLevel } from './instrument'
 import { HttpRequestMethod, LogType, TelemetryEventLabel } from './types'
@@ -106,13 +107,15 @@ export class DefaultLogger implements Logger {
   }
 
   private emitLog(msg: string, severityLevel: SeverityLevel, extras?: LogFields) {
+    const agent = agentParse(globalThis.navigator?.userAgent)
     defaultLogReporter.emitLog(msg, {
       logger: this.name,
       eventLabel: extras?.eventLabel,
       hostname: globalThis.location?.hostname,
       severity: severityLevel,
       type: extras?.type,
-      agent: globalThis.navigator?.userAgent,
+      browser: agent?.name,
+      os: agent?.os,
       lang: globalThis.navigator?.language,
       method: extras?.method,
       placementId: extras?.placementId,
