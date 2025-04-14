@@ -112,7 +112,6 @@ export class DefaultLogger implements Logger {
       hostname: globalThis.location?.hostname,
       severity: severityLevel,
       type: extras?.type,
-      agent: globalThis.navigator?.userAgent,
       lang: globalThis.navigator?.language,
       method: extras?.method,
       placementId: extras?.placementId,

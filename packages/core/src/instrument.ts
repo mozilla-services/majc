@@ -23,7 +23,6 @@ export interface MozLogMessage {
   Severity?: SeverityLevel
   Pid?: number
   Fields?: {
-    agent?: string
     errorId?: string
     method?: HttpRequestMethod
     msg?: string
@@ -42,7 +41,6 @@ export interface LogEmitterOptions {
   envVersion?: string
   severity?: SeverityLevel
   pid?: number
-  agent?: string
   errorId?: string
   method?: HttpRequestMethod
   path?: string
@@ -138,7 +136,6 @@ export class DefaultLogReporter implements LogReporter {
       Severity: opts?.severity,
       Pid: opts?.pid,
       Fields: {
-        agent: opts?.agent,
         errorId: opts?.errorId,
         method: opts?.method,
         msg: msg,

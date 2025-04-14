@@ -18,7 +18,6 @@ const TEST_LOG_OPTIONS_1: LogEmitterOptions = {
   envVersion: '0.0.0',
   severity: SeverityLevel.Error,
   pid: 1,
-  agent: 'testAgentName',
   errorId: 'TestLogError',
   method: 'POST',
   path: '/v1/example/api/call',
@@ -34,7 +33,6 @@ const TEST_LOG_OPTIONS_2: LogEmitterOptions = {
   envVersion: '0.0.0',
   severity: SeverityLevel.Info,
   pid: 1,
-  agent: 'testAgentName',
   errorId: 'TestLogError',
   method: 'POST',
   path: '/v1/example/api/call',
@@ -51,7 +49,6 @@ const EXPECTED_FORMATTED_LOG_1: MozLogMessage = {
   Severity: SeverityLevel.Error,
   Pid: 1,
   Fields: {
-    agent: 'testAgentName',
     errorId: 'TestLogError',
     method: 'POST',
     msg: TEST_LOG_MESSAGE_1,

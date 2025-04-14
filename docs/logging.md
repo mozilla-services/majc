@@ -66,6 +66,7 @@ table {
 
 For our log format, we leverage a slightly modified version of [Firefox's Log Format](https://wiki.mozilla.org/Firefox/Services/Logging). Log formatting is handled automatically, during log emission.
 
+Example:
 ```typescript
 {
   Timestamp: 1519361465000000000,
@@ -76,7 +77,6 @@ For our log format, we leverage a slightly modified version of [Firefox's Log Fo
   Severity: 3, // Error = 3
   Pid: 1,
   Fields: {
-    agent: 'curl/7.43.0',
     errorId: 'ExampleLogError',
     method: 'POST',
     msg: 'the user wanted to do something',
@@ -85,10 +85,6 @@ For our log format, we leverage a slightly modified version of [Firefox's Log Fo
     lang: 'en-us',
   },
 ```
-
-Some unique things worth calling out is that we have explicitly removed the `uid` field as we want to be sure we *do not* save any kind of identifying information about a user in our logs.
-
-We also include an additional `placementId` field which is useful to know if the log was associated with a particular ad placement.
 
 
 ### Emitting Telemetry
