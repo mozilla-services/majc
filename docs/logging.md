@@ -77,8 +77,6 @@ Example:
   Severity: 3, // Error = 3
   Pid: 1,
   Fields: {
-    browser: "Firefox",
-    os: "Mac OSX",
     errorId: 'ExampleLogError',
     method: 'POST',
     msg: 'the user wanted to do something',
