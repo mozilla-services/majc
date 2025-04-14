@@ -7,7 +7,7 @@ const commonBundleConfig: Options = {
   platform: 'browser', // Ensure cross-platform modules import a browser-compatible package
   dts: false,
   minify: true,
-  noExternal: ['uuid', 'woothee'],
+  noExternal: ['uuid'],
 }
 
 const commonTypesConfig: Options = {

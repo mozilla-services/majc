@@ -281,8 +281,6 @@ interface MozLogMessage {
     Severity?: SeverityLevel;
     Pid?: number;
     Fields?: {
-        browser?: string;
-        os?: string;
         errorId?: string;
         method?: HttpRequestMethod;
         msg?: string;
@@ -299,8 +297,6 @@ interface LogEmitterOptions {
     envVersion?: string;
     severity?: SeverityLevel;
     pid?: number;
-    browser?: string;
-    os?: string;
     errorId?: string;
     method?: HttpRequestMethod;
     path?: string;
