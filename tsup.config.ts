@@ -51,9 +51,9 @@ const configs: Options[] = [
   },
 ]
 
-export function prependDirective(directive: string, clientLibs: string[]): NonNullable<Options['plugins']>[number] {
-  if (!Array.isArray(clientLibs)) {
-    throw Error('ClientLibs given to prependDirective plugin must be an array.')
+export function prependDirective(directive: string, filePatterns: string[]): NonNullable<Options['plugins']>[number] {
+  if (!Array.isArray(filePatterns)) {
+    throw Error('FilePatterns given to prependDirective plugin must be an array.')
   }
   return {
     name: 'prepend-directive',
@@ -61,11 +61,11 @@ export function prependDirective(directive: string, clientLibs: string[]): NonNu
 
     buildEnd(ctx) {
       for (const file of ctx.writtenFiles) {
-        for (const clientLibName of clientLibs) {
-          if (file.name.startsWith(clientLibName)) {
+        for (const filePattern of filePatterns) {
+          if (file.name.startsWith(filePattern)) {
             const fileContent = readFileSync(file.name, 'utf8')
             writeFileSync(file.name, `${directive};${fileContent}`)
-            console.log(`Prepended "use client" directive to ${file.name}`)
+            console.log(`Prepended ${directive} directive to ${file.name}`)
           }
         }
       }
