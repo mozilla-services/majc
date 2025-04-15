@@ -1,5 +1,3 @@
-'use client'
-
 import { createContext, useContext, useEffect, useState } from 'react'
 import { fetchAds } from '@core/fetch'
 import { DefaultLogger } from '@core/logger'
