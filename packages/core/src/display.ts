@@ -55,9 +55,10 @@ const styleHtml = `
         transform: rotate(1turn);
       }
     }
-    .moz-ads-placement-link {
+    .moz-ads-placement-link,
+    .moz-ads-placement-link[hidden] {
       all: initial;
-      display: flex;
+      display: flex !important;
       align-items: center;
       justify-content: center;
       position: relative;
@@ -260,7 +261,7 @@ const reportFormHtml = `
     <select class="moz-ads-placement-report-reason-select" aria-label="${l('report_form_title_default')}">
       <option selected disabled>--${l('report_form_select_reason_option_none')}--</option>
       <option value="inappropriate">${l('report_form_select_reason_option_inappropriate')}</option>
-      <option value="seen_multiple_times">${l('report_form_select_reason_option_seen_multiple_times')}</option>
+      <option value="seen_too_many_times">${l('report_form_select_reason_option_seen_too_many_times')}</option>
       <option value="not_interested">${l('report_form_select_reason_option_not_interested')}</option>
     </select>
     <button type="submit" class="moz-ads-placement-button moz-ads-placement-report-submit-button" disabled>${l('report_form_submit_button')}</button>
