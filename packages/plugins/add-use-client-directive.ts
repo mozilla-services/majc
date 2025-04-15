@@ -63,12 +63,15 @@ export function addUseClientDirective(clientLibs?: string[]): NonNullable<Option
     renderChunk: (code, { imports, map, path }) => {
       const relativePath = relative(process.cwd(), path)
 
-      console.log('Look Here:\n')
-      console.log(path)
-      console.log(imports)
-      console.log(relativePath)
-      console.log(trackedImports)
-      console.log('\nEND')
+      console.log('~~~~~~~~~~~~~~~')
+      console.log('Look Here:\n\n')
+      console.log('path: ', path)
+      console.log('imports: ', imports)
+      console.log('map: ', map)
+      console.log('relPath: ', relativePath)
+      console.log('trackedImports: ', trackedImports)
+      console.log('\n\nEND')
+      console.log('~~~~~~~~~~~~~~~')
 
       // Check if the code contains any client libraries or hooks.
       if (containsClientLibsOrHooks(code, clientLibsRegex)) {
