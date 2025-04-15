@@ -1,5 +1,6 @@
-import { M as MozAdsPlacementWithContent, I as IABAdUnitFormatType, a as MozAdsSize, N as NonIABAdUnitFormatType, b as MozAdsRenderPlacementEvent, c as MozAdsRenderPlacementReportEvent, d as MozAdsRenderPlacementErrorEvent, e as MozAdsPlacements, A as AdPlacement, f as AdResponse, H as HttpRequestMethod, L as LogType, T as TelemetryEventLabel } from './types-CO1lAqrl.js';
-export { h as IABContent, g as IABContentTaxonomyType, j as MozAdsContent, i as MozAdsPlacementConfig } from './types-CO1lAqrl.js';
+import { M as MozAdsPlacementWithContent, I as IABAdUnitFormatType, a as MozAdsSize, N as NonIABAdUnitFormatType, b as MozAdsRenderPlacementEvent, c as MozAdsRenderPlacementReportEvent, d as MozAdsRenderPlacementErrorEvent, e as MozAdsPlacements, H as HttpRequestMethod, L as LogType, T as TelemetryEventLabel } from './types-B24rG9Wh.js';
+export { g as IABContent, f as IABContentTaxonomyType, i as MozAdsContent, h as MozAdsPlacementConfig } from './types-B24rG9Wh.js';
+import { A as AdPlacement, a as AdResponse } from './types.gen-D4NshL2B.js';
 
 declare function recordClick(placement: MozAdsPlacementWithContent): Promise<void>;
 
