@@ -86,5 +86,11 @@ export function addUseClientDirective(clientLibs?: string[]): NonNullable<Option
       // Return the original code if no client libraries or hooks were found.
       return { code, map }
     },
+    buildEnd(ctx) {
+      // Maybe need to append in the buildEnd step?
+      for (const file of ctx.writtenFiles) {
+        console.log(file.name)
+      }
+    },
   }
 }
