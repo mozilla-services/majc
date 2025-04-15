@@ -1,6 +1,6 @@
 /* eslint @stylistic/quote-props: ["error", "consistent"] */
 
-import { addUseClientDirective } from './packages/plugins/addUseClientDirective'
+import { addUseClientDirective } from './packages/build/plugins/addUseClientDirective'
 
 import { defineConfig, Options } from 'tsup'
 
