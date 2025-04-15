@@ -11,7 +11,7 @@ export type MozAdsLocalizedStringKey =
   'report_form_close_button_tooltip' |
   'report_form_select_reason_option_none' |
   'report_form_select_reason_option_inappropriate' |
-  'report_form_select_reason_option_seen_multiple_times' |
+  'report_form_select_reason_option_seen_too_many_times' |
   'report_form_select_reason_option_not_interested' |
   'report_form_submit_button' |
   'report_form_title_default' |

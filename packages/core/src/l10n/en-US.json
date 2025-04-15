@@ -7,7 +7,7 @@
   "report_form_title_success": "Thank you for your feedback.",
   "report_form_select_reason_option_none": "Select a reason",
   "report_form_select_reason_option_inappropriate": "Inappropriate",
-  "report_form_select_reason_option_seen_multiple_times": "Seen multiple times",
+  "report_form_select_reason_option_seen_too_many_times": "Seen multiple times",
   "report_form_select_reason_option_not_interested": "Not interested",
   "report_form_submit_button": "Submit"
 }
