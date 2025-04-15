@@ -53,7 +53,7 @@ const configs: Options[] = [
 
 export function prependDirective(directive: string, clientLibs: string[]): NonNullable<Options['plugins']>[number] {
   if (!Array.isArray(clientLibs)) {
-    throw Error('ClientLibs given to addUseClientDirective plugin must be an array.')
+    throw Error('ClientLibs given to prependDirective plugin must be an array.')
   }
   return {
     name: 'prepend-directive',
