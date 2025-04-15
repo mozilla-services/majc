@@ -1,7 +1,6 @@
 /* eslint @stylistic/quote-props: ["error", "consistent"] */
 
 import { readFileSync, writeFileSync } from 'fs'
-
 import { defineConfig, Options } from 'tsup'
 
 const commonBundleConfig: Options = {
