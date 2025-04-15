@@ -1,5 +1,3 @@
-'use client'
-
 import { useLayoutEffect, useRef } from 'react'
 import { recordClick } from '@core/clicks'
 import { renderPlacement } from '@core/display'
