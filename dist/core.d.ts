@@ -1,6 +1,182 @@
-import { M as MozAdsPlacementWithContent, I as IABAdUnitFormatType, a as MozAdsSize, N as NonIABAdUnitFormatType, b as MozAdsRenderPlacementEvent, c as MozAdsRenderPlacementReportEvent, d as MozAdsRenderPlacementErrorEvent, e as MozAdsPlacements, H as HttpRequestMethod, L as LogType, T as TelemetryEventLabel } from './types-B24rG9Wh.js';
-export { g as IABContent, f as IABContentTaxonomyType, i as MozAdsContent, h as MozAdsPlacementConfig } from './types-B24rG9Wh.js';
-import { A as AdPlacement, a as AdResponse } from './types.gen-D4NshL2B.js';
+type AdPlacement = {
+    /**
+     * Specifies the placement location of the ad. Values will be Mozilla supplied and specific to the integration.
+     */
+    placement: string;
+    /**
+     * The number of ads to be placed in the specified location.
+     */
+    count?: number;
+    content?: AdContent;
+};
+type AdContent = {
+    /**
+     * A valid taxonomy identifier recognized by MARS
+     */
+    taxonomy: 'IAB-1.0' | 'IAB-2.0' | 'IAB-2.1' | 'IAB-2.2' | 'IAB-3.0';
+    categories: Array<string>;
+};
+/**
+ * An object containing callback URLs for interactions with an ad.
+ */
+type AdCallbacks = {
+    /**
+     * This URL should be requested with an HTTP GET when the ad is clicked. Response should be ignored.
+     */
+    click: string | null;
+    /**
+     * This URL should be requested with an HTTP GET when half of the ad is visible in the viewport for 1 second. If the ad's pixel size is greater that 242500 (970 * 250) only 30% visibility is required. Response should be ignored.
+     */
+    impression: string | null;
+    /**
+     * This URL may be issued by a client on behalf of a user to report an ad that is inappropriate or otherwise unsatisfying. Response should be ignored. The reason parameter is required with this action.
+     */
+    report?: string | null;
+};
+type AdFormatBase = {
+    /**
+     * The format type of the ad.
+     */
+    format?: string;
+    /**
+     * The target destination URL of the ad.
+     */
+    url?: string;
+    callbacks?: AdCallbacks;
+};
+/**
+ * Client-side enforced frequency capping information.
+ */
+type SpocFrequencyCaps = {
+    /**
+     * A key that identifies the frequency cap.
+     */
+    cap_key?: string;
+    /**
+     * Number of times to show the same ad during a one day period.
+     */
+    day?: number;
+};
+/**
+ * Ranking information for personalized content.
+ */
+type SpocRanking = {
+    /**
+     * The priority in the ranking. Reranking of ads should prefer priority before personalization.
+     */
+    priority?: number;
+    /**
+     * A map of model names to scores for personalization.
+     */
+    personalization_models?: {
+        [key: string]: number;
+    };
+    /**
+     * The overall score for the item.
+     */
+    item_score?: number;
+};
+type ImageAd = AdFormatBase & {
+    /**
+     * URL of the ad image.
+     */
+    image_url?: string;
+    /**
+     * Alt text to describe the ad image.
+     */
+    alt_text?: string;
+    /**
+     * The block key generated for the advertiser.
+     */
+    block_key?: string;
+};
+type Spoc = AdFormatBase & {
+    /**
+     * URL of the ad image.
+     */
+    image_url?: string;
+    /**
+     * Title of the sponsored content.
+     */
+    title?: string;
+    /**
+     * The domain where the content is hosted.
+     */
+    domain?: string;
+    /**
+     * A short excerpt from the sponsored content.
+     */
+    excerpt?: string;
+    /**
+     * The name of the sponsor.
+     */
+    sponsor?: string;
+    /**
+     * An optional override for the sponsor name.
+     */
+    sponsored_by_override?: string | null;
+    /**
+     * The block key generated for the advertiser.
+     */
+    block_key?: string;
+    caps?: SpocFrequencyCaps;
+    ranking?: SpocRanking;
+};
+type UaTile = AdFormatBase & {
+    /**
+     * URL of the ad image.
+     */
+    image_url?: string;
+    /**
+     * The name displayed under the tile.
+     */
+    name?: string;
+    /**
+     * The block key generated for the advertiser.
+     */
+    block_key?: string;
+};
+type AdResponse = {
+    [key: string]: Array<ImageAd | Spoc | UaTile>;
+};
+
+type IABAdUnitFormatType = 'Billboard' | 'SmartphoneBanner300' | 'SmartphoneBanner320' | 'Leaderboard' | 'SuperLeaderboardPushdown' | 'Portrait' | 'Skyscraper' | 'MediumRectangle' | 'TwentyBySixty' | 'MobilePhoneInterstitial640' | 'MobilePhoneInterstitial750' | 'MobilePhoneInterstitial1080' | 'FeaturePhoneSmallBanner' | 'FeaturePhoneMediumBanner' | 'FeaturePhoneLargeBanner';
+type NonIABAdUnitFormatType = 'NewTab';
+type IABContentTaxonomyType = 'IAB-1.0' | 'IAB-2.0' | 'IAB-2.1' | 'IAB-2.2' | 'IAB-3.0';
+interface IABContent {
+    taxonomy: IABContentTaxonomyType;
+    categoryIds: string[];
+}
+type LogType = 'logReporter.init.success' | 'recordClick.clickOccurred' | 'recordClick.success' | 'recordClick.callbackResponseError' | 'recordClick.callbackNotFoundError' | 'renderPlacement.reportCallbackResponseError' | 'renderPlacement.reportCallbackNotFoundError' | 'renderPlacement.reportCallbackInvalid' | 'fetchAds.request.success' | 'fetchAds.request.error' | 'impressionObserver.recordImpression.viewed' | 'impressionObserver.recordImpression.callbackResponseError' | 'impressionObserver.recordImpression.callbackNotFoundError' | 'impressionObserver.observeAd.adNotFoundError' | 'impressionObserver.forceRecordImpression.error' | 'placementComponent.adLoad.success' | 'placementComponent.adLoad.failure' | 'placementComponent.render.error';
+type TelemetryEventLabel = 'init' | 'render_error' | 'ad_load_error' | 'fetch_error' | 'invalid_url_error';
+type HttpRequestMethod = 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'CONNECT' | 'OPTIONS' | 'TRACE' | 'PATCH';
+type MozAdsPlacements = Record<string, MozAdsPlacementConfig | MozAdsPlacementWithContent>;
+interface MozAdsRenderPlacementEvent {
+    placement?: MozAdsPlacementWithContent;
+}
+interface MozAdsRenderPlacementReportEvent extends MozAdsRenderPlacementEvent {
+    reason: string;
+}
+interface MozAdsRenderPlacementErrorEvent extends MozAdsRenderPlacementEvent {
+    error: Error;
+}
+interface MozAdsPlacementConfig {
+    placementId: string;
+    fixedSize?: MozAdsSize;
+    iabContent?: IABContent;
+    onClick?: (event: MozAdsRenderPlacementEvent) => void;
+    onReport?: (event: MozAdsRenderPlacementReportEvent) => void;
+    onError?: (event: MozAdsRenderPlacementErrorEvent) => void;
+    onLoad?: (event: MozAdsRenderPlacementEvent) => void;
+}
+interface MozAdsPlacementWithContent extends MozAdsPlacementConfig {
+    content?: MozAdsContent;
+}
+type MozAdsContent = ImageAd | Spoc | UaTile;
+interface MozAdsSize {
+    width: number;
+    height: number;
+}
 
 declare function recordClick(placement: MozAdsPlacementWithContent): Promise<void>;
 
@@ -213,4 +389,4 @@ declare const setItemInStore: (key: MozAdsStoreKey, value: string, storeType?: S
 declare const removeItemFromStore: (key: MozAdsStoreKey, storeType?: StoreType) => void;
 declare const getOrGenerateContextId: (forceRegenerate?: boolean) => string;
 
-export { CLOSE_ICON_SVG, DEFAULT_IMPRESSION_TIME_THRESHOLD_MS, DEFAULT_IMPRESSION_VIEW_THRESHOLD, DEFAULT_SERVICE_ENDPOINT, DefaultLogReporter, type DefaultLogReporterConfig, DefaultLogger, DefaultMozAdsImpressionObserver, FALLBACK_BILLBOARD_SVG, FALLBACK_DINO_SVG_FRAGMENT, FALLBACK_DONATE_SVG_FRAGMENT, FALLBACK_IMPRESSION_ENDPOINT, FALLBACK_IMPRESSION_TIME_THRESHOLD, FALLBACK_IMPRESSION_VIEW_THRESHOLD, FALLBACK_MRECTANGLE_SVG, FALLBACK_SKYSCRAPER_SVG, FallbackAdURL, FetchAdsError, type FetchAdsParams, FixedSize, HttpRequestMethod, IABAdUnitFormatType, IABFixedSize, IABFixedSizeLookup, INSTRUMENT_ENDPOINT, IS_BROWSER, LOG_EMIT_FLAG_DEFAULT, LOG_TO_CONSOLE_FLAG_DEFAULT, type LogEmitterOptions, type LogFields, type LogReporter, LogType, type Logger, type LoggerConfig, LoggerLevel, type MozAdsImpressionObserver, type MozAdsImpressionTracker, type MozAdsLocalizedStringKey, MozAdsPlacementWithContent, MozAdsPlacements, MozAdsRenderPlacementErrorEvent, MozAdsRenderPlacementEvent, type MozAdsRenderPlacementProps, MozAdsRenderPlacementReportEvent, MozAdsSize, type MozAdsStoreKey, type MozLogMessage, NonIABAdUnitFormatType, NonIABFixedSize, type PlacementImpressionInfo, REPORT_ICON_SVG, SeverityLevel, StoreType, TelemetryEventLabel, buildPlacementsRequest, defaultImpressionObserver, defaultLogReporter, fetchAds, getItemFromStore, getOrGenerateContextId, l, mapResponseToPlacementsWithContent, preloadImage, recordClick, removeItemFromStore, renderPlacement, setItemInStore };
+export { CLOSE_ICON_SVG, DEFAULT_IMPRESSION_TIME_THRESHOLD_MS, DEFAULT_IMPRESSION_VIEW_THRESHOLD, DEFAULT_SERVICE_ENDPOINT, DefaultLogReporter, type DefaultLogReporterConfig, DefaultLogger, DefaultMozAdsImpressionObserver, FALLBACK_BILLBOARD_SVG, FALLBACK_DINO_SVG_FRAGMENT, FALLBACK_DONATE_SVG_FRAGMENT, FALLBACK_IMPRESSION_ENDPOINT, FALLBACK_IMPRESSION_TIME_THRESHOLD, FALLBACK_IMPRESSION_VIEW_THRESHOLD, FALLBACK_MRECTANGLE_SVG, FALLBACK_SKYSCRAPER_SVG, FallbackAdURL, FetchAdsError, type FetchAdsParams, FixedSize, type HttpRequestMethod, type IABAdUnitFormatType, type IABContent, type IABContentTaxonomyType, IABFixedSize, IABFixedSizeLookup, INSTRUMENT_ENDPOINT, IS_BROWSER, LOG_EMIT_FLAG_DEFAULT, LOG_TO_CONSOLE_FLAG_DEFAULT, type LogEmitterOptions, type LogFields, type LogReporter, type LogType, type Logger, type LoggerConfig, LoggerLevel, type MozAdsContent, type MozAdsImpressionObserver, type MozAdsImpressionTracker, type MozAdsLocalizedStringKey, type MozAdsPlacementConfig, type MozAdsPlacementWithContent, type MozAdsPlacements, type MozAdsRenderPlacementErrorEvent, type MozAdsRenderPlacementEvent, type MozAdsRenderPlacementProps, type MozAdsRenderPlacementReportEvent, type MozAdsSize, type MozAdsStoreKey, type MozLogMessage, type NonIABAdUnitFormatType, NonIABFixedSize, type PlacementImpressionInfo, REPORT_ICON_SVG, SeverityLevel, StoreType, type TelemetryEventLabel, buildPlacementsRequest, defaultImpressionObserver, defaultLogReporter, fetchAds, getItemFromStore, getOrGenerateContextId, l, mapResponseToPlacementsWithContent, preloadImage, recordClick, removeItemFromStore, renderPlacement, setItemInStore };

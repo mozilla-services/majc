@@ -31,11 +31,22 @@ const configs: Options[] = [
     ...commonBundleConfig,
   },
   {
-    name: 'build-types',
-    splitting: true,
+    name: 'core-types',
     entry: {
       'core': 'packages/core/src/index.ts',
+    },
+    ...commonTypesConfig,
+  },
+  {
+    name: 'react-types',
+    entry: {
       'react': 'packages/react/src/index.ts',
+    },
+    ...commonTypesConfig,
+  },
+  {
+    name: 'heyapi-types',
+    entry: {
       'heyapi': 'packages/heyapi/src/index.ts',
     },
     ...commonTypesConfig,
