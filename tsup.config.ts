@@ -1,10 +1,13 @@
 /* eslint @stylistic/quote-props: ["error", "consistent"] */
 
+import { addUseClientDirective } from './packages/plugins/add-use-client-directive'
+
 import { defineConfig, Options } from 'tsup'
 
 const commonBundleConfig: Options = {
   target: 'esnext',
   platform: 'browser', // Ensure cross-platform modules import a browser-compatible package
+  splitting: true,
   dts: false,
   minify: true,
   noExternal: ['uuid'],
@@ -17,17 +20,21 @@ const commonTypesConfig: Options = {
 
 const configs: Options[] = [
   {
-    name: 'core',
+    name: 'build',
     entry: {
       'core': 'packages/core/src/index.ts',
+      'react': 'packages/react/src/index.ts',
     },
     format: ['esm', 'cjs'],
+    plugins: [addUseClientDirective(['dist/react'])],
     ...commonBundleConfig,
   },
   {
-    name: 'core-types',
+    name: 'build-types',
     entry: {
       'core': 'packages/core/src/index.ts',
+      'react': 'packages/react/src/index.ts',
+
     },
     ...commonTypesConfig,
   },
@@ -54,22 +61,6 @@ const configs: Options[] = [
     format: ['iife'],
     globalName: 'mozAds',
     ...commonBundleConfig,
-  },
-  {
-    name: 'react',
-    entry: {
-      'react': 'packages/react/src/index.ts',
-    },
-    format: ['esm', 'cjs'],
-    external: ['react'], // Prevent including all of the 'react' package in our own bundle
-    ...commonBundleConfig,
-  },
-  {
-    name: 'react-types',
-    entry: {
-      'react': 'packages/react/src/index.ts',
-    },
-    ...commonTypesConfig,
   },
 ]
 

@@ -1,6 +1,5 @@
-'use client'
-
-import { FixedSize, MozAdsPlacement } from '@mozilla-services/majc/dist/react'
+import { MozAdsPlacement } from '@mozilla-services/majc/dist/react'
+import { FixedSize } from '@mozilla-services/majc/dist/core'
 import SideBar from '../navbar/SideBar'
 import ArticleContent from './ArticleContent'
 import ArticleHeader from './ArticleHeader'
