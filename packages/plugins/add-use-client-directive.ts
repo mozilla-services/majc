@@ -63,11 +63,9 @@ export function addUseClientDirective(clientLibs?: string[]): NonNullable<Option
     renderChunk: (code, { imports, map, path }) => {
       const relativePath = relative(process.cwd(), path)
 
-      // Remove the current path from the tracked imports.
-      trackedImports.delete(relativePath)
-
-      console.log('THIS:\n')
+      console.log('Look Here:\n')
       console.log(path)
+      console.log(imports)
       console.log(relativePath)
       console.log(trackedImports)
       console.log('\nEND')
