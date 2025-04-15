@@ -56,8 +56,8 @@ export function prependDirective(directive: string, clientLibs: string[]): NonNu
     throw Error('ClientLibs given to addUseClientDirective plugin must be an array.')
   }
   return {
-    name: 'add-use-client-directive',
-    // At the end of the build step, directly add the useClientDirective to files with specified pattern
+    name: 'prepend-directive',
+    // At the end of the build step, directly prepend the specified directive to files with specified pattern
 
     buildEnd(ctx) {
       for (const file of ctx.writtenFiles) {
