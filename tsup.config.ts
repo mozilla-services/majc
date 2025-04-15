@@ -32,6 +32,7 @@ const configs: Options[] = [
   },
   {
     name: 'build-types',
+    splitting: true,
     entry: {
       'core': 'packages/core/src/index.ts',
       'react': 'packages/react/src/index.ts',
