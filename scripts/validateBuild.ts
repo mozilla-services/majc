@@ -1,5 +1,5 @@
 import { readFileSync, readdirSync } from 'fs'
-import packageJson from '../../package.json'
+import packageJson from '../package.json'
 
 export interface ExpectedBuildOutput {
   buildDir: string

@@ -1,8 +1,8 @@
 /* eslint @stylistic/quote-props: ["error", "consistent"] */
 
 import { defineConfig, Options } from 'tsup'
-import { prependDirective } from './packages/build/prependDirectivePlugin.ts'
-import { ExpectedBuildOutput, validateBuildFiles, validatePackageExports } from './packages/build/validateBuild.ts'
+import { prependDirective } from './scripts/prependDirectivePlugin.ts'
+import { ExpectedBuildOutput, validateBuildFiles, validatePackageExports } from './scripts/validateBuild.ts'
 
 // Get any environment variables passed to tsup and make them
 // available here.
