@@ -3,12 +3,23 @@
 import { readFileSync, writeFileSync } from 'fs'
 import { defineConfig, Options } from 'tsup'
 
+// Get any environment variables passed to tsup and make them
+// available here.
+const env: Record<string, string> = process.argv.reduce((acc, curr) => {
+  if (curr.startsWith('--env.')) {
+    const [key, value] = curr.substring(6).split('=')
+    acc[key] = value
+  }
+
+  return acc
+}, {})
+
 const commonBundleConfig: Options = {
   target: 'esnext',
   platform: 'browser', // Ensure cross-platform modules import a browser-compatible package
   clean: true,
   dts: false,
-  minify: true,
+  minify: env.NODE_ENV === 'production',
   noExternal: ['uuid'],
 }
 

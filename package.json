@@ -50,11 +50,12 @@
     "typescript-eslint": "^8.25.0"
   },
   "scripts": {
-    "build": "tsup",
+    "build": "tsup --env.NODE_ENV=development",
+    "build:production": "tsup --env.NODE_ENV=production",
     "clean": "rm -rf dist",
     "clean:mars-api": "rm -rf .mars-api-temp && rm -rf packages/heyapi/src",
-    "example:iife": "cd examples/iife && npm install && npm run dev",
-    "example:react": "cd examples/react && npm install && npm run dev",
+    "example:iife": "npm run build && cd examples/iife && npm install && npm run dev",
+    "example:react": "npm run build && cd examples/react && npm install && npm run dev",
     "generate:mars-api": "openapi-ts && cp packages/heyapi/templates/client.gen.ts.template packages/heyapi/src/client.gen.ts && cp packages/heyapi/templates/index.ts.template packages/heyapi/src/index.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
