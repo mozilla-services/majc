@@ -80,7 +80,7 @@ export class DefaultLogReporter implements LogReporter {
     if (config?.limiterOps?.dupLogCountLimit) {
       this.dupLogCountLimit = config.limiterOps.dupLogCountLimit
     }
-    this.emitLog('MAJC instrumentation is alive', {
+    this.emitLog(`MAJC instrumentation is alive in ${process.env.NODE_ENV}`, {
       logger: 'core.instrument',
       eventLabel: 'init',
       type: 'logReporter.init.success',

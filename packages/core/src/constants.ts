@@ -9,7 +9,15 @@ import {
 } from './types'
 
 export const IS_BROWSER = typeof window !== 'undefined'
-export const DEFAULT_SERVICE_ENDPOINT: HTTPSURLString = 'https://ads.allizom.org/'
+export const IS_PRODUCTION = process.env.NODE_ENV === 'production'
+
+export const DEFAULT_SERVICE_ENDPOINT: HTTPSURLString = IS_PRODUCTION
+  ? 'https://ads.mozilla.org/' // production
+  : 'https://ads.allizom.org/' // staging
+export const INSTRUMENT_ENDPOINT: HTTPSURLString = `${DEFAULT_SERVICE_ENDPOINT}v1/log`
+
+export const LOG_TO_CONSOLE_FLAG_DEFAULT = !IS_PRODUCTION
+export const LOG_EMIT_FLAG_DEFAULT = true
 
 // https://www.iab.com/wp-content/uploads/2019/04/IABNewAdPortfolio_LW_FixedSizeSpec.pdf
 export const IABFixedSize: Record<IABAdUnitFormatType, MozAdsSize> = {
@@ -173,8 +181,3 @@ export const DefaultImpressionThreshold: ImpressionThreshold = {
   percent: 0.5,
   duration: 1_000,
 } as const
-
-// Logging & Instrumentation
-export const INSTRUMENT_ENDPOINT: HTTPSURLString = 'https://ads.allizom.org/v1/log'
-export const LOG_TO_CONSOLE_FLAG_DEFAULT = true
-export const LOG_EMIT_FLAG_DEFAULT = true
