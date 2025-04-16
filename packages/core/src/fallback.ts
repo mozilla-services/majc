@@ -1,9 +1,9 @@
 import { AdResponse, ImageAd } from '@heyapi'
-import { IABAdUnitFormatType, MozAdsPlacementConfig, MozAdsPlacements, MozAdsPlacementWithContent } from './types'
-import { FallbackAdURL, IABFixedSizeLookup } from './constants'
+import { AdUnitFormatType, MozAdsPlacementConfig, MozAdsPlacements, MozAdsPlacementWithContent } from './types'
+import { FallbackAdURL, AdUnitFormatTypeLookup } from './constants'
 import { FALLBACK_BILLBOARD_SVG, FALLBACK_MRECTANGLE_SVG, FALLBACK_SKYSCRAPER_SVG } from './images'
 
-const fallbackAdContentLookup: Partial<Record<IABAdUnitFormatType, ImageAd>> = {
+const fallbackAdContentLookup: Partial<Record<AdUnitFormatType, ImageAd>> = {
   Billboard: getFallbackBillboard(),
   Skyscraper: getFallbackSkyscraper(),
   MediumRectangle: getFallbackMediumRectangle(),
@@ -12,27 +12,24 @@ const fallbackAdContentLookup: Partial<Record<IABAdUnitFormatType, ImageAd>> = {
 export function getFallbackAds(placements: MozAdsPlacements): AdResponse {
   const reducer = (acc: AdResponse, placement: [string, MozAdsPlacementConfig | MozAdsPlacementWithContent]): AdResponse => {
     const placementName = placement[0]
-    const adSize = placement[1]?.fixedSize
-
-    if (!adSize) {
-      // If we don't have an adSize specificed, there isn't a reliable way to decide what size backup ad to return... so we return nothing.
-      // This should have the same behavior as if no ad was placed and the space on the page is given back
+    const fixedSize = placement[1]?.fixedSize
+    if (!fixedSize) {
+      // If we don't have a fixedSize specified, there isn't a reliable way to decide what size backup ad to return, so we return nothing.
+      // This should have the same behavior as if no ad was placed and the space on the page is given back.
       return {
         ...acc,
         [placementName]: [{}],
       }
     }
 
-    const adType = IABFixedSizeLookup[`${adSize.width}x${adSize.height}`]
-
+    const adUnitFormatType = AdUnitFormatTypeLookup[`${fixedSize.width}x${fixedSize.height}`]
     return {
       ...acc,
-      [placementName]: [fallbackAdContentLookup[adType] ?? getFallbackSquareDefault()],
+      [placementName]: [fallbackAdContentLookup[adUnitFormatType] ?? getFallbackSquareDefault()],
     }
   }
-  const fallbackAdResponse: AdResponse = Object.entries(placements).reduce(reducer, {})
 
-  return fallbackAdResponse
+  return Object.entries(placements).reduce(reducer, {})
 }
 
 export function getFallbackBillboard(): ImageAd {

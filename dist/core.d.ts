@@ -142,6 +142,13 @@ type AdResponse = {
 
 type IABAdUnitFormatType = 'Billboard' | 'SmartphoneBanner300' | 'SmartphoneBanner320' | 'Leaderboard' | 'SuperLeaderboardPushdown' | 'Portrait' | 'Skyscraper' | 'MediumRectangle' | 'TwentyBySixty' | 'MobilePhoneInterstitial640' | 'MobilePhoneInterstitial750' | 'MobilePhoneInterstitial1080' | 'FeaturePhoneSmallBanner' | 'FeaturePhoneMediumBanner' | 'FeaturePhoneLargeBanner';
 type NonIABAdUnitFormatType = 'NewTab';
+type AdUnitFormatType = IABAdUnitFormatType | NonIABAdUnitFormatType;
+type AdUnitFormatTypeLookupKey = `${number}x${number}`;
+type HTTPSURLString = `https://${string}.${string}`;
+interface ImpressionThreshold {
+    percent: number;
+    duration: number;
+}
 type IABContentTaxonomyType = 'IAB-1.0' | 'IAB-2.0' | 'IAB-2.1' | 'IAB-2.2' | 'IAB-3.0';
 interface IABContent {
     taxonomy: IABContentTaxonomyType;
@@ -181,18 +188,15 @@ interface MozAdsSize {
 declare function recordClick(placement: MozAdsPlacementWithContent): Promise<void>;
 
 declare const IS_BROWSER: boolean;
-declare const DEFAULT_SERVICE_ENDPOINT = "https://ads.allizom.org/";
+declare const DEFAULT_SERVICE_ENDPOINT: HTTPSURLString;
 declare const IABFixedSize: Record<IABAdUnitFormatType, MozAdsSize>;
-declare const IABFixedSizeLookup: Record<`${number}x${number}`, IABAdUnitFormatType>;
 declare const NonIABFixedSize: Record<NonIABAdUnitFormatType, MozAdsSize>;
-declare const FixedSize: Record<IABAdUnitFormatType | NonIABAdUnitFormatType, MozAdsSize>;
-declare const FallbackAdURL: Partial<Record<IABAdUnitFormatType, string>>;
-declare const DEFAULT_IMPRESSION_VIEW_THRESHOLD: Record<string, number>;
-declare const FALLBACK_IMPRESSION_VIEW_THRESHOLD = 0.5;
-declare const DEFAULT_IMPRESSION_TIME_THRESHOLD_MS: Record<string, number>;
-declare const FALLBACK_IMPRESSION_TIME_THRESHOLD = 1000;
-declare const FALLBACK_IMPRESSION_ENDPOINT = "";
-declare const INSTRUMENT_ENDPOINT = "https://ads.allizom.org/v1/log";
+declare const FixedSize: Record<AdUnitFormatType, MozAdsSize>;
+declare const AdUnitFormatTypeLookup: Record<AdUnitFormatTypeLookupKey, AdUnitFormatType>;
+declare const FallbackAdURL: Partial<Record<AdUnitFormatType, HTTPSURLString>>;
+declare const AdUnitFormatImpressionThreshold: Record<AdUnitFormatType, ImpressionThreshold>;
+declare const DefaultImpressionThreshold: ImpressionThreshold;
+declare const INSTRUMENT_ENDPOINT: HTTPSURLString;
 declare const LOG_TO_CONSOLE_FLAG_DEFAULT = true;
 declare const LOG_EMIT_FLAG_DEFAULT = true;
 
@@ -238,7 +242,7 @@ interface PlacementImpressionInfo {
     viewStatus: 'unseen' | 'in-view' | 'viewed';
     viewThreshold: number;
     timeThreshold: number;
-    impressionUrl: string;
+    impressionUrl?: string | null;
     timeout?: ReturnType<typeof setTimeout>;
 }
 interface MozAdsImpressionObserver {
@@ -389,4 +393,4 @@ declare const setItemInStore: (key: MozAdsStoreKey, value: string, storeType?: S
 declare const removeItemFromStore: (key: MozAdsStoreKey, storeType?: StoreType) => void;
 declare const getOrGenerateContextId: (forceRegenerate?: boolean) => string;
 
-export { CLOSE_ICON_SVG, DEFAULT_IMPRESSION_TIME_THRESHOLD_MS, DEFAULT_IMPRESSION_VIEW_THRESHOLD, DEFAULT_SERVICE_ENDPOINT, DefaultLogReporter, type DefaultLogReporterConfig, DefaultLogger, DefaultMozAdsImpressionObserver, FALLBACK_BILLBOARD_SVG, FALLBACK_DINO_SVG_FRAGMENT, FALLBACK_DONATE_SVG_FRAGMENT, FALLBACK_IMPRESSION_ENDPOINT, FALLBACK_IMPRESSION_TIME_THRESHOLD, FALLBACK_IMPRESSION_VIEW_THRESHOLD, FALLBACK_MRECTANGLE_SVG, FALLBACK_SKYSCRAPER_SVG, FallbackAdURL, FetchAdsError, type FetchAdsParams, FixedSize, type HttpRequestMethod, type IABAdUnitFormatType, type IABContent, type IABContentTaxonomyType, IABFixedSize, IABFixedSizeLookup, INSTRUMENT_ENDPOINT, IS_BROWSER, LOG_EMIT_FLAG_DEFAULT, LOG_TO_CONSOLE_FLAG_DEFAULT, type LogEmitterOptions, type LogFields, type LogReporter, type LogType, type Logger, type LoggerConfig, LoggerLevel, type MozAdsContent, type MozAdsImpressionObserver, type MozAdsImpressionTracker, type MozAdsLocalizedStringKey, type MozAdsPlacementConfig, type MozAdsPlacementWithContent, type MozAdsPlacements, type MozAdsRenderPlacementErrorEvent, type MozAdsRenderPlacementEvent, type MozAdsRenderPlacementProps, type MozAdsRenderPlacementReportEvent, type MozAdsSize, type MozAdsStoreKey, type MozLogMessage, type NonIABAdUnitFormatType, NonIABFixedSize, type PlacementImpressionInfo, REPORT_ICON_SVG, SeverityLevel, StoreType, type TelemetryEventLabel, buildPlacementsRequest, defaultImpressionObserver, defaultLogReporter, fetchAds, getItemFromStore, getOrGenerateContextId, l, mapResponseToPlacementsWithContent, preloadImage, recordClick, removeItemFromStore, renderPlacement, setItemInStore };
+export { AdUnitFormatImpressionThreshold, type AdUnitFormatType, AdUnitFormatTypeLookup, type AdUnitFormatTypeLookupKey, CLOSE_ICON_SVG, DEFAULT_SERVICE_ENDPOINT, DefaultImpressionThreshold, DefaultLogReporter, type DefaultLogReporterConfig, DefaultLogger, DefaultMozAdsImpressionObserver, FALLBACK_BILLBOARD_SVG, FALLBACK_DINO_SVG_FRAGMENT, FALLBACK_DONATE_SVG_FRAGMENT, FALLBACK_MRECTANGLE_SVG, FALLBACK_SKYSCRAPER_SVG, FallbackAdURL, FetchAdsError, type FetchAdsParams, FixedSize, type HTTPSURLString, type HttpRequestMethod, type IABAdUnitFormatType, type IABContent, type IABContentTaxonomyType, IABFixedSize, INSTRUMENT_ENDPOINT, IS_BROWSER, type ImpressionThreshold, LOG_EMIT_FLAG_DEFAULT, LOG_TO_CONSOLE_FLAG_DEFAULT, type LogEmitterOptions, type LogFields, type LogReporter, type LogType, type Logger, type LoggerConfig, LoggerLevel, type MozAdsContent, type MozAdsImpressionObserver, type MozAdsImpressionTracker, type MozAdsLocalizedStringKey, type MozAdsPlacementConfig, type MozAdsPlacementWithContent, type MozAdsPlacements, type MozAdsRenderPlacementErrorEvent, type MozAdsRenderPlacementEvent, type MozAdsRenderPlacementProps, type MozAdsRenderPlacementReportEvent, type MozAdsSize, type MozAdsStoreKey, type MozLogMessage, type NonIABAdUnitFormatType, NonIABFixedSize, type PlacementImpressionInfo, REPORT_ICON_SVG, SeverityLevel, StoreType, type TelemetryEventLabel, buildPlacementsRequest, defaultImpressionObserver, defaultLogReporter, fetchAds, getItemFromStore, getOrGenerateContextId, l, mapResponseToPlacementsWithContent, preloadImage, recordClick, removeItemFromStore, renderPlacement, setItemInStore };
