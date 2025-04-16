@@ -6,14 +6,14 @@ export interface ExpectedBuildOutput {
   clientOnlyModules: string[]
 }
 
-export function validateBuildFiles(expectedBuildOutput: ExpectedBuildOutput) {
-  function validateClientOnlyBuildFile(filePath: string) {
-    const fileContent = readFileSync(filePath, 'utf8')
-    if (!fileContent.startsWith('"use client"')) {
-      throw Error(`"Client-only" build module ${filePath} does not start with "use client" directive.`)
-    }
+function validateClientOnlyBuildFile(filePath: string) {
+  const fileContent = readFileSync(filePath, 'utf8')
+  if (!fileContent.startsWith('"use client"')) {
+    throw Error(`"Client-only" build module ${filePath} does not start with "use client" directive.`)
   }
+}
 
+export function validateBuildFiles(expectedBuildOutput: ExpectedBuildOutput) {
   const files = readdirSync(expectedBuildOutput.buildDir)
   const filesSet = new Set()
   for (const file of files) {

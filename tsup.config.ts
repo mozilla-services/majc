@@ -76,7 +76,7 @@ const configs: Options[] = [
 
 export default defineConfig(configs)
 
-process.on('exit', (code) => {
+process.on('beforeExit', (code) => {
   if (code !== 0) {
     process.exit(code)
   }
