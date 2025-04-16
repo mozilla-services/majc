@@ -1,7 +1,8 @@
 /* eslint @stylistic/quote-props: ["error", "consistent"] */
 
-import { readFileSync, writeFileSync } from 'fs'
 import { defineConfig, Options } from 'tsup'
+import { prependDirective } from './packages/build/prependDirectivePlugin.ts'
+import { ExpectedBuildOutput, validateBuildFiles } from './packages/build/validateBuild.ts'
 
 // Get any environment variables passed to tsup and make them
 // available here.
@@ -75,36 +76,11 @@ const configs: Options[] = [
 
 export default defineConfig(configs)
 
-export function prependDirective(directive: string, filePatterns: string[]): NonNullable<Options['plugins']>[number] {
-  if (!Array.isArray(filePatterns)) {
-    throw Error('FilePatterns given to prependDirective plugin must be an array.')
-  }
-  return {
-    name: 'prepend-directive',
-    // At the end of the build step, directly prepend the specified directive to files with specified pattern
-
-    buildEnd(ctx) {
-      for (const file of ctx.writtenFiles) {
-        for (const filePattern of filePatterns) {
-          if (file.name.startsWith(filePattern)) {
-            const fileContent = readFileSync(file.name, 'utf8')
-            writeFileSync(file.name, `${directive};${fileContent}`)
-            console.log(`Prepended ${directive} directive to ${file.name}`)
-          }
-        }
-      }
-    },
-  }
-}
-
-export function validateBuildFiles() {
-
-}
-
-process.on('beforeExit', (code) => {
+process.on('exit', (code) => {
   if (code !== 0) {
-    throw Error(`Build failed with non-zero exit code: ${code}`)
+    process.exit(code)
   }
   console.log('[POST-BUILD] Validating build files...')
-  validateBuildFiles()
+  validateBuildFiles(expectedBuildOutput)
+  console.log('[POST-BUILD] Validation successful! Build complete.')
 })
