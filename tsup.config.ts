@@ -5,7 +5,9 @@ import { prependDirective } from './packages/build/prependDirectivePlugin.ts'
 import { ExpectedBuildOutput, validateBuildFiles } from './packages/build/validateBuild.ts'
 
 const expectedBuildOutput: ExpectedBuildOutput = {
+  // Output directory for build files. dist/ is the default for tsup.
   buildDir: 'dist/',
+  // All modules we expect to have. Do not include chunks here as their hash can change.
   files: [
     'core.d.ts',
     'core.js',
@@ -18,6 +20,7 @@ const expectedBuildOutput: ExpectedBuildOutput = {
     'react.js',
     'react.mjs',
   ],
+  // Modules which we expect to have the "client only" directive.
   clientOnlyModules: [
     'react.js',
     'react.mjs',
