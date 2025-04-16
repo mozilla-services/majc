@@ -5,6 +5,7 @@ export default {
     'packages/core/src/**/*.{js,jsx,ts,tsx}',
     'packages/iife/src/**/*.{js,jsx,ts,tsx}',
     'packages/react/src/**/*.{js,jsx,ts,tsx}',
+    'scripts/**/*.{js,jsx,ts,tsx}',
   ],
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'lcov', 'text-summary'],
