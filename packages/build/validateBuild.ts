@@ -1,4 +1,5 @@
 import { readFileSync, readdirSync } from 'fs'
+import packageJson from '../../package.json'
 
 export interface ExpectedBuildOutput {
   buildDir: string
@@ -26,5 +27,11 @@ export function validateBuildFiles(expectedBuildOutput: ExpectedBuildOutput) {
     if (!filesSet.has(requiredFile)) {
       throw Error(`Expected module ${requiredFile} not found in build directory ${expectedBuildOutput.buildDir}`)
     }
+  }
+}
+
+export function validatePackageExports(expectedBuildOutput: ExpectedBuildOutput) {
+  if (!packageJson.files.includes(expectedBuildOutput.buildDir)) {
+    throw Error(`package.json does not included the expected build output directory: ${expectedBuildOutput.buildDir} in "files"`)
   }
 }
