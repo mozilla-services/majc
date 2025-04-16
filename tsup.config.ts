@@ -73,6 +73,8 @@ const configs: Options[] = [
   },
 ]
 
+export default defineConfig(configs)
+
 export function prependDirective(directive: string, filePatterns: string[]): NonNullable<Options['plugins']>[number] {
   if (!Array.isArray(filePatterns)) {
     throw Error('FilePatterns given to prependDirective plugin must be an array.')
@@ -95,4 +97,14 @@ export function prependDirective(directive: string, filePatterns: string[]): Non
   }
 }
 
-export default defineConfig(configs)
+export function validateBuildFiles() {
+
+}
+
+process.on('beforeExit', (code) => {
+  if (code !== 0) {
+    throw Error(`Build failed with non-zero exit code: ${code}`)
+  }
+  console.log('[POST-BUILD] Validating build files...')
+  validateBuildFiles()
+})
