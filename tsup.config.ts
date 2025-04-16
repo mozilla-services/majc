@@ -2,7 +2,7 @@
 
 import { defineConfig, Options } from 'tsup'
 import { prependDirective } from './packages/build/prependDirectivePlugin.ts'
-import { ExpectedBuildOutput, validateBuildFiles } from './packages/build/validateBuild.ts'
+import { ExpectedBuildOutput, validateBuildFiles, validatePackageExports } from './packages/build/validateBuild.ts'
 
 const expectedBuildOutput: ExpectedBuildOutput = {
   // Output directory for build files. dist/ is the default for tsup.
@@ -94,5 +94,6 @@ process.on('beforeExit', (code) => {
   }
   console.log('[POST-BUILD] Validating build files...')
   validateBuildFiles(expectedBuildOutput)
+  validatePackageExports(expectedBuildOutput)
   console.log('[POST-BUILD] Validation successful! Build complete.')
 })
