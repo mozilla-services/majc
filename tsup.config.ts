@@ -3,6 +3,27 @@
 import { readFileSync, writeFileSync } from 'fs'
 import { defineConfig, Options } from 'tsup'
 
+const expectedBuildOutput = {
+  buildDir: 'dist/',
+  files: [
+    'core.d.ts',
+    'core.js',
+    'core.mjs',
+    'heyapi.d.ts',
+    'heyapi.js',
+    'heyapi.mjs',
+    'iife.global.js',
+    'react.d.ts',
+    'react.js',
+    'react.mjs',
+  ],
+  clientOnlyModules: [
+    'react.js',
+    'react.mjs',
+  ],
+
+}
+
 const commonBundleConfig: Options = {
   target: 'esnext',
   platform: 'browser', // Ensure cross-platform modules import a browser-compatible package
@@ -62,6 +83,8 @@ const configs: Options[] = [
   },
 ]
 
+export default defineConfig(configs)
+
 export function prependDirective(directive: string, filePatterns: string[]): NonNullable<Options['plugins']>[number] {
   if (!Array.isArray(filePatterns)) {
     throw Error('FilePatterns given to prependDirective plugin must be an array.')
@@ -84,4 +107,14 @@ export function prependDirective(directive: string, filePatterns: string[]): Non
   }
 }
 
-export default defineConfig(configs)
+export function validateBuildFiles() {
+
+}
+
+process.on('beforeExit', (code) => {
+  if (code !== 0) {
+    throw Error(`Build failed with non-zero exit code: ${code}`)
+  }
+  console.log('[POST-BUILD] Validating build files...')
+  validateBuildFiles()
+})
