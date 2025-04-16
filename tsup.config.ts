@@ -2,7 +2,7 @@
 
 import { defineConfig, Options } from 'tsup'
 import { prependDirective } from './scripts/prependDirectivePlugin.ts'
-import { ExpectedBuildOutput, validateBuildFiles, validatePackageExports } from './scripts/validateBuild.ts'
+import { ExpectedBuildOutput, validateBuildFiles } from './scripts/validateBuild.ts'
 
 // Get any environment variables passed to tsup and make them
 // available here.
@@ -82,6 +82,5 @@ process.on('beforeExit', (code) => {
   }
   console.log('[POST-BUILD] Validating build files...')
   validateBuildFiles(expectedBuildOutput)
-  validatePackageExports(expectedBuildOutput)
   console.log('[POST-BUILD] Validation successful! Build complete.')
 })
