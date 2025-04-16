@@ -21,6 +21,18 @@ export type IABAdUnitFormatType =
 export type NonIABAdUnitFormatType =
   'NewTab'
 
+export type AdUnitFormatType = IABAdUnitFormatType | NonIABAdUnitFormatType
+
+// Lookup key in the format `${width}x${height}`
+export type AdUnitFormatTypeLookupKey = `${number}x${number}`
+
+export type HTTPSURLString = `https://${string}.${string}`
+
+export interface ImpressionThreshold {
+  percent: number
+  duration: number
+}
+
 export type IABContentTaxonomyType =
   'IAB-1.0' |
   'IAB-2.0' |

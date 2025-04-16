@@ -1,9 +1,7 @@
 import {
-  DEFAULT_IMPRESSION_VIEW_THRESHOLD,
-  DEFAULT_IMPRESSION_TIME_THRESHOLD_MS,
-  FALLBACK_IMPRESSION_VIEW_THRESHOLD,
-  FALLBACK_IMPRESSION_TIME_THRESHOLD,
-  FALLBACK_IMPRESSION_ENDPOINT,
+  AdUnitFormatTypeLookup,
+  AdUnitFormatImpressionThreshold,
+  DefaultImpressionThreshold,
 } from './constants'
 import { DefaultLogger } from './logger'
 import { MozAdsPlacementWithContent } from './types'
@@ -16,7 +14,7 @@ export interface PlacementImpressionInfo {
   viewStatus: 'unseen' | 'in-view' | 'viewed'
   viewThreshold: number
   timeThreshold: number
-  impressionUrl: string
+  impressionUrl?: string | null
   timeout?: ReturnType<typeof setTimeout>
 }
 
@@ -104,27 +102,31 @@ export class DefaultMozAdsImpressionObserver implements MozAdsImpressionObserver
 
   public observe(placement: MozAdsPlacementWithContent) {
     const placementId = placement.placementId
-    this.impressionTracker[placementId] = {
-      viewStatus: 'unseen',
-      viewThreshold: DEFAULT_IMPRESSION_VIEW_THRESHOLD[placementId] ?? FALLBACK_IMPRESSION_VIEW_THRESHOLD,
-      timeThreshold: DEFAULT_IMPRESSION_TIME_THRESHOLD_MS[placementId] ?? FALLBACK_IMPRESSION_TIME_THRESHOLD,
-      impressionUrl: placement.content?.callbacks?.impression ?? FALLBACK_IMPRESSION_ENDPOINT,
-    }
-    const placementElement = document.querySelector(`.moz-ads-placement-img[data-placement-id="${placementId}"]`)
-    if (!placementElement) {
+    const placementImage = document.querySelector<HTMLImageElement>(`.moz-ads-placement-img[data-placement-id="${placementId}"]`)
+    if (!placementImage) {
       logger.warn(`Could not find element with ID: ${placementId} while attempting to observe ad`, {
         type: 'impressionObserver.observeAd.adNotFoundError',
         placementId: placementId,
       })
       return
     }
-    this.intersectionObserver?.observe(placementElement)
+
+    const adUnitFormatType = AdUnitFormatTypeLookup[`${placementImage.width}x${placementImage.height}`]
+    const threshold = AdUnitFormatImpressionThreshold[adUnitFormatType]
+    this.impressionTracker[placementId] = {
+      viewStatus: 'unseen',
+      viewThreshold: threshold?.percent ?? DefaultImpressionThreshold.percent,
+      timeThreshold: threshold?.duration ?? DefaultImpressionThreshold.duration,
+      impressionUrl: placement.content?.callbacks?.impression,
+    }
+
+    this.intersectionObserver?.observe(placementImage)
   }
 
   public unobserve(placementId: string) {
-    const placementElement = document.querySelector(`.moz-ads-placement-img[data-placement-id="${placementId}"]`)
-    if (placementElement) {
-      this.intersectionObserver?.unobserve(placementElement)
+    const placementImage = document.querySelector<HTMLImageElement>(`.moz-ads-placement-img[data-placement-id="${placementId}"]`)
+    if (placementImage) {
+      this.intersectionObserver?.unobserve(placementImage)
     }
   }
 

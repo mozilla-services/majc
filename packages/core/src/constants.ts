@@ -1,7 +1,15 @@
-import { IABAdUnitFormatType, MozAdsSize, NonIABAdUnitFormatType } from './types'
+import {
+  AdUnitFormatType,
+  AdUnitFormatTypeLookupKey,
+  HTTPSURLString,
+  IABAdUnitFormatType,
+  ImpressionThreshold,
+  MozAdsSize,
+  NonIABAdUnitFormatType,
+} from './types'
 
 export const IS_BROWSER = typeof window !== 'undefined'
-export const DEFAULT_SERVICE_ENDPOINT = 'https://ads.allizom.org/'
+export const DEFAULT_SERVICE_ENDPOINT: HTTPSURLString = 'https://ads.allizom.org/'
 
 // https://www.iab.com/wp-content/uploads/2019/04/IABNewAdPortfolio_LW_FixedSizeSpec.pdf
 export const IABFixedSize: Record<IABAdUnitFormatType, MozAdsSize> = {
@@ -67,15 +75,6 @@ export const IABFixedSize: Record<IABAdUnitFormatType, MozAdsSize> = {
   },
 } as const
 
-// Given an ad format, this allows us to go from a '${width}x${height}' to an IABAdUnitFormatType
-export const IABFixedSizeLookup: Record<`${number}x${number}`, IABAdUnitFormatType> = Object.entries(IABFixedSize).reduce(
-  (acc: typeof IABFixedSizeLookup, curr) => {
-    const formatName = curr[0] as IABAdUnitFormatType
-    acc[`${curr[1].width}x${curr[1].height}`] = formatName
-
-    return acc
-  }, {})
-
 export const NonIABFixedSize: Record<NonIABAdUnitFormatType, MozAdsSize> = {
   NewTab: {
     width: 200,
@@ -83,39 +82,99 @@ export const NonIABFixedSize: Record<NonIABAdUnitFormatType, MozAdsSize> = {
   },
 } as const
 
-export const FixedSize: Record<IABAdUnitFormatType | NonIABAdUnitFormatType, MozAdsSize> = {
+export const FixedSize: Record<AdUnitFormatType, MozAdsSize> = {
   ...IABFixedSize,
   ...NonIABFixedSize,
 } as const
 
-export const FallbackAdURL: Partial<Record<IABAdUnitFormatType, string>> = {
+// Create a mapping object to find an AdUnitFormatType from a AdUnitFormatTypeLookupKey
+export const AdUnitFormatTypeLookup: Record<AdUnitFormatTypeLookupKey, AdUnitFormatType> = Object.entries(FixedSize).reduce(
+  (acc: typeof AdUnitFormatTypeLookup, curr) => {
+    const formatName = curr[0] as AdUnitFormatType
+    acc[`${curr[1].width}x${curr[1].height}`] = formatName
+
+    return acc
+  }, {})
+
+export const FallbackAdURL: Partial<Record<AdUnitFormatType, HTTPSURLString>> = {
   Billboard: 'https://foundation.mozilla.org/?form=Donate_New_Tab&utm_source=newtab&utm_medium=firefox-desktop&utm_campaign=25-fund-nta&utm_content=Billboard-1940x500&utm_term=en',
   Skyscraper: 'https://foundation.mozilla.org/?form=Donate_New_Tab&utm_source=newtab&utm_medium=firefox-desktop&utm_campaign=25-fund-nta&utm_content=Skyscraper-120x600&utm_term=en',
   MediumRectangle: 'https://foundation.mozilla.org/?form=Donate_New_Tab&utm_source=newtab&utm_medium=firefox-desktop&utm_campaign=25-fund-nta&utm_content=MREC-300x250&utm_term=en',
 } as const
 
-// Impression Settings
-export const DEFAULT_IMPRESSION_VIEW_THRESHOLD: Record<string, number> = {
-  pocket_billboard: 0.3,
-  pocket_billboard_1: 0.3,
-  pocket_billboard_2: 0.3,
-  pocket_skyscraper: 0.5,
-  pocket_skyscraper_1: 0.5,
-  pocket_skyscraper_2: 0.5,
-}
-export const FALLBACK_IMPRESSION_VIEW_THRESHOLD = 0.5
-export const DEFAULT_IMPRESSION_TIME_THRESHOLD_MS: Record<string, number> = {
-  pocket_billboard: 1_000,
-  pocket_billboard_1: 1_000,
-  pocket_billboard_2: 1_000,
-  pocket_skyscraper: 1_000,
-  pocket_skyscraper_1: 1_000,
-  pocket_skyscraper_2: 1_000,
-}
-export const FALLBACK_IMPRESSION_TIME_THRESHOLD = 1_000
-export const FALLBACK_IMPRESSION_ENDPOINT = ''
+export const AdUnitFormatImpressionThreshold: Record<AdUnitFormatType, ImpressionThreshold> = {
+  Billboard: {
+    percent: 0.3,
+    duration: 1_000,
+  },
+  SmartphoneBanner300: {
+    percent: 0.5,
+    duration: 1_000,
+  },
+  SmartphoneBanner320: {
+    percent: 0.5,
+    duration: 1_000,
+  },
+  Leaderboard: {
+    percent: 0.5,
+    duration: 1_000,
+  },
+  SuperLeaderboardPushdown: {
+    percent: 0.5,
+    duration: 1_000,
+  },
+  Portrait: {
+    percent: 0.5,
+    duration: 1_000,
+  },
+  Skyscraper: {
+    percent: 0.5,
+    duration: 1_000,
+  },
+  MediumRectangle: {
+    percent: 0.5,
+    duration: 1_000,
+  },
+  TwentyBySixty: {
+    percent: 0.5,
+    duration: 1_000,
+  },
+  MobilePhoneInterstitial640: {
+    percent: 0.5,
+    duration: 1_000,
+  },
+  MobilePhoneInterstitial750: {
+    percent: 0.5,
+    duration: 1_000,
+  },
+  MobilePhoneInterstitial1080: {
+    percent: 0.5,
+    duration: 1_000,
+  },
+  FeaturePhoneSmallBanner: {
+    percent: 0.5,
+    duration: 1_000,
+  },
+  FeaturePhoneMediumBanner: {
+    percent: 0.5,
+    duration: 1_000,
+  },
+  FeaturePhoneLargeBanner: {
+    percent: 0.5,
+    duration: 1_000,
+  },
+  NewTab: {
+    percent: 0.5,
+    duration: 1_000,
+  },
+} as const
+
+export const DefaultImpressionThreshold: ImpressionThreshold = {
+  percent: 0.5,
+  duration: 1_000,
+} as const
 
 // Logging & Instrumentation
-export const INSTRUMENT_ENDPOINT = 'https://ads.allizom.org/v1/log'
+export const INSTRUMENT_ENDPOINT: HTTPSURLString = 'https://ads.allizom.org/v1/log'
 export const LOG_TO_CONSOLE_FLAG_DEFAULT = true
 export const LOG_EMIT_FLAG_DEFAULT = true
