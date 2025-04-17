@@ -1,9 +1,9 @@
 import { client, getAds, AdPlacement, AdResponse } from '@heyapi'
-import { AdUnitFormatTypeLookup, DEFAULT_SERVICE_ENDPOINT } from './constants'
+import { DEFAULT_SERVICE_ENDPOINT } from './constants'
 import { DefaultLogger } from './logger'
 import { getOrGenerateContextId } from './store'
 import { MozAdsPlacements, MozAdsPlacementWithContent } from './types'
-import { fallbackAdContentLookup, getFallbackAds, getFallbackSquareDefault } from './fallback'
+import { getFallbackAd, getFallbackAds } from './fallback'
 
 const logger = new DefaultLogger({ name: 'core.fetch' })
 
@@ -139,14 +139,7 @@ export function mapResponseToPlacementsWithContent(response: AdResponse, placeme
     const contentFromServer = response[placementId]?.[0]
     if (!contentFromServer) {
       // If an ad placement is missing from the response, we fill that slot if a single fallback if able
-
-      if (!placementWithContent.fixedSize) {
-        // Without a fixedSize, we cannot fallback to anything, so we give it an empty object to let future steps know loading is complete.
-        placementWithContent.content = {}
-        continue
-      }
-      const fallbackContentType = AdUnitFormatTypeLookup[`${placementWithContent?.fixedSize.width}x${placementWithContent?.fixedSize.height}`]
-      const fallbackContent = fallbackAdContentLookup[fallbackContentType] ?? getFallbackSquareDefault()
+      const fallbackContent = getFallbackAd(placementWithContent)
       placementWithContent.content = fallbackContent
       continue
     }
