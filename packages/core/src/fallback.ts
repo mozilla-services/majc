@@ -40,7 +40,6 @@ export function getFallbackAds(placements: MozAdsPlacements): AdResponse {
 export function getFallbackBillboard(): ImageAd {
   return {
     url: FallbackAdURL['Billboard'],
-    format: 'Billboard',
     image_url: getSvgUri(FALLBACK_BILLBOARD_SVG),
   }
 }
@@ -48,7 +47,6 @@ export function getFallbackBillboard(): ImageAd {
 export function getFallbackSkyscraper(): ImageAd {
   return {
     url: FallbackAdURL['Skyscraper'],
-    format: 'Skyscraper',
     image_url: getSvgUri(FALLBACK_SKYSCRAPER_SVG),
   }
 }
@@ -56,7 +54,6 @@ export function getFallbackSkyscraper(): ImageAd {
 export function getFallbackMediumRectangle(): ImageAd {
   return {
     url: FallbackAdURL['MediumRectangle'],
-    format: 'MediumRectangle',
     image_url: getSvgUri(FALLBACK_MRECTANGLE_SVG),
   }
 }
