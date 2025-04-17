@@ -139,8 +139,7 @@ export function mapResponseToPlacementsWithContent(response: AdResponse, placeme
     const contentFromServer = response[placementId]?.[0]
     if (!contentFromServer) {
       // If an ad placement is missing from the response, we fill that slot if a single fallback if able
-      const fallbackContent = getFallbackAd(placementWithContent)
-      placementWithContent.content = fallbackContent
+      placementWithContent.content = getFallbackAd(placementWithContent)
       continue
     }
     placementWithContent.content = contentFromServer
