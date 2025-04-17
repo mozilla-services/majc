@@ -1,9 +1,9 @@
 import { client, getAds, AdPlacement, AdResponse } from '@heyapi'
-import { DEFAULT_SERVICE_ENDPOINT } from './constants'
+import { AdUnitFormatTypeLookup, DEFAULT_SERVICE_ENDPOINT } from './constants'
 import { DefaultLogger } from './logger'
 import { getOrGenerateContextId } from './store'
 import { MozAdsPlacements, MozAdsPlacementWithContent } from './types'
-import { getFallbackAds } from './fallback'
+import { fallbackAdContentLookup, getFallbackAds, getFallbackSquareDefault } from './fallback'
 
 const logger = new DefaultLogger({ name: 'core.fetch' })
 
@@ -76,6 +76,7 @@ export const fetchAds = async ({
           type: 'fetchAds.request.success',
           method: 'POST',
         })
+        console.log('here', mapResponseToPlacementsWithContent(response, pendingPlacements))
 
         resolve(mapResponseToPlacementsWithContent(response, pendingPlacements))
       }
@@ -136,7 +137,21 @@ export function buildPlacementsRequest(placements: MozAdsPlacements): AdPlacemen
 export function mapResponseToPlacementsWithContent(response: AdResponse, placements: MozAdsPlacements): MozAdsPlacements {
   for (const placementWithContent of Object.values<MozAdsPlacementWithContent>(placements)) {
     const placementId = placementWithContent.placementId
-    placementWithContent.content = response[placementId]?.[0]
+    const contentFromServer = response[placementId]?.[0]
+    if (!contentFromServer) {
+      // If a single ad placement is missing from the response, we fill that slot if a single fallback if able
+
+      if (!placementWithContent.fixedSize) {
+        // Without a fixedSize, we cannot fallback to anything
+        placementWithContent.content = {}
+        continue
+      }
+      const fallbackContentType = AdUnitFormatTypeLookup[`${placementWithContent?.fixedSize.width}x${placementWithContent?.fixedSize.height}`]
+      const fallbackContent = fallbackAdContentLookup[fallbackContentType] ?? getFallbackSquareDefault()
+      placementWithContent.content = fallbackContent
+      continue
+    }
+    placementWithContent.content = contentFromServer
   }
   return placements
 }
