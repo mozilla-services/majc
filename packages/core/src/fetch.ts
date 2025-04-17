@@ -3,7 +3,7 @@ import { DEFAULT_SERVICE_ENDPOINT } from './constants'
 import { DefaultLogger } from './logger'
 import { getOrGenerateContextId } from './store'
 import { MozAdsPlacements, MozAdsPlacementWithContent } from './types'
-import { getFallbackAds } from './fallback'
+import { getFallbackAd, getFallbackAds } from './fallback'
 
 const logger = new DefaultLogger({ name: 'core.fetch' })
 
@@ -72,7 +72,7 @@ export const fetchAds = async ({
           throw fetchAdsError
         }
 
-        logger.info(`Succesfully fetched ads with request: ${JSON.stringify(request)}`, {
+        logger.info(`Successfully fetched ads with request: ${JSON.stringify(request)}`, {
           type: 'fetchAds.request.success',
           method: 'POST',
         })
@@ -131,12 +131,18 @@ export function buildPlacementsRequest(placements: MozAdsPlacements): AdPlacemen
 /**
  * Maps the ad content from the UAPI response to corresponding placement IDs of given configs.
  *
- * Note: This function makes no guarantee that all given placement IDs will have defined `adContent`.
+ * Note: This function will attempt to use fallback ads where possible if not all content is mapped.
  */
 export function mapResponseToPlacementsWithContent(response: AdResponse, placements: MozAdsPlacements): MozAdsPlacements {
   for (const placementWithContent of Object.values<MozAdsPlacementWithContent>(placements)) {
     const placementId = placementWithContent.placementId
-    placementWithContent.content = response[placementId]?.[0]
+    const contentFromServer = response[placementId]?.[0]
+    if (!contentFromServer) {
+      // If an ad placement is missing from the response, we fill that slot if a single fallback if able
+      placementWithContent.content = getFallbackAd(placementWithContent)
+      continue
+    }
+    placementWithContent.content = contentFromServer
   }
   return placements
 }

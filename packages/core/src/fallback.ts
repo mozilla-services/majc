@@ -9,23 +9,28 @@ const fallbackAdContentLookup: Partial<Record<AdUnitFormatType, ImageAd>> = {
   MediumRectangle: getFallbackMediumRectangle(),
 }
 
+export function getFallbackAd(placement: MozAdsPlacementConfig | MozAdsPlacementWithContent): ImageAd {
+  const fixedSize = placement?.fixedSize
+  if (!fixedSize) {
+    // If we don't have a fixedSize specified, there isn't a reliable way to decide what size backup ad to return, so we return nothing.
+    // This should have the same behavior as if no ad was placed and the space on the page is given back.
+    return {}
+  }
+
+  const adUnitFormatType = AdUnitFormatTypeLookup[`${fixedSize.width}x${fixedSize.height}`]
+  return fallbackAdContentLookup[adUnitFormatType] ?? getFallbackSquareDefault()
+}
+
 export function getFallbackAds(placements: MozAdsPlacements): AdResponse {
   const reducer = (acc: AdResponse, placement: [string, MozAdsPlacementConfig | MozAdsPlacementWithContent]): AdResponse => {
     const placementName = placement[0]
-    const fixedSize = placement[1]?.fixedSize
-    if (!fixedSize) {
-      // If we don't have a fixedSize specified, there isn't a reliable way to decide what size backup ad to return, so we return nothing.
-      // This should have the same behavior as if no ad was placed and the space on the page is given back.
-      return {
-        ...acc,
-        [placementName]: [{}],
-      }
-    }
+    const placementWithContent = placement[1]
 
-    const adUnitFormatType = AdUnitFormatTypeLookup[`${fixedSize.width}x${fixedSize.height}`]
+    const adContent = getFallbackAd(placementWithContent)
+
     return {
       ...acc,
-      [placementName]: [fallbackAdContentLookup[adUnitFormatType] ?? getFallbackSquareDefault()],
+      [placementName]: [adContent],
     }
   }
 
@@ -35,7 +40,6 @@ export function getFallbackAds(placements: MozAdsPlacements): AdResponse {
 export function getFallbackBillboard(): ImageAd {
   return {
     url: FallbackAdURL['Billboard'],
-    format: 'Billboard',
     image_url: getSvgUri(FALLBACK_BILLBOARD_SVG),
   }
 }
@@ -43,7 +47,6 @@ export function getFallbackBillboard(): ImageAd {
 export function getFallbackSkyscraper(): ImageAd {
   return {
     url: FallbackAdURL['Skyscraper'],
-    format: 'Skyscraper',
     image_url: getSvgUri(FALLBACK_SKYSCRAPER_SVG),
   }
 }
@@ -51,7 +54,6 @@ export function getFallbackSkyscraper(): ImageAd {
 export function getFallbackMediumRectangle(): ImageAd {
   return {
     url: FallbackAdURL['MediumRectangle'],
-    format: 'MediumRectangle',
     image_url: getSvgUri(FALLBACK_MRECTANGLE_SVG),
   }
 }
