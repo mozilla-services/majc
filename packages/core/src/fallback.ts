@@ -3,7 +3,7 @@ import { AdUnitFormatType, MozAdsPlacementConfig, MozAdsPlacements, MozAdsPlacem
 import { FallbackAdURL, AdUnitFormatTypeLookup } from './constants'
 import { FALLBACK_BILLBOARD_SVG, FALLBACK_MRECTANGLE_SVG, FALLBACK_SKYSCRAPER_SVG } from './images'
 
-export const fallbackAdContentLookup: Partial<Record<AdUnitFormatType, ImageAd>> = {
+const fallbackAdContentLookup: Partial<Record<AdUnitFormatType, ImageAd>> = {
   Billboard: getFallbackBillboard(),
   Skyscraper: getFallbackSkyscraper(),
   MediumRectangle: getFallbackMediumRectangle(),
