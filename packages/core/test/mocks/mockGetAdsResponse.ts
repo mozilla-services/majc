@@ -46,3 +46,17 @@ export const mockGetAdsResponse: AdResponse = {
     block_key: 'CAQSC21vemlsbGFfYWRz',
   }],
 }
+
+export const mockGetAdsPartialResponse: AdResponse = {
+  pocket_billboard_1: [{
+    format: 'billboard',
+    url: 'https://www.mozilla.org/en-US/advertising/billoard1',
+    callbacks: {
+      click: 'https://ads.allizom.org/v1/t?data=CksqC21vemlsbGFfYWRzMiQwMzI2N2FkMS0wMDc0LTRhYTYtOGUwYy1lYzE4ZTA5MDZiZmVyEHBvY2tldF9iaWxsYm9hcmSYAQKoAQQSIHqvsgW8NasHbO_8_9qPE1hTdf135riAdQQP_u10Blfg',
+      impression: 'https://ads.allizom.org/v1/t?data=CksqC21vemlsbGFfYWRzMiQwMzI2N2FkMS0wMDc0LTRhYTYtOGUwYy1lYzE4ZTA5MDZiZmVyEHBvY2tldF9iaWxsYm9hcmSYAQGoAQQSIMZ0R8D0FPL6fVfpr5U-imRkn03olztJhuA5hVZs0UCU',
+    },
+    image_url: 'https://picsum.photos/970/250?random=1',
+    // alt_text: 'Billboard ad 1 for mozilla_ads',
+    block_key: 'CAQSC21vemlsbGFfYWRz',
+  }],
+}

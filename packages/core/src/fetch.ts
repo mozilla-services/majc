@@ -72,11 +72,10 @@ export const fetchAds = async ({
           throw fetchAdsError
         }
 
-        logger.info(`Succesfully fetched ads with request: ${JSON.stringify(request)}`, {
+        logger.info(`Successfully fetched ads with request: ${JSON.stringify(request)}`, {
           type: 'fetchAds.request.success',
           method: 'POST',
         })
-        console.log('here', mapResponseToPlacementsWithContent(response, pendingPlacements))
 
         resolve(mapResponseToPlacementsWithContent(response, pendingPlacements))
       }
@@ -132,7 +131,7 @@ export function buildPlacementsRequest(placements: MozAdsPlacements): AdPlacemen
 /**
  * Maps the ad content from the UAPI response to corresponding placement IDs of given configs.
  *
- * Note: This function makes no guarantee that all given placement IDs will have defined `adContent`.
+ * Note: This function will attempt to use fallback ads where possible if not all content is mapped.
  */
 export function mapResponseToPlacementsWithContent(response: AdResponse, placements: MozAdsPlacements): MozAdsPlacements {
   for (const placementWithContent of Object.values<MozAdsPlacementWithContent>(placements)) {
@@ -142,7 +141,7 @@ export function mapResponseToPlacementsWithContent(response: AdResponse, placeme
       // If a single ad placement is missing from the response, we fill that slot if a single fallback if able
 
       if (!placementWithContent.fixedSize) {
-        // Without a fixedSize, we cannot fallback to anything
+        // Without a fixedSize, we cannot fallback to anything, so we give it an empty object
         placementWithContent.content = {}
         continue
       }

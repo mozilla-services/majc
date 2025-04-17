@@ -2,10 +2,11 @@
 
 import * as heyapi from '@heyapi'
 import * as fallback from '../src/fallback'
-import { mockGetAdsResponse } from './mocks/mockGetAdsResponse'
+import { mockGetAdsPartialResponse, mockGetAdsResponse } from './mocks/mockGetAdsResponse'
 import { buildPlacementsRequest, fetchAds, FetchAdsError, FetchAdsParams } from '../src/fetch'
 import { MozAdsPlacements, MozAdsPlacementWithContent } from '../src/types'
 import { tick } from '@/jest.setup'
+import { IABFixedSize } from '@core/constants'
 
 jest.mock('@heyapi', () => {
   return {
@@ -35,6 +36,25 @@ describe('core/fetch.ts', () => {
     },
   }
 
+  const placementsWithFixedSizes: MozAdsPlacements = {
+    'pocket_billboard_1': {
+      placementId: 'pocket_billboard_1',
+      fixedSize: IABFixedSize.Billboard,
+    },
+    'pocket_skyscraper_1': {
+      placementId: 'pocket_skyscraper_1',
+      fixedSize: IABFixedSize.Skyscraper,
+      iabContent: {
+        taxonomy: 'IAB-1.0',
+        categoryIds: ['IAB1-1', 'IAB1-2', 'IAB2-1'],
+      },
+    },
+    'pocket_skyscraper_2': {
+      placementId: 'pocket_skyscraper_2',
+      fixedSize: { width: 100, height: 9000 }, // Non-standard fixedSize
+    },
+  }
+
   const contextId = '03267ad1-0074-4aa6-8e0c-ec18e0906bfe'
 
   const params: FetchAdsParams = {
@@ -43,10 +63,23 @@ describe('core/fetch.ts', () => {
     placements,
   }
 
+  const paramsWithFixedSizes: FetchAdsParams = {
+    serviceEndpoint: 'https://if-youre-requesting-this-then-the-mock-is-broken',
+    contextId,
+    placements: placementsWithFixedSizes,
+  }
+
   const request = {
     body: {
       context_id: contextId,
       placements: buildPlacementsRequest(params.placements),
+    },
+  }
+
+  const requestWithFixedSizes = {
+    body: {
+      context_id: contextId,
+      placements: buildPlacementsRequest(paramsWithFixedSizes.placements),
     },
   }
 
@@ -85,6 +118,48 @@ describe('core/fetch.ts', () => {
     const skyScraper2Placements = Object.values(placementsWithContent).filter(el => el.placementId === 'pocket_skyscraper_2')
     expect(skyScraper2Placements.length).toBe(1)
     expect((skyScraper2Placements[0] as MozAdsPlacementWithContent).content).toEqual(mockGetAdsResponse['pocket_skyscraper_2'][0])
+  })
+
+  test('fetchAds with successful partial response without fixed size', async () => {
+    // @ts-expect-error Jest types create difficult to resolve union for test code
+    const getAdsMock = jest.spyOn(heyapi, 'getAds').mockResolvedValueOnce({ data: mockGetAdsPartialResponse })
+    const placementsWithContent = await fetchAds(params)
+    await expect(placementsWithContent).resolves
+    expect(getAdsMock).toHaveBeenCalledWith(request)
+    expect(Object.values(placementsWithContent).length).toBe(3)
+
+    const billboard1Placements = Object.values(placementsWithContent).filter(el => el.placementId === 'pocket_billboard_1')
+    expect(billboard1Placements.length).toBe(1)
+    expect((billboard1Placements[0] as MozAdsPlacementWithContent).content).toEqual(mockGetAdsResponse['pocket_billboard_1'][0])
+
+    const skyScraper1Placements = Object.values(placementsWithContent).filter(el => el.placementId === 'pocket_skyscraper_1')
+    expect(skyScraper1Placements.length).toBe(1)
+    expect((skyScraper1Placements[0] as MozAdsPlacementWithContent).content).toEqual({})
+
+    const skyScraper2Placements = Object.values(placementsWithContent).filter(el => el.placementId === 'pocket_skyscraper_2')
+    expect(skyScraper2Placements.length).toBe(1)
+    expect((skyScraper2Placements[0] as MozAdsPlacementWithContent).content).toEqual({})
+  })
+
+  test('fetchAds with successful partial response with fixed size', async () => {
+    // @ts-expect-error Jest types create difficult to resolve union for test code
+    const getAdsMock = jest.spyOn(heyapi, 'getAds').mockResolvedValueOnce({ data: mockGetAdsPartialResponse })
+    const placementsWithContent = await fetchAds(paramsWithFixedSizes)
+    await expect(placementsWithContent).resolves
+    expect(getAdsMock).toHaveBeenCalledWith(requestWithFixedSizes)
+    expect(Object.values(placementsWithContent).length).toBe(3)
+
+    const billboard1Placements = Object.values(placementsWithContent).filter(el => el.placementId === 'pocket_billboard_1')
+    expect(billboard1Placements.length).toBe(1)
+    expect((billboard1Placements[0] as MozAdsPlacementWithContent).content).toEqual(mockGetAdsResponse['pocket_billboard_1'][0])
+
+    const skyScraper1Placements = Object.values(placementsWithContent).filter(el => el.placementId === 'pocket_skyscraper_1')
+    expect(skyScraper1Placements.length).toBe(1)
+    expect((skyScraper1Placements[0] as MozAdsPlacementWithContent).content).toEqual(fallback.getFallbackSkyscraper())
+
+    const skyScraper2Placements = Object.values(placementsWithContent).filter(el => el.placementId === 'pocket_skyscraper_2')
+    expect(skyScraper2Placements.length).toBe(1)
+    expect((skyScraper2Placements[0] as MozAdsPlacementWithContent).content).toEqual(fallback.getFallbackSquareDefault())
   })
 
   test('fetchAds with error response', async () => {

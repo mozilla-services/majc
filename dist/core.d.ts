@@ -226,7 +226,7 @@ declare function buildPlacementsRequest(placements: MozAdsPlacements): AdPlaceme
 /**
  * Maps the ad content from the UAPI response to corresponding placement IDs of given configs.
  *
- * Note: This function makes no guarantee that all given placement IDs will have defined `adContent`.
+ * Note: This function will attempt to use fallback ads where possible if not all content is mapped.
  */
 declare function mapResponseToPlacementsWithContent(response: AdResponse, placements: MozAdsPlacements): MozAdsPlacements;
 
