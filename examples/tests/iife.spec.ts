@@ -7,6 +7,9 @@ test.beforeEach(async ({ page }) => {
 
 test.describe('Tiles', { tag: '@Desktop' }, () => {
   test('should show the ad image', async ({ page }) => {
+    await page.goto('http://127.0.0.1:8080/examples/iife/')
+    await expect(page).toHaveTitle(/powered by MAJC/)
+
     const tileImage = page.getByAltText('Mozilla Ad')
     await expect(tileImage).toBeVisible()
     await expect(tileImage).toHaveAttribute('src', new RegExp('^https://ads-img.allizom.org/'))
@@ -21,13 +24,25 @@ test.describe('Tiles', { tag: '@Desktop' }, () => {
     await expect(tileContainer).toHaveAttribute('data-placement-id', 'newtab_tile_1')
   })
 
-  // test('should register an impression', async ({ page }) => { })
-
-  test('should register a click and navigate to the landing page', async ({ page }) => {
+  test('should register the impression', async ({ page }) => {
+    page.on('request', (request) => {
+      expect(request.url().startsWith('https://ads.allizom.org/v1/t?data=')).toBeTruthy()
+      expect(request.method()).toEqual('GET')
+    })
+    page.on('response', (response) => {
+      expect(response).toBeDefined()
+      expect(response?.ok()).toBeTruthy()
+    })
   })
 
-  test('should allow me to report an ad', async ({ page }) => {
-  })
+  // test('should register a click and navigate to the landing page', async ({ page }) => {
+  // })
+
+  // test('should allow me to report an ad', async ({ page }) => {
+  // })
+
+  // test('should show a hardcoded fallback ad if the request fails', async ({ page }) => {
+  // })
 })
 
 test.describe('Billboard', { tag: '@Desktop' }, () => {
