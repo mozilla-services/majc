@@ -1,78 +1,85 @@
 import { test, expect } from '@playwright/test'
+import { expectAdLayout, expectClickNavigation } from './helpers'
 
 test.beforeEach(async ({ page }) => {
   await page.goto('http://127.0.0.1:8080/examples/iife/')
   await expect(page).toHaveTitle(/powered by MAJC/)
 })
 
-test.describe('Tiles', { tag: '@Desktop' }, () => {
-  test('should show the ad image', async ({ page }) => {
-    await page.goto('http://127.0.0.1:8080/examples/iife/')
-    await expect(page).toHaveTitle(/powered by MAJC/)
-
-    const tileImage = page.getByAltText('Mozilla Ad')
-    await expect(tileImage).toBeVisible()
-    await expect(tileImage).toHaveAttribute('src', new RegExp('^https://ads-img.allizom.org/'))
-
-    const tileInner = page.locator('.moz-ads-placement-inner').filter({ has: tileImage })
-    await expect(tileInner).toHaveAttribute('aria-live', 'polite')
-    await expect(tileInner).toHaveAttribute('aria-atomic', 'true')
-
-    const tileContainer = page.locator('.moz-ads-placement-container').filter({ has: tileImage })
-    await expect(tileContainer).toHaveCSS('width', '64px')
-    await expect(tileContainer).toHaveCSS('height', '64px')
-    await expect(tileContainer).toHaveAttribute('data-placement-id', 'newtab_tile_1')
-  })
-
-  test('should register the impression', async ({ page }) => {
-    page.on('request', (request) => {
-      expect(request.url().startsWith('https://ads.allizom.org/v1/t?data=')).toBeTruthy()
-      expect(request.method()).toEqual('GET')
+test.describe('IIFE example', () => {
+  // Tiles won't be returned by MARS for mobile, so we only test them on Desktop
+  test.describe('Tile', { tag: ['@Desktop'] }, () => {
+    test('should display the ad', async ({ page }) => {
+      await expectAdLayout(page, 'newtab_tile_1', 'Mozilla Ad', '64px', '64px')
     })
-    page.on('response', (response) => {
-      expect(response).toBeDefined()
-      expect(response?.ok()).toBeTruthy()
+
+    test('should navigate to the landing page on click', async ({ page }) => {
+      await expectClickNavigation(page, 'Mozilla Ad')
     })
   })
 
-  // test('should register a click and navigate to the landing page', async ({ page }) => {
-  // })
+  test.describe('Medium Rectangle', ({ tag: ['@Desktop', '@Mobile'] }), () => {
+    test('should display the ad', async ({ page }) => {
+      await expectAdLayout(page, 'mock_pocket_rectangle_1', 'Brand Text 2', '300px', '250px')
+    })
 
-  // test('should allow me to report an ad', async ({ page }) => {
-  // })
+    test('should navigate to the landing page on click', async ({ page }) => {
+      await expectClickNavigation(page, 'Brand Text 2')
+    })
+  })
 
-  // test('should show a hardcoded fallback ad if the request fails', async ({ page }) => {
-  // })
+  test.describe('Billboard', ({ tag: ['@Desktop', '@Mobile'] }), () => {
+    test('should display the ad', async ({ page }) => {
+      await expectAdLayout(page, 'mock_pocket_billboard_1', 'Brand Text 0', '970px', '250px')
+    })
+
+    test('should navigate to the landing page on click', async ({ page }) => {
+      await expectClickNavigation(page, 'Brand Text 0')
+    })
+  })
+
+  test.describe('Skyscraper', ({ tag: ['@Desktop', '@Mobile'] }), () => {
+    test('should display the ad', async ({ page }) => {
+      await expectAdLayout(page, 'mock_pocket_skyscraper_1', 'Brand Text 1', '160px', '600px')
+    })
+
+    test('should navigate to the landing page on click', async ({ page }) => {
+      await expectClickNavigation(page, 'Brand Text 1')
+    })
+  })
 })
 
-test.describe('Billboard', { tag: '@Desktop' }, () => {
-  // test('should show the ad image', async ({ page }) => { })
-  // test('should register an impression', async ({ page }) => { })
-  // test('should register a click and navigate to the landing page', async ({ page }) => { })
-  // test('should allow me to report an ad', async ({ page }) => { })
-})
-
-test.describe('Skyscraper', { tag: ['@Desktop', '@Mobile'] }, () => { })
-
-test.describe('Medium Rectangle', { tag: ['@Desktop', '@Mobile'] }, () => { })
-
-// test('should show the ad image for a billboard', async ({ page }) => {
-//   const
+//   test('should register an impression for each ad', async ({ page }) => {
+//     let requestCount = 0
+//     page.on('request', (request) => {
+//       expect(request.url().startsWith('https://ads.allizom.org/v1/t?data=')).toBeTruthy()
+//       expect(request.method()).toEqual('GET')
+//       requestCount += 1
+//     })
+//     page.on('response', (response) => {
+//       expect(response).toBeDefined()
+//       expect(response?.ok()).toBeTruthy()
+//     })
+//     expect(requestCount).toBe(4)
+//   })
 // })
 
-// test('should show the ad image for a skyscraper', async ({ page }) => {
-//   await expect(page.getByRole('img'))
-// })
+// test.describe('Context Id', { tag: ['@Desktop', '@Mobile'] }, () => { })
 
-// test.describe('Click an Ad', () => {
+// Trying to assert that the click callback happened ...
+// test('should register the click', async ({ page }) => {
+//   const adSurfacePage = page
+//   const impressionCallbackPromise = adSurfacePage.waitForRequest(new RegExp('^https://ads-img.allizom.org/'))
+//   const impressionCallbackRequest = await impressionCallbackPromise
+//   const impressionCallbackResponse = await impressionCallbackRequest.response()
+//   expect(impressionCallbackResponse?.ok()).toBeTruthy()
 
-//   test('should link to the landing page for a billboard', async ({ page }) => { })
+//   const link = page.getByRole('link', { name: 'Mozilla Ad' })
+//   console.log('before click', page.url())
 
-//   test('should link to the landing page for a skyscraper', async ({ page }) => { })
-// })
-
-// test.describe('Report an Ad', () => {
-//   test('should submit a report reason for a tile', async ({ page }) => { })
-//   test('should submit a report reason for a billboard', async ({ page }) => { })
-//   test('should submit a report reason for a skyscraper', async ({ page }) => { })
+//   const clickCallbackPromise = adSurfacePage.waitForRequest(new RegExp('^https://ads-img.allizom.org/'))
+//   await link.click()
+//   const clickCallbackRequest = await clickCallbackPromise
+//   const clickCallbackResponse = await clickCallbackRequest.response()
+//   expect(clickCallbackResponse?.ok()).toBeTruthy()
 // })

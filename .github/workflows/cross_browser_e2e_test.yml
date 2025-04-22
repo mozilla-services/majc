@@ -1,4 +1,4 @@
-name: Playwright Tests
+name: cross browser e2e test
 on:
   push:
     branches: [ main, majc-61-view-testing ]
