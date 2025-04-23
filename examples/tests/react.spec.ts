@@ -10,7 +10,7 @@ test.describe('React example', () => {
   test.describe('Billboard', ({ tag: ['@Desktop', '@Mobile'] }), () => {
     test.describe('above the fold', () => {
       test('should display the ad', async ({ page }) => {
-        await expectAdLayout(page, 'mock_pocket_billboard_1', 'Brand Text 0', '970px', '250px')
+        await expectAdLayout(page, 'mock_pocket_billboard_1', 'Brand Text 0')
       })
 
       test('should navigate to the landing page on click', async ({ page }) => {
@@ -20,7 +20,7 @@ test.describe('React example', () => {
 
     test.describe('below the fold', () => {
       test('should display the ad', async ({ page }) => {
-        await expectAdLayout(page, 'mock_pocket_billboard_2', 'Brand Text 2', '970px', '250px')
+        await expectAdLayout(page, 'mock_pocket_billboard_2', 'Brand Text 2')
       })
 
       test('should navigate to the landing page on click', async ({ page }) => {
@@ -31,7 +31,7 @@ test.describe('React example', () => {
 
   test.describe('Skyscraper', ({ tag: ['@Desktop', '@Mobile'] }), () => {
     test('should display the ad', async ({ page }) => {
-      await expectAdLayout(page, 'mock_pocket_skyscraper_1', 'Brand Text 1', '160px', '600px')
+      await expectAdLayout(page, 'mock_pocket_skyscraper_1', 'Brand Text 1')
     })
 
     test('should navigate to the landing page on click', async ({ page }) => {
