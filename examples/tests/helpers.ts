@@ -25,12 +25,7 @@ const expectClickNavigation = async (page: Page, altText: string): Promise<void>
   const link = page.getByRole('link', { name: altText })
   const href = await link.getAttribute('href') || ''
   const clickPromise = page.waitForRequest(href)
-
-  // Forcing the click here seems to be necessary for Mobile Chrome, where playwright thinks
-  // that the something about img inside the link "intercepts pointer events". I could not repro
-  // this issue in manual testing, but it may be worth revisiting either playwright usage or our DOM
-  // structure to see if there is a way to go without forcing here.
-  await link.click({ force: true })
+  await link.click()
   const landingPage = await clickPromise
 
   // When navigating to a url, Playwright adds a trailing slash between hostname and the query params.
