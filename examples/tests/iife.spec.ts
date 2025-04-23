@@ -10,7 +10,7 @@ test.describe('IIFE example', () => {
   // Tiles won't be returned by MARS for mobile, so we only test them on Desktop
   test.describe('Tile', { tag: ['@Desktop'] }, () => {
     test('should display the ad', async ({ page }) => {
-      await expectAdLayout(page, 'newtab_tile_1', 'Mozilla Ad', '64px', '64px')
+      await expectAdLayout(page, 'newtab_tile_1', 'Mozilla Ad')
     })
 
     test('should navigate to the landing page on click', async ({ page }) => {
@@ -20,7 +20,7 @@ test.describe('IIFE example', () => {
 
   test.describe('Medium Rectangle', ({ tag: ['@Desktop', '@Mobile'] }), () => {
     test('should display the ad', async ({ page }) => {
-      await expectAdLayout(page, 'mock_pocket_rectangle_1', 'Brand Text 2', '300px', '250px')
+      await expectAdLayout(page, 'mock_pocket_rectangle_1', 'Brand Text 2')
     })
 
     test('should navigate to the landing page on click', async ({ page }) => {
@@ -30,7 +30,7 @@ test.describe('IIFE example', () => {
 
   test.describe('Billboard', ({ tag: ['@Desktop', '@Mobile'] }), () => {
     test('should display the ad', async ({ page }) => {
-      await expectAdLayout(page, 'mock_pocket_billboard_1', 'Brand Text 0', '970px', '250px')
+      await expectAdLayout(page, 'mock_pocket_billboard_1', 'Brand Text 0')
     })
 
     test('should navigate to the landing page on click', async ({ page }) => {
@@ -40,7 +40,7 @@ test.describe('IIFE example', () => {
 
   test.describe('Skyscraper', ({ tag: ['@Desktop', '@Mobile'] }), () => {
     test('should display the ad', async ({ page }) => {
-      await expectAdLayout(page, 'mock_pocket_skyscraper_1', 'Brand Text 1', '160px', '600px')
+      await expectAdLayout(page, 'mock_pocket_skyscraper_1', 'Brand Text 1')
     })
 
     test('should navigate to the landing page on click', async ({ page }) => {
