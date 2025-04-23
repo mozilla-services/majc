@@ -1,7 +1,7 @@
 /* eslint @stylistic/quote-props: ["error", "consistent"] */
 
 import { defineConfig, Options } from 'tsup'
-import { prependDirective } from './scripts/prependDirectivePlugin.ts'
+import { readFileSync, writeFileSync } from 'fs'
 import { ExpectedBuildOutput, validateBuildFiles } from './scripts/validateBuild.ts'
 
 const expectedBuildOutput: ExpectedBuildOutput = {
@@ -104,3 +104,25 @@ process.on('beforeExit', (code) => {
   validateBuildFiles(expectedBuildOutput)
   console.log('[POST-BUILD] Validation successful! Build complete.')
 })
+
+function prependDirective(directive: string, filePatterns: string[]): NonNullable<Options['plugins']>[number] {
+  if (!Array.isArray(filePatterns)) {
+    throw Error('FilePatterns given to prependDirective plugin must be an array.')
+  }
+  return {
+    name: 'prepend-directive',
+    // At the end of the build step, directly prepend the specified directive to files with specified pattern
+
+    buildEnd(ctx) {
+      for (const file of ctx.writtenFiles) {
+        for (const filePattern of filePatterns) {
+          if (file.name.startsWith(filePattern)) {
+            const fileContent = readFileSync(file.name, 'utf8')
+            writeFileSync(file.name, `${directive};${fileContent}`)
+            console.log(`Prepended ${directive} directive to ${file.name}`)
+          }
+        }
+      }
+    },
+  }
+}
