@@ -16,6 +16,8 @@ test.describe('React example', () => {
       test('should navigate to the landing page on click', async ({ page }) => {
         await expectClickNavigation(page, 'Brand Text 0')
       })
+
+      test.skip('should be able to report the ad', async ({ page }) => { })
     })
 
     test.describe('below the fold', () => {
@@ -26,6 +28,8 @@ test.describe('React example', () => {
       test('should navigate to the landing page on click', async ({ page }) => {
         await expectClickNavigation(page, 'Brand Text 2')
       })
+
+      test.skip('should be able to report the ad', async ({ page }) => { })
     })
   })
 
@@ -37,5 +41,19 @@ test.describe('React example', () => {
     test('should navigate to the landing page on click', async ({ page }) => {
       await expectClickNavigation(page, 'Brand Text 1')
     })
+
+    test.skip('should be able to report the ad', async ({ page }) => { })
+  })
+
+  test.describe('Impressions', ({ tag: ['@Desktop', '@Mobile'] }), () => {
+    test.skip('callbacks should be sent for each ad', async ({ page }) => { })
+  })
+
+  test.describe('Clicks', ({ tag: ['@Desktop', '@Mobile'] }), () => {
+    test.skip('callbacks should be sent for each ad', async ({ page }) => { })
+  })
+
+  test.describe('Context Ids', ({ tag: ['@Desktop', '@Mobile'] }), () => {
+    test.skip('should rotate on each page load', async ({ page }) => { })
   })
 })
