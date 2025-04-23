@@ -4,6 +4,26 @@ import { defineConfig, Options } from 'tsup'
 import { prependDirective } from './scripts/prependDirectivePlugin.ts'
 import { ExpectedBuildOutput, validateBuildFiles } from './scripts/validateBuild.ts'
 
+const expectedBuildOutput: ExpectedBuildOutput = {
+  buildDir: 'dist/',
+  files: [
+    'core.js',
+    'core.mjs',
+    'core.d.ts',
+    'react.d.ts',
+    'react.js',
+    'react.mjs',
+    'heyapi.d.ts',
+    'heyapi.js',
+    'heyapi.mjs',
+    'iife.global.js',
+  ],
+  clientOnlyModules: [
+    'react.js',
+    'react.mjs',
+  ],
+}
+
 // Get any environment variables passed to tsup and make them
 // available here.
 const env: Record<string, string> = process.argv.reduce((acc, curr) => {
