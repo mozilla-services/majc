@@ -6,10 +6,28 @@ export interface ExpectedBuildOutput {
   clientOnlyModules: string[]
 }
 
+export class MissingBuildFileError extends Error {
+  override name = 'MissingBuildFileError'
+  constructor(
+    public cause: Error,
+  ) {
+    super(cause.message, { cause })
+  }
+}
+
+export class MissingClientOnlyDirectiveError extends Error {
+  override name = 'MissingClientOnlyDirectiveError'
+  constructor(
+    public cause: Error,
+  ) {
+    super(cause.message, { cause })
+  }
+}
+
 function validateClientOnlyBuildFile(filePath: string) {
   const fileContent = readFileSync(filePath, 'utf8')
   if (!fileContent.startsWith('"use client"')) {
-    throw Error(`"Client-only" build module ${filePath} does not start with "use client" directive.`)
+    throw new MissingClientOnlyDirectiveError(Error(`"Client-only" build module ${filePath} does not start with "use client" directive.`))
   }
 }
 
@@ -24,7 +42,7 @@ export function validateBuildFiles(expectedBuildOutput: ExpectedBuildOutput) {
   }
   for (const requiredFile of expectedBuildOutput.files) {
     if (!filesSet.has(requiredFile)) {
-      throw Error(`Expected module ${requiredFile} not found in build directory ${expectedBuildOutput.buildDir}`)
+      throw new MissingBuildFileError(Error(`Expected module ${requiredFile} not found in build directory ${expectedBuildOutput.buildDir}`))
     }
   }
 }
