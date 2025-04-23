@@ -26,6 +26,8 @@ test.describe('IIFE example', () => {
     test('should navigate to the landing page on click', async ({ page }) => {
       await expectClickNavigation(page, 'Brand Text 2')
     })
+
+    test.skip('should be able to report the ad', async ({ page }) => { })
   })
 
   test.describe('Billboard', ({ tag: ['@Desktop', '@Mobile'] }), () => {
@@ -36,6 +38,8 @@ test.describe('IIFE example', () => {
     test('should navigate to the landing page on click', async ({ page }) => {
       await expectClickNavigation(page, 'Brand Text 0')
     })
+
+    test.skip('should be able to report the ad', async ({ page }) => { })
   })
 
   test.describe('Skyscraper', ({ tag: ['@Desktop', '@Mobile'] }), () => {
@@ -46,40 +50,46 @@ test.describe('IIFE example', () => {
     test('should navigate to the landing page on click', async ({ page }) => {
       await expectClickNavigation(page, 'Brand Text 1')
     })
+
+    test.skip('should be able to report the ad', async ({ page }) => { })
+  })
+
+  // This is a tricky one to get right. I think playwright isn't waiting
+  // long enough to get impressions on these. Might need to scroll differently,
+  // do some additional/different actions to keep the placement in view, or add some waiting...
+  test.describe('Impressions', ({ tag: ['@Desktop', '@Mobile'] }), () => {
+    test.skip('callbacks should be sent for each ad', async ({ page }) => {
+      let requestCount = 0
+      page.on('request', (request) => {
+        console.log(`request made: ${request.url()}`)
+        if (request.url().startsWith('https://ads.allizom.org/v1/t?data=')) requestCount += 1
+      })
+
+      const tile = page.getByAltText('Mozilla Ad')
+      await tile.scrollIntoViewIfNeeded()
+      await tile.hover()
+
+      const rectangle = page.getByAltText('Brand Text 2')
+      await rectangle.scrollIntoViewIfNeeded()
+      await rectangle.hover()
+
+      const billboard = page.getByAltText('Brand Text 0')
+      await billboard.scrollIntoViewIfNeeded()
+      await billboard.hover()
+
+      const skyscraper = page.getByAltText('Brand Text 1')
+      await skyscraper.scrollIntoViewIfNeeded()
+      await skyscraper.hover()
+
+      expect(requestCount).toBe(4)
+    })
+  })
+
+  test.describe('Clicks', ({ tag: ['@Desktop', '@Mobile'] }), () => {
+    test.skip('callbacks should be sent for each ad', async ({ page }) => { })
+  })
+
+  test.describe('Context Ids', ({ tag: ['@Desktop', '@Mobile'] }), () => {
+    test.skip('should rotate on each page load', async ({ page }) => { })
   })
 })
-
-//   test('should register an impression for each ad', async ({ page }) => {
-//     let requestCount = 0
-//     page.on('request', (request) => {
-//       expect(request.url().startsWith('https://ads.allizom.org/v1/t?data=')).toBeTruthy()
-//       expect(request.method()).toEqual('GET')
-//       requestCount += 1
-//     })
-//     page.on('response', (response) => {
-//       expect(response).toBeDefined()
-//       expect(response?.ok()).toBeTruthy()
-//     })
-//     expect(requestCount).toBe(4)
-//   })
-// })
-
-// test.describe('Context Id', { tag: ['@Desktop', '@Mobile'] }, () => { })
-
-// Trying to assert that the click callback happened ...
-// test('should register the click', async ({ page }) => {
-//   const adSurfacePage = page
-//   const impressionCallbackPromise = adSurfacePage.waitForRequest(new RegExp('^https://ads-img.allizom.org/'))
-//   const impressionCallbackRequest = await impressionCallbackPromise
-//   const impressionCallbackResponse = await impressionCallbackRequest.response()
-//   expect(impressionCallbackResponse?.ok()).toBeTruthy()
-
-//   const link = page.getByRole('link', { name: 'Mozilla Ad' })
-//   console.log('before click', page.url())
-
-//   const clickCallbackPromise = adSurfacePage.waitForRequest(new RegExp('^https://ads-img.allizom.org/'))
-//   await link.click()
-//   const clickCallbackRequest = await clickCallbackPromise
-//   const clickCallbackResponse = await clickCallbackRequest.response()
-//   expect(clickCallbackResponse?.ok()).toBeTruthy()
-// })
