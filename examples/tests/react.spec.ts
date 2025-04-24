@@ -7,7 +7,7 @@ test.beforeEach(async ({ page }) => {
 })
 
 test.describe('React example', () => {
-  test.describe('Billboard', ({ tag: ['@Desktop', '@Mobile'] }), () => {
+  test.describe('Billboard', ({ tag: ['@Desktop'] }), () => {
     test.describe('above the fold', () => {
       test('should display the ad', async ({ page }) => {
         await expectAdLayout(page, 'mock_pocket_billboard_1', 'Brand Text 0')
@@ -33,7 +33,23 @@ test.describe('React example', () => {
     })
   })
 
-  test.describe('Skyscraper', ({ tag: ['@Desktop', '@Mobile'] }), () => {
+  // This can be enabled once we update the React example Article to be responsive and show
+  // rectangles instead of billboards for mobile
+  test.describe('Medium Rectangle', ({ tag: ['@Mobile'] }), () => {
+    test.skip('should display the ad', async ({ page }) => {
+      await expectAdLayout(page, 'mock_pocket_rectangle_1', 'Brand Text 2')
+    })
+
+    test.skip('should navigate to the landing page on click', async ({ page }) => {
+      await expectClickNavigation(page, 'Brand Text 2')
+    })
+
+    test.skip('should be able to report the ad', async ({ page }) => { })
+  })
+
+  // It should be possible to test this on Mobile as well, but there is a tricky issue
+  // with clicking on the Skyscraper on Mobile Chrome that needs to be figured out.
+  test.describe('Skyscraper', ({ tag: ['@Desktop'/* , @Mobile  */] }), () => {
     test('should display the ad', async ({ page }) => {
       await expectAdLayout(page, 'mock_pocket_skyscraper_1', 'Brand Text 1')
     })
@@ -45,15 +61,15 @@ test.describe('React example', () => {
     test.skip('should be able to report the ad', async ({ page }) => { })
   })
 
-  test.describe('Impressions', ({ tag: ['@Desktop', '@Mobile'] }), () => {
+  test.describe('Impression', ({ tag: ['@Desktop', '@Mobile'] }), () => {
     test.skip('callbacks should be sent for each ad', async ({ page }) => { })
   })
 
-  test.describe('Clicks', ({ tag: ['@Desktop', '@Mobile'] }), () => {
+  test.describe('Click', ({ tag: ['@Desktop', '@Mobile'] }), () => {
     test.skip('callbacks should be sent for each ad', async ({ page }) => { })
   })
 
-  test.describe('Context Ids', ({ tag: ['@Desktop', '@Mobile'] }), () => {
+  test.describe('Context Id', ({ tag: ['@Desktop', '@Mobile'] }), () => {
     test.skip('should rotate on each page load', async ({ page }) => { })
   })
 })
