@@ -53,14 +53,14 @@ test.describe('IIFE example', () => {
       await expectClickNavigation(page, 'Brand Text 1')
     })
 
-    test.skip('should be able to report the ad', async ({ page }) => { })
+    test.skip('should be able to report the ad', async () => { })
   })
 
   // This is a tricky one to get right. I think playwright isn't waiting
   // long enough to get impressions on these. Might need to scroll differently,
   // do some additional/different actions to keep the placement in view, or add some waiting...
-  test.describe('Impression', ({ tag: ['@Desktop', '@Mobile'] }), () => {
-    test.skip('callbacks should be sent for each ad', async ({ page }) => {
+  test.describe('Impression callback', ({ tag: ['@Desktop', '@Mobile'] }), () => {
+    test.skip('should be sent for each ad', async ({ page }) => {
       let requestCount = 0
       page.on('request', (request) => {
         console.log(`request made: ${request.url()}`)
@@ -87,11 +87,11 @@ test.describe('IIFE example', () => {
     })
   })
 
-  test.describe('Click', ({ tag: ['@Desktop', '@Mobile'] }), () => {
-    test.skip('callbacks should be sent for each ad', async ({ page }) => { })
+  test.describe('Click callback', ({ tag: ['@Desktop', '@Mobile'] }), () => {
+    test.skip('should be sent for each ad', async () => { })
   })
 
   test.describe('Context Id', ({ tag: ['@Desktop', '@Mobile'] }), () => {
-    test.skip('should rotate on each page load', async ({ page }) => { })
+    test.skip('should rotate on each page load', async () => { })
   })
 })
