@@ -26,7 +26,7 @@ export class MissingClientOnlyDirectiveError extends Error {
 
 function validateClientOnlyBuildFile(filePath: string) {
   const fileContent = readFileSync(filePath, 'utf8')
-  if (!fileContent.startsWith('"use client"')) {
+  if (!fileContent.startsWith('"use client";')) {
     throw new MissingClientOnlyDirectiveError(Error(`"Client-only" build module ${filePath} does not start with "use client" directive.`))
   }
 }

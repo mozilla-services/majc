@@ -18,10 +18,10 @@ describe('scripts/validateBuild.ts', () => {
 
   const readFileHappyPath = (path: PathOrFileDescriptor) => {
     if (path === 'exampleDist/moduleA.js') {
-      return '"use client" console.log("HelloWorld");'
+      return '"use client"; console.log("HelloWorld");'
     }
     if (path === 'exampleDist/moduleA.mjs') {
-      return '"use client" console.log("Hello World Again");'
+      return '"use client"; console.log("Hello World Again");'
     }
     return 'console.log("Hello")'
   }
@@ -31,7 +31,7 @@ describe('scripts/validateBuild.ts', () => {
       return '"use strict"; "use client"; console.log("HelloWorld");'
     }
     if (path === 'exampleDist/moduleA.mjs') {
-      return '"use client" console.log("Hello World Again");'
+      return '"use client"; console.log("Hello World Again");'
     }
     return 'console.log("Hello")'
   }
