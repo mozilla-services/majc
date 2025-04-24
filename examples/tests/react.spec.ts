@@ -17,7 +17,7 @@ test.describe('React example', () => {
         await expectClickNavigation(page, 'Brand Text 0')
       })
 
-      test.skip('should be able to report the ad', async ({ page }) => { })
+      test.skip('should be able to report the ad', async () => { })
     })
 
     test.describe('below the fold', () => {
@@ -29,7 +29,7 @@ test.describe('React example', () => {
         await expectClickNavigation(page, 'Brand Text 2')
       })
 
-      test.skip('should be able to report the ad', async ({ page }) => { })
+      test.skip('should be able to report the ad', async () => { })
     })
   })
 
@@ -44,7 +44,7 @@ test.describe('React example', () => {
       await expectClickNavigation(page, 'Brand Text 2')
     })
 
-    test.skip('should be able to report the ad', async ({ page }) => { })
+    test.skip('should be able to report the ad', async () => { })
   })
 
   // It should be possible to test this on Mobile as well, but there is a tricky issue
@@ -58,18 +58,18 @@ test.describe('React example', () => {
       await expectClickNavigation(page, 'Brand Text 1')
     })
 
-    test.skip('should be able to report the ad', async ({ page }) => { })
+    test.skip('should be able to report the ad', async () => { })
   })
 
-  test.describe('Impression', ({ tag: ['@Desktop', '@Mobile'] }), () => {
-    test.skip('callbacks should be sent for each ad', async ({ page }) => { })
+  test.describe('Impression callback', ({ tag: ['@Desktop', '@Mobile'] }), () => {
+    test.skip('should be sent for each ad', async () => { })
   })
 
-  test.describe('Click', ({ tag: ['@Desktop', '@Mobile'] }), () => {
-    test.skip('callbacks should be sent for each ad', async ({ page }) => { })
+  test.describe('Click callback', ({ tag: ['@Desktop', '@Mobile'] }), () => {
+    test.skip('should be sent for each ad', async () => { })
   })
 
   test.describe('Context Id', ({ tag: ['@Desktop', '@Mobile'] }), () => {
-    test.skip('should rotate on each page load', async ({ page }) => { })
+    test.skip('should rotate on each page load', async () => { })
   })
 })
