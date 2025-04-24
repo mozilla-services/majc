@@ -27,7 +27,7 @@ test.describe('IIFE example', () => {
       await expectClickNavigation(page, 'Brand Text 2')
     })
 
-    test.skip('should be able to report the ad', async ({ page }) => { })
+    test.skip('should be able to report the ad', async () => { })
   })
 
   test.describe('Billboard', ({ tag: ['@Desktop', '@Mobile'] }), () => {
@@ -39,7 +39,7 @@ test.describe('IIFE example', () => {
       await expectClickNavigation(page, 'Brand Text 0')
     })
 
-    test.skip('should be able to report the ad', async ({ page }) => { })
+    test.skip('should be able to report the ad', async () => { })
   })
 
   // It should be possible to test this on Mobile as well, but there is a tricky issue
