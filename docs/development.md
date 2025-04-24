@@ -67,3 +67,35 @@ npm run update:mars-api
 ```
 
 Note: This will only be possible for internal Mozillians who have access to the MARS repo.
+
+## End-to-end testing with Playwright
+
+We use [Playwright](https://playwright.dev/) for end-to-end/view testing. It loads up our example
+apps and make sure they work correctly cross-browser and cross-device from a user-facing perspective.
+
+To run the tests on the command line:
+
+```sh
+npm run playwright
+```
+
+This will start up the example apps if they aren't already running, run through the tests in a headless
+browser, and open an interactive html report in your browser when its finished.
+
+Some very useful additional modes:
+
+```sh
+# Record traces. Click a test case in the HTML report to see a detailed trace, with playback timeline and UI screenshots.
+npm run playwright -- --trace on
+# Run tests in Playwright's UI, with test controls, locator picker, watch mode, and more.
+npm run playwright -- --ui
+# Run the tests with an actual browser so you can watch Playwright interact with the page.
+npm run playwright -- --headed
+# Run the tests with specific browsers.
+npm run playwright -- --project webkit --project firefox
+# Run specific tests by filename, directory, filename keywords, or title.
+npm run playwright -- iife.spec.ts
+npm run playwright -- tests/subdirectory/
+npm run playwright -- react angular
+npm run playwright -- -g 'should display the ad'
+```

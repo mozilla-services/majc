@@ -36,24 +36,24 @@ const expectClickNavigation = async (page: Page, altText: string): Promise<void>
 }
 
 const cssWidthForPlacement = (placementName: string): string => {
-  if (placementName.indexOf('billboard') != -1) return `${FixedSize.Billboard.width}px`
-  if (placementName.indexOf('rectangle') != -1) return `${FixedSize.MediumRectangle.width}px`
-  if (placementName.indexOf('skyscraper') != -1) return `${FixedSize.Skyscraper.width}px`
-  if (placementName.indexOf('tile') != -1) return '64px'
+  if (placementName.includes('billboard')) return `${FixedSize.Billboard.width}px`
+  if (placementName.includes('rectangle')) return `${FixedSize.MediumRectangle.width}px`
+  if (placementName.includes('skyscraper')) return `${FixedSize.Skyscraper.width}px`
+  if (placementName.includes('tile')) return '64px'
   return 'Ceci n\'est pas un css width'
 }
 
 const cssHeightForPlacement = (placementName: string): string => {
-  if (placementName.indexOf('billboard') != -1) return `${FixedSize.Billboard.height}px`
-  if (placementName.indexOf('rectangle') != -1) return `${FixedSize.MediumRectangle.height}px`
-  if (placementName.indexOf('skyscraper') != -1) return `${FixedSize.Skyscraper.height}px`
-  if (placementName.indexOf('tile') != -1) return '64px'
+  if (placementName.includes('billboard')) return `${FixedSize.Billboard.height}px`
+  if (placementName.includes('rectangle')) return `${FixedSize.MediumRectangle.height}px`
+  if (placementName.includes('skyscraper')) return `${FixedSize.Skyscraper.height}px`
+  if (placementName.includes('tile')) return '64px'
   return 'Ceci n\'est pas un css height'
 }
 
 const round = (cssDimension: string): number => {
   if (!cssDimension.endsWith('px')) return -1
-  return Math.round(parseFloat(cssDimension.slice(0, -2)))
+  return Math.round(parseFloat(cssDimension))
 }
 
 /**

@@ -42,9 +42,7 @@ test.describe('IIFE example', () => {
     test.skip('should be able to report the ad', async () => { })
   })
 
-  // It should be possible to test this on Mobile as well, but there is a tricky issue
-  // with clicking on the Skyscraper on Mobile Chrome that needs to be figured out.
-  test.describe('Skyscraper', ({ tag: ['@Desktop'/* , '@Mobile' */] }), () => {
+  test.describe('Skyscraper', ({ tag: ['@Desktop', '@Mobile'] }), () => {
     test('should display the ad', async ({ page }) => {
       await expectAdLayout(page, 'mock_pocket_skyscraper_1', 'Brand Text 1')
     })
