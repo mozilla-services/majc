@@ -21,6 +21,7 @@ export default {
     '<rootDir>/jest.setup.ts',
   ],
   testEnvironment: 'jsdom',
+  testPathIgnorePatterns: ['examples/tests'],
   transform: {
     '^.+.(ts|tsx)?$': ['ts-jest', {}],
   },
