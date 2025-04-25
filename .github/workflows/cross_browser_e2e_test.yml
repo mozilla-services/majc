@@ -1,9 +1,9 @@
 name: cross browser e2e test
 on:
   push:
-    branches: [ main, majc-61-view-testing ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, majc-61-view-testing ]
+    branches: [ main ]
 jobs:
   test:
     timeout-minutes: 20

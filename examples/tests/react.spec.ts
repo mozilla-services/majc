@@ -18,6 +18,7 @@ test.describe('React example', () => {
       })
 
       test.skip('should be able to report the ad', async () => { })
+      test.skip('should display the fallback ad when a live ad isn\'t available', async () => { })
     })
 
     test.describe('below the fold', () => {
@@ -30,6 +31,7 @@ test.describe('React example', () => {
       })
 
       test.skip('should be able to report the ad', async () => { })
+      test.skip('should display the fallback ad when a live ad isn\'t available', async () => { })
     })
   })
 
@@ -45,6 +47,7 @@ test.describe('React example', () => {
     })
 
     test.skip('should be able to report the ad', async () => { })
+    test.skip('should display the fallback ad when a live ad isn\'t available', async () => { })
   })
 
   // It should be possible to test this on Mobile as well, but there is a tricky issue
@@ -59,6 +62,7 @@ test.describe('React example', () => {
     })
 
     test.skip('should be able to report the ad', async () => { })
+    test.skip('should display the fallback ad when a live ad isn\'t available', async () => { })
   })
 
   test.describe('Impression callback', ({ tag: ['@Desktop', '@Mobile'] }), () => {
