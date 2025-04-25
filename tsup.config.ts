@@ -1,7 +1,28 @@
 /* eslint @stylistic/quote-props: ["error", "consistent"] */
 
-import { readFileSync, writeFileSync } from 'fs'
 import { defineConfig, Options } from 'tsup'
+import { readFileSync, writeFileSync } from 'fs'
+import { ExpectedBuildOutput, validateBuildFiles } from './scripts/validateBuild.ts'
+
+const expectedBuildOutput: ExpectedBuildOutput = {
+  buildDir: 'dist/',
+  files: [
+    'core.js',
+    'core.mjs',
+    'core.d.ts',
+    'react.d.ts',
+    'react.js',
+    'react.mjs',
+    'heyapi.d.ts',
+    'heyapi.js',
+    'heyapi.mjs',
+    'iife.global.js',
+  ],
+  clientOnlyModules: [
+    'react.js',
+    'react.mjs',
+  ],
+}
 
 // Get any environment variables passed to tsup and make them
 // available here.
@@ -73,7 +94,18 @@ const configs: Options[] = [
   },
 ]
 
-export function prependDirective(directive: string, filePatterns: string[]): NonNullable<Options['plugins']>[number] {
+export default defineConfig(configs)
+
+process.on('beforeExit', (code) => {
+  if (code !== 0) {
+    process.exit(code)
+  }
+  console.log('[POST-BUILD] Validating build files...')
+  validateBuildFiles(expectedBuildOutput)
+  console.log('[POST-BUILD] Validation successful! Build complete.')
+})
+
+function prependDirective(directive: string, filePatterns: string[]): NonNullable<Options['plugins']>[number] {
   if (!Array.isArray(filePatterns)) {
     throw Error('FilePatterns given to prependDirective plugin must be an array.')
   }
@@ -94,5 +126,3 @@ export function prependDirective(directive: string, filePatterns: string[]): Non
     },
   }
 }
-
-export default defineConfig(configs)

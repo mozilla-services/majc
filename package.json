@@ -61,6 +61,7 @@
     "lint:fix": "eslint . --fix",
     "prepare": "husky",
     "test": "NODE_ENV=TEST jest --coverage",
+    "validate:example:build": "cd examples/react && npm run build",
     "update:mars-api": "git clone --depth 1 https://github.com/mozilla-services/mars.git .mars-api-temp && cp .mars-api-temp/openapi/openapi.yml packages/heyapi/mars.yml && npm run clean:mars-api && npm run generate:mars-api"
   }
 }
