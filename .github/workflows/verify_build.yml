@@ -9,9 +9,6 @@ jobs:
     name: validate_build
     runs-on:
       - ubuntu-latest
-    strategy:
-      matrix:
-        node-version: ['20.x', '22.x']
     steps:
     - uses: actions/checkout@v4
     - name: Use Node.js ${{ matrix.node-version }}
@@ -20,17 +17,17 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: npm
 
-    - name: Install dependencies
+    - name: Install base dependencies
       run: npm ci
 
-    - name: Build and verify dist
+    - name: Build and verify MAJC dist files
       run: |-
         npm run build
 
-    - name: Install example dependencies
+    - name: Install React Example dependencies
       run: npm ci
       working-directory: ./examples/react
 
-    - name: Build and verify example react app
+    - name: Build and verify Example React App
       run: npm run build
       working-directory: ./examples/react
