@@ -27,5 +27,5 @@ jobs:
       run: |-
         npm run build
     - name: Build and verify example react app
-      run: |-
-        npm run validate:example:build
+      run: npm run build
+      working-directory: ./examples/react
