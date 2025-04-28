@@ -26,6 +26,11 @@ jobs:
     - name: Build and verify dist
       run: |-
         npm run build
+
+    - name: Install example dependencies
+      run: npm ci
+      working-directory: ./examples/react
+
     - name: Build and verify example react app
       run: npm run build
       working-directory: ./examples/react
