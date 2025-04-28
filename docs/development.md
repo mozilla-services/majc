@@ -49,6 +49,24 @@ If you want to disable pre-commit hooks locally for any reason, set the `HUSKY=0
 HUSKY=0 git commit -m "Your commit message"
 ```
 
+## Build process
+
+MAJC's build process is handled primarily through `tsup` and can be configured via a top-level `tsup.config.ts` file. All bundled dist files output by the build process can be found in `./dist`.
+
+### Build validation
+
+At the end of the build process, a validation step is performed to verify that the files we expect to come out of the build process are properly created in our output directory.
+
+In `tsup.config.ts`, you fill find an `expectedBuildOutput` const sitting at the top of the file. This object defines what the expected output should be. A description of this object's attributes are below:
+
+  - `buildDir` is the relative path to where build files are written.
+  - `files` are the names of the files we expect to exist after the build process.
+  - `clientOnlyModules` are files we expect to have a top-level `"use client";` directive.
+
+Validation logic is handled by a `process.on('beforeExit', (...) => {...})` hook at the end of the script.
+
+**Note**: A dry-run of this build process is performed during CI. As a result, any failure that occurs in the build validation will cause a failure in CI. This prevents us from merging code that fails to build.
+
 ## Example apps
 
 - IIFE
@@ -57,6 +75,10 @@ HUSKY=0 git commit -m "Your commit message"
   - `npm run example:react`
 
 NOTE: When testing local changes, be sure to re-build via `npm run build` to ensure the example apps are referencing the latest changes.
+
+### Example React App and CI dependencies
+
+As part of CI, we validate that the Example React App can build successfully. This is not so much to verify that our example is in a working condition (although it is a nice side-effect), but rather verify that MAJC will not cause build errors in an application that implements it. As a result, developers must make sure the example is always in a build-able state when opening a PR.
 
 ## Updating MARS API definitions
 
