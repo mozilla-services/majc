@@ -5,8 +5,8 @@ on:
   pull_request:
     branches: [ main ]
 jobs:
-  test:
-    name: test
+  validate_build:
+    name: validate_build
     runs-on:
       - ubuntu-latest
     steps:
