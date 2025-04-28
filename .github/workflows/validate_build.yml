@@ -21,8 +21,7 @@ jobs:
       run: npm ci
 
     - name: Build and verify MAJC dist files
-      run: |-
-        npm run build
+      run: npm run build
 
     - name: Install React Example dependencies
       run: npm ci
