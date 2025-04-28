@@ -28,4 +28,4 @@ jobs:
         npm run build
     - name: Build and verify example react app
       run: |-
-        npm run validate:exampe:build
+        npm run validate:example:build
