@@ -1,8 +1,17 @@
 import { readFileSync, readdirSync } from 'fs'
 
 export interface ExpectedBuildOutput {
+  /**
+   * The relative path where we expect tsup to output build files.
+   */
   buildDir: string
+  /**
+   * A list of file names we expect to exist in the build directory with extensions.
+   */
   files: string[]
+  /*
+   * A list of files names we expect to have "use client"; directives.
+   */
   clientOnlyModules: string[]
 }
 
