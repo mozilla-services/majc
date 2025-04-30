@@ -10,18 +10,19 @@ jobs:
     runs-on:
       - ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js 20.18.0
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+    - name: Use Node.js latest
       uses: actions/setup-node@v4
       with:
-        node-version: '20.18.0'
+        node-version: lts/*
         cache: npm
 
     - name: Install dependencies
       run: npm ci
 
     - name: Build and verify MAJC dist files
-      run: npm run build
+      run: |-
+        npm run build
 
     - name: Install React Example dependencies
       run: npm ci
