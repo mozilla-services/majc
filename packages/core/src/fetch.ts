@@ -1,7 +1,7 @@
 import { client, getAds, AdPlacement, AdResponse } from '@heyapi'
 import { DEFAULT_SERVICE_ENDPOINT } from './constants'
 import { DefaultLogger } from './logger'
-import { getOrGenerateContextId } from './store'
+import { getOptanonCookie, getOrGenerateContextId } from './store'
 import { MozAdsPlacements, MozAdsPlacementWithContent } from './types'
 import { getFallbackAd, getFallbackAds } from './fallback'
 
@@ -19,6 +19,7 @@ export class FetchAdsError extends Error {
 export interface FetchAdsParams {
   placements: MozAdsPlacements
   contextId?: string
+  consentOptions?: string
   serviceEndpoint?: string
 }
 
@@ -28,8 +29,10 @@ let fetchPromise: Promise<MozAdsPlacements> | undefined
 export const fetchAds = async ({
   placements,
   contextId = getOrGenerateContextId(),
+  consentOptions = getOptanonCookie(),
   serviceEndpoint = DEFAULT_SERVICE_ENDPOINT,
 }: FetchAdsParams): Promise<MozAdsPlacements> => {
+  console.log(consentOptions)
   // Add these placements to a pending queue to be fetched
   pendingPlacements = {
     ...pendingPlacements,

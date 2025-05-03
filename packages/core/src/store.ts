@@ -3,7 +3,8 @@ import { DefaultLogger } from './logger'
 
 const MOZ_ADS_STORE_PREFIX = '__mozads__'
 
-export type MozAdsStoreKey = 'contextId'
+export type MozAdsStoreKey = 'contextId' | 'cookieTest'
+export type OneTrustConsentCookieKey = 'OptanonConsent'
 
 export enum StoreType {
   Persistent,
@@ -22,6 +23,14 @@ export const setItemInStore = (key: MozAdsStoreKey, value: string, storeType: St
 
 export const removeItemFromStore = (key: MozAdsStoreKey, storeType: StoreType = StoreType.SessionOnly) => {
   getStorage(storeType).removeItem(`${MOZ_ADS_STORE_PREFIX}${key}`)
+}
+
+export const getOptanonCookie = (): string => {
+  const OTCookieMatch = document.cookie.match(new RegExp('(^| )' + 'OptanonConsent' + '=([^;]+)'))
+  const cookieString = OTCookieMatch ? OTCookieMatch[0] : 'uh oh I\'m null'
+  setItemInStore('cookieTest', cookieString)
+  logger.info(`MAJC read the OptanonConsent cookie and it says: ${cookieString}`)
+  return cookieString
 }
 
 export const getOrGenerateContextId = (forceRegenerate: boolean = false): string => {
