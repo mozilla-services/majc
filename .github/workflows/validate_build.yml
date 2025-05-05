@@ -1,4 +1,4 @@
-name: validate_build
+name: validate build
 on:
   push:
     branches: [ main ]
@@ -6,28 +6,22 @@ on:
     branches: [ main ]
 jobs:
   validate_build:
-    name: validate_build
-    runs-on:
-      - ubuntu-latest
+    name: validate build
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-    - name: Use Node.js latest
+    - name: Use default Node.js
       uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
       with:
-        node-version: lts/*
         cache: npm
-
     - name: Install dependencies
       run: npm ci
-
     - name: Build and verify MAJC dist files
       run: |-
         npm run build
-
     - name: Install React Example dependencies
       run: npm ci
       working-directory: ./examples/react
-
     - name: Build and verify Example React App
       run: npm run build
       working-directory: ./examples/react
