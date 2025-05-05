@@ -1,4 +1,4 @@
-name: validate_build
+name: validate build
 on:
   push:
     branches: [ main ]
