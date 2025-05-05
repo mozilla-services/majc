@@ -5,7 +5,8 @@ on:
   pull_request:
     branches: [ main ]
 jobs:
-  test:
+  cross_browser_e2e_test:
+    name: cross browser e2e test
     timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
