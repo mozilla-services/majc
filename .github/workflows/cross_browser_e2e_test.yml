@@ -1,7 +1,6 @@
 name: cross browser e2e test
 permissions:
   contents: read
-  pull-requests: write
 on:
   push:
     branches: [ main ]
