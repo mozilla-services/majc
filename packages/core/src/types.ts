@@ -33,12 +33,14 @@ export interface ImpressionThreshold {
   duration: number
 }
 
-export type IABContentTaxonomyType =
-  'IAB-1.0' |
-  'IAB-2.0' |
-  'IAB-2.1' |
-  'IAB-2.2' |
-  'IAB-3.0'
+export const IABContentTaxonomyTypes = ['IAB-1.0',
+  'IAB-2.0',
+  'IAB-2.1',
+  'IAB-2.2',
+  'IAB-3.0',
+] as const
+
+export type IABContentTaxonomyType = typeof IABContentTaxonomyTypes[number]
 
 export interface IABContent {
   taxonomy: IABContentTaxonomyType // https://iabtechlab.com/standards/content-taxonomy/

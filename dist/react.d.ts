@@ -122,7 +122,8 @@ type UaTile = AdFormatBase & {
     block_key?: string;
 };
 
-type IABContentTaxonomyType = 'IAB-1.0' | 'IAB-2.0' | 'IAB-2.1' | 'IAB-2.2' | 'IAB-3.0';
+declare const IABContentTaxonomyTypes: readonly ["IAB-1.0", "IAB-2.0", "IAB-2.1", "IAB-2.2", "IAB-3.0"];
+type IABContentTaxonomyType = typeof IABContentTaxonomyTypes[number];
 interface IABContent {
     taxonomy: IABContentTaxonomyType;
     categoryIds: string[];
