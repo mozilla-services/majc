@@ -3,6 +3,7 @@ import {
   AdUnitFormatImpressionThreshold,
   DefaultImpressionThreshold,
 } from './constants'
+import { isFallback } from './fallback'
 import { DefaultLogger } from './logger'
 import { MozAdsPlacementWithContent } from './types'
 
@@ -101,6 +102,9 @@ export class DefaultMozAdsImpressionObserver implements MozAdsImpressionObserver
   }
 
   public observe(placement: MozAdsPlacementWithContent) {
+    // No need to observe fallback ads -- they are meant for an offline experience so they don't
+    // have dynamic impression urls from MARS, so we can't register an impression for them.
+    if (isFallback(placement)) return
     const placementId = placement.placementId
     const placementImage = document.querySelector<HTMLImageElement>(`.moz-ads-placement-img[data-placement-id="${placementId}"]`)
     if (!placementImage) {

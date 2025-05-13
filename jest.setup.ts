@@ -23,6 +23,8 @@ Object.defineProperty(globalThis, 'Image', {
   value: MockImage,
 })
 
-globalThis.URL.createObjectURL = jest.fn()
+globalThis.URL.createObjectURL = (blob: Blob): string => {
+  return `blob://blobbish-${blob.type}`
+}
 
 fetchMock.enableMocks()
