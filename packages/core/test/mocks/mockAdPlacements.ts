@@ -1,3 +1,4 @@
+import { IABFixedSize, FallbackAdURL } from '@core/constants'
 import { MozAdsPlacements } from '../../src/types'
 
 export const MOCK_AD_PLACEMENTS: MozAdsPlacements = {
@@ -31,5 +32,14 @@ export const MOCK_AD_PLACEMENTS: MozAdsPlacements = {
   },
   invalid_placement_1: {
     placementId: 'invalid_placement_1',
+  },
+  fallback_placement_1: {
+    placementId: 'fallback_placement_1',
+    fixedSize: IABFixedSize.Skyscraper,
+    content: {
+      format: 'skyscraper',
+      url: FallbackAdURL['Skyscraper'],
+      image_url: 'blob://blobbish',
+    },
   },
 }
