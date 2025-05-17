@@ -45,40 +45,38 @@ export class DefaultMozAdsImpressionObserver implements MozAdsImpressionObserver
   }
 
   private async recordImpression(placementId: string, impressionUrl?: string | null) {
-    if (impressionUrl) {
-      logger.info(`Impression occurred for placement: ${placementId}`, {
-        type: 'impressionObserver.recordImpression.viewed',
-        placementId: placementId,
+    if (!impressionUrl || !URL.canParse(impressionUrl)) {
+      logger.error(`Invalid impression URL for placement: ${placementId}`, {
+        type: 'impressionObserver.recordImpression.invalidCallbackError',
+        eventLabel: 'invalid_url_error',
       })
-      try {
-        const response = await fetch(impressionUrl, { keepalive: true })
-        if (!response.ok) {
-          logger.error(`Impression callback returned a non-200 for placement: ${placementId}`, {
-            type: 'impressionObserver.recordImpression.callbackResponseError',
-            eventLabel: 'fetch_error',
-            path: impressionUrl,
-            placementId: placementId,
-            method: 'GET',
-            errorId: `${response.status}`,
-          })
-        }
-      }
-      catch (error: unknown) {
-        logger.error(`Impression callback threw an unexpected error for placement: ${placementId}`, {
+      return
+    }
+    logger.info(`Impression occurred for placement: ${placementId}`, {
+      type: 'impressionObserver.recordImpression.viewed',
+      placementId: placementId,
+    })
+    try {
+      const response = await fetch(impressionUrl, { keepalive: true })
+      if (!response.ok) {
+        logger.error(`Impression callback returned a non-200 for placement: ${placementId}`, {
           type: 'impressionObserver.recordImpression.callbackResponseError',
           eventLabel: 'fetch_error',
           path: impressionUrl,
           placementId: placementId,
           method: 'GET',
-          errorId: (error as Error)?.name,
+          errorId: `${response.status}`,
         })
       }
     }
-    else {
-      logger.error(`No impression callback URL found for placement: ${placementId}`, {
-        type: 'impressionObserver.recordImpression.callbackNotFoundError',
-        eventLabel: 'invalid_url_error',
+    catch (error: unknown) {
+      logger.error(`Impression callback threw an unexpected error for placement: ${placementId}`, {
+        type: 'impressionObserver.recordImpression.callbackResponseError',
+        eventLabel: 'fetch_error',
+        path: impressionUrl,
         placementId: placementId,
+        method: 'GET',
+        errorId: (error as Error)?.name,
       })
     }
   }
