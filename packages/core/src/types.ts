@@ -51,7 +51,7 @@ export type LogType =
   'recordClick.clickOccurred' |
   'recordClick.success' |
   'recordClick.callbackResponseError' |
-  'recordClick.callbackNotFoundError' |
+  'recordClick.invalidCallbackError' |
   'renderPlacement.reportCallbackResponseError' |
   'renderPlacement.reportCallbackNotFoundError' |
   'renderPlacement.reportCallbackInvalid' |
@@ -59,7 +59,7 @@ export type LogType =
   'fetchAds.request.error' |
   'impressionObserver.recordImpression.viewed' |
   'impressionObserver.recordImpression.callbackResponseError' |
-  'impressionObserver.recordImpression.callbackNotFoundError' |
+  'impressionObserver.recordImpression.invalidCallbackError' |
   'impressionObserver.observeAd.adNotFoundError' |
   'impressionObserver.forceRecordImpression.error' |
   'placementComponent.adLoad.success' |

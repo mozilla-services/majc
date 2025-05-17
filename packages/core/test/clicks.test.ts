@@ -1,6 +1,7 @@
 /* eslint @stylistic/quote-props: 0 */
 
 import fetchMock from 'jest-fetch-mock'
+import * as logger from '../src/logger'
 import { recordClick } from '../src/clicks'
 import { INSTRUMENT_ENDPOINT } from '../src/constants'
 
@@ -9,19 +10,19 @@ describe('core/clicks.ts', () => {
     jest.clearAllMocks()
   })
 
-  test('recordClick logs an error and fails when no click callback URL is provided', async () => {
-    const placementWithContent = {
+  test('recordClick logs an error and exits when no click callback URL is provided', async () => {
+    const placementWithoutContent = {
       placementId: 'pocket_billboard_1',
     }
 
     const consoleErrorMock = jest.spyOn(globalThis.console, 'error')
     fetchMock.mockResponse(async () => ({}))
 
-    await recordClick(placementWithContent)
+    await recordClick(placementWithoutContent)
 
     expect(fetchMock.mock.lastCall?.[0]).toEqual(`${INSTRUMENT_ENDPOINT}?event=invalid_url_error`)
     expect(fetchMock.mock.lastCall?.[1]).toEqual({ keepalive: true })
-    expect(consoleErrorMock).toHaveBeenLastCalledWith('No click callback URL found for placement ID: pocket_billboard_1')
+    expect(consoleErrorMock).toHaveBeenLastCalledWith('Invalid click URL for placement: pocket_billboard_1')
   })
 
   test('recordClick logs an error and fails when the fetch fails with an error', async () => {
