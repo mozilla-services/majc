@@ -9,20 +9,28 @@ describe('core/impresssions.ts', () => {
   let placementElement1: HTMLElement
   let placementElement2: HTMLElement
   let invalidPlacementElement: HTMLElement
+  let fallbackPlacementElement: HTMLElement
 
   beforeEach(() => {
     placementElement1 = document.createElement('img')
     placementElement2 = document.createElement('img')
     invalidPlacementElement = document.createElement('img')
+    fallbackPlacementElement = document.createElement('img')
+
     placementElement1.className = 'moz-ads-placement-img'
     placementElement2.className = 'moz-ads-placement-img'
+    fallbackPlacementElement.className = 'moz-ads-placement-img'
+
     placementElement1.dataset.placementId = 'pocket_billboard_1'
     placementElement2.dataset.placementId = 'pocket_billboard_2'
+    fallbackPlacementElement.dataset.placementId = 'fallback_placement_1'
+
     globalThis.IntersectionObserver = MockIntersectionObserver
     defaultObserver = new DefaultMozAdsImpressionObserver()
 
     document.body.appendChild(placementElement1)
     document.body.appendChild(placementElement2)
+    document.body.appendChild(fallbackPlacementElement)
     jest.useFakeTimers()
   })
 
@@ -69,6 +77,13 @@ describe('core/impresssions.ts', () => {
     expect(observerSpy).toHaveBeenCalledWith(placementElement1)
     expect(observerSpy).toHaveBeenCalledWith(placementElement2)
     expect(observerSpy).toHaveBeenCalledTimes(2)
+  })
+
+  test('fallback ads are not observed', () => {
+    defaultObserver.observe(MOCK_AD_PLACEMENTS['pocket_billboard_1'])
+    defaultObserver.observe(MOCK_AD_PLACEMENTS['fallback_placement_1'])
+    expect(defaultObserver.impressionTracker['pocket_billboard_1']).toBeTruthy()
+    expect(defaultObserver.impressionTracker['fallback_placement_1']).toBeUndefined()
   })
 
   test('unseen element successfully becomes in-view when above threshold', () => {

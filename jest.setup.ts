@@ -2,6 +2,7 @@ import fetchMock from 'jest-fetch-mock'
 import mockConsole from './packages/core/test/mocks/mockConsole'
 import { MockDate } from './packages/core/test/mocks/mockDate'
 import { MockImage } from './packages/core/test/mocks/mockImage'
+import { MockURL } from './packages/core/test/mocks/mockURL'
 
 export function wait(ms?: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms))
@@ -23,6 +24,8 @@ Object.defineProperty(globalThis, 'Image', {
   value: MockImage,
 })
 
-globalThis.URL.createObjectURL = jest.fn()
+Object.defineProperty(globalThis, 'URL', {
+  value: MockURL,
+})
 
 fetchMock.enableMocks()
