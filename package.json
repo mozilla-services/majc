@@ -32,7 +32,7 @@
     "uuid": "11.1.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.21.0",
+    "@eslint/js": "^9.27.0",
     "@hey-api/openapi-ts": "^0.64.10",
     "@playwright/test": "^1.51.1",
     "@stylistic/eslint-plugin": "^2.13.0",
