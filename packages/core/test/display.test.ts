@@ -18,11 +18,11 @@ describe('iife/display.ts', () => {
         format: 'billboard',
         url: 'https://getpocket.com/',
         callbacks: {
-          click: 'http://example.com/click',
-          impression: 'http://example.com/impression',
-          report: 'http://example.com/report',
+          click: 'https://example.com/click',
+          impression: 'https://example.com/impression',
+          report: 'https://example.com/report',
         },
-        image_url: 'http://example.com/image',
+        image_url: 'https://example.com/image',
         alt_text: 'Advertiser Name',
         block_key: '1234567890ABCDEFGHabcdefgh',
       },
@@ -137,11 +137,11 @@ describe('iife/display.ts', () => {
         format: 'billboard',
         url: 'https://getpocket.com/',
         callbacks: {
-          click: 'http://example.com/click',
-          impression: 'http://example.com/impression',
-          report: 'http://example.com/report',
+          click: 'https://example.com/click',
+          impression: 'https://example.com/impression',
+          report: 'https://example.com/report',
         },
-        image_url: 'http://example.com/image',
+        image_url: 'https://example.com/image',
         alt_text: 'Advertiser Name',
         block_key: '1234567890ABCDEFGHabcdefgh',
       },
@@ -158,7 +158,7 @@ describe('iife/display.ts', () => {
     const img = link?.querySelector<HTMLImageElement>('.moz-ads-placement-img[data-placement-id="pocket_billboard_1"]')
     expect(img).toBeInstanceOf(HTMLImageElement)
     expect(img?.alt).toEqual('Advertiser Name')
-    expect(img?.src).toEqual('http://example.com/image')
+    expect(img?.src).toEqual('https://example.com/image')
     const reportButton = link?.querySelector<HTMLButtonElement>('.moz-ads-placement-report-button')
     expect(reportButton).toBeInstanceOf(HTMLButtonElement)
     expect(reportButton?.title).toEqual('Report ad')
@@ -182,11 +182,11 @@ describe('iife/display.ts', () => {
         format: 'billboard',
         url: 'https://getpocket.com/',
         callbacks: {
-          click: 'http://example.com/click',
-          impression: 'http://example.com/impression',
-          report: 'http://example.com/report',
+          click: 'https://example.com/click',
+          impression: 'https://example.com/impression',
+          report: 'https://example.com/report',
         },
-        image_url: 'http://example.com/image',
+        image_url: 'https://example.com/image',
         alt_text: 'Advertiser Name',
         block_key: '1234567890ABCDEFGHabcdefgh',
       },
@@ -203,7 +203,7 @@ describe('iife/display.ts', () => {
     const img = link?.querySelector<HTMLImageElement>('.moz-ads-placement-img[data-placement-id="pocket_billboard_1"]')
     expect(img).toBeInstanceOf(HTMLImageElement)
     expect(img?.alt).toEqual('Advertiser Name')
-    expect(img?.src).toEqual('http://example.com/image')
+    expect(img?.src).toEqual('https://example.com/image')
     const reportButton = link?.querySelector<HTMLButtonElement>('.moz-ads-placement-report-button')
     expect(reportButton).toBeInstanceOf(HTMLButtonElement)
     expect(reportButton?.title).toEqual('Report ad')
@@ -230,11 +230,11 @@ describe('iife/display.ts', () => {
       content: {
         format: 'billboard',
         callbacks: {
-          click: 'http://example.com/click',
-          impression: 'http://example.com/impression',
-          report: 'http://example.com/report',
+          click: 'https://example.com/click',
+          impression: 'https://example.com/impression',
+          report: 'https://example.com/report',
         },
-        image_url: 'http://example.com/image',
+        image_url: 'https://example.com/image',
         block_key: '1234567890ABCDEFGHabcdefgh',
       },
     }
@@ -272,7 +272,7 @@ describe('iife/display.ts', () => {
     fetchMock.mockResponse(async () => ({}))
     reportForm?.dispatchEvent(new Event('submit'))
     await tick()
-    expect(fetchMock.mock.lastCall?.[0]).toEqual('http://example.com/report?reason=not_interested')
+    expect(fetchMock.mock.lastCall?.[0]).toEqual('https://example.com/report?reason=not_interested')
     expect(fetchMock.mock.lastCall?.[1]).toEqual({ keepalive: true })
     expect(onReport).toHaveBeenCalled()
     const reportTitleParagraph = inner?.querySelector<HTMLParagraphElement>('.moz-ads-placement-report-title')
@@ -292,11 +292,11 @@ describe('iife/display.ts', () => {
       content: {
         format: 'billboard',
         callbacks: {
-          click: 'http://example.com/click',
-          impression: 'http://example.com/impression',
+          click: 'https://example.com/click',
+          impression: 'https://example.com/impression',
           report: undefined,
         },
-        image_url: 'http://example.com/image',
+        image_url: 'https://example.com/image',
         block_key: '1234567890ABCDEFGHabcdefgh',
       },
     }
@@ -343,11 +343,11 @@ describe('iife/display.ts', () => {
       content: {
         format: 'billboard',
         callbacks: {
-          click: 'http://example.com/click',
-          impression: 'http://example.com/impression',
-          report: 'http://example.com/report',
+          click: 'https://example.com/click',
+          impression: 'https://example.com/impression',
+          report: 'https://example.com/report',
         },
-        image_url: 'http://example.com/image',
+        image_url: 'https://example.com/image',
         block_key: '1234567890ABCDEFGHabcdefgh',
       },
     }

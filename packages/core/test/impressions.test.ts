@@ -45,53 +45,85 @@ describe('core/impresssions.ts', () => {
     jest.useRealTimers()
   })
 
-  describe('forceRecordImpression logs an error ', () => {
-    test('when the impression callback URL is invalid', async () => {
-      jest.useRealTimers()
+  describe('forceRecordImpression and recordImpression', () => {
+    describe('sends a request to the impression callback url', () => {
+      test('when the placement is not tracked', () => {
+        jest.useRealTimers()
 
-      defaultObserver.forceRecordImpression({
-        placementId: 'pocket_billboard_1',
-        content: {
-          callbacks: {
-            click: 'invalid-click-callback-url',
-            impression: 'invalid-impression-callback-url',
-          },
-        },
+        defaultObserver.forceRecordImpression(MOCK_AD_PLACEMENTS['pocket_billboard_1'])
+
+        expect(logInfoSpy).toHaveBeenCalledWith('Impression occurred for placement: pocket_billboard_1', { placementId: 'pocket_billboard_1', type: 'impressionObserver.recordImpression.viewed' })
+        expect(fetchMock.mock.calls.length).toBe(2)
+        expect(fetchMock.mock.calls[0][0]).toBe('https://ads.allizom.org/v1/log?event=init')
+        expect(fetchMock.mock.calls[1][0]).toBe('https://fake_impression_url.abc/1')
       })
 
-      expect(logErrorSpy).toHaveBeenCalledWith(
-        'Invalid impression URL for placement: pocket_billboard_1',
-        { type: 'impressionObserver.recordImpression.invalidCallbackError', eventLabel: 'invalid_url_error' })
-      expect(logInfoSpy).not.toHaveBeenCalled()
-      expect(fetchMock).not.toHaveBeenCalled()
+      test('when the placement is not viewed', () => {
+        jest.useRealTimers()
+
+        const unObserveSpy = jest.spyOn(defaultObserver.intersectionObserver!, 'unobserve')
+        defaultObserver.observe(MOCK_AD_PLACEMENTS['pocket_billboard_1'])
+        expect(defaultObserver.impressionTracker['pocket_billboard_1'].viewStatus).toEqual('unseen')
+
+        defaultObserver.forceRecordImpression(MOCK_AD_PLACEMENTS['pocket_billboard_1'])
+
+        expect(logInfoSpy).toHaveBeenCalledWith('Impression occurred for placement: pocket_billboard_1', { placementId: 'pocket_billboard_1', type: 'impressionObserver.recordImpression.viewed' })
+        expect(fetchMock.mock.calls.length).toBe(1)
+        expect(fetchMock.mock.calls[0][0]).toBe('https://fake_impression_url.abc/1')
+        expect(defaultObserver.impressionTracker['pocket_billboard_1'].viewStatus).toEqual('viewed')
+        expect(unObserveSpy).toHaveBeenCalledWith(placementElement1)
+      })
     })
 
-    test('when the impression callback request fails', async () => {
-      jest.useRealTimers()
+    describe('logs an error', () => {
+      test('and exits early when the impression callback URL is invalid', () => {
+        jest.useRealTimers()
 
-      fetchMock.mockResponse(async () => ({
-        init: {
-          status: 500,
-        },
-      }))
-
-      defaultObserver.forceRecordImpression({
-        placementId: 'pocket_billboard_1',
-        content: {
-          callbacks: {
-            click: 'https://example.com/click',
-            impression: 'https://example.com/impression',
+        defaultObserver.forceRecordImpression({
+          placementId: 'pocket_billboard_1',
+          content: {
+            callbacks: {
+              click: 'invalid-click-callback-url',
+              impression: 'invalid-impression-callback-url',
+            },
           },
-        },
+        })
+
+        expect(logErrorSpy).toHaveBeenCalledWith(
+          'Invalid impression URL for placement: pocket_billboard_1',
+          { type: 'impressionObserver.recordImpression.invalidCallbackError', eventLabel: 'invalid_url_error' })
+        expect(logInfoSpy).not.toHaveBeenCalled()
+        expect(fetchMock.mock.calls.length).toBe(1)
+        expect(fetchMock.mock.calls[0][0]).toBe('https://ads.allizom.org/v1/log?event=invalid_url_error')
       })
 
-      expect(fetchMock.mock.lastCall?.[0]).toEqual('https://example.com/impression')
-      expect(fetchMock.mock.lastCall?.[1]).toEqual({ keepalive: true })
+      test('when the impression callback request fails', async () => {
+        jest.useRealTimers()
 
-      await tick()
+        fetchMock.mockResponse(async () => ({
+          init: {
+            status: 500,
+          },
+        }))
 
-      expect(logErrorSpy).toHaveBeenLastCalledWith('Impression callback returned a non-200 for placement: pocket_billboard_1',
-        { errorId: '500', eventLabel: 'fetch_error', method: 'GET', path: 'https://example.com/impression', placementId: 'pocket_billboard_1', type: 'impressionObserver.recordImpression.callbackResponseError' })
+        defaultObserver.forceRecordImpression({
+          placementId: 'pocket_billboard_1',
+          content: {
+            callbacks: {
+              click: 'https://example.com/click',
+              impression: 'https://example.com/impression',
+            },
+          },
+        })
+
+        expect(fetchMock.mock.lastCall?.[0]).toEqual('https://example.com/impression')
+        expect(fetchMock.mock.lastCall?.[1]).toEqual({ keepalive: true })
+
+        await tick()
+
+        expect(logErrorSpy).toHaveBeenLastCalledWith('Impression callback returned a non-200 for placement: pocket_billboard_1',
+          { errorId: '500', eventLabel: 'fetch_error', method: 'GET', path: 'https://example.com/impression', placementId: 'pocket_billboard_1', type: 'impressionObserver.recordImpression.callbackResponseError' })
+      })
     })
   })
 

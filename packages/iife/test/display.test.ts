@@ -77,11 +77,11 @@ describe('iife/display.ts', () => {
             format: 'billboard',
             url: 'https://getpocket.com/',
             callbacks: {
-              click: 'http://example.com/click',
-              impression: 'http://example.com/impression',
-              report: 'http://example.com/report',
+              click: 'https://example.com/click',
+              impression: 'https://example.com/impression',
+              report: 'https://example.com/report',
             },
-            image_url: 'http://example.com/image',
+            image_url: 'https://example.com/image',
             alt_text: 'Advertiser Name',
             block_key: '1234567890ABCDEFGHabcdefgh',
           },
@@ -98,14 +98,14 @@ describe('iife/display.ts', () => {
     const img = link?.querySelector<HTMLImageElement>('.moz-ads-placement-img[data-placement-id="pocket_billboard_1"]')
     expect(img).toBeInstanceOf(HTMLImageElement)
     expect(img?.alt).toEqual('Advertiser Name')
-    expect(img?.src).toEqual('http://example.com/image')
+    expect(img?.src).toEqual('https://example.com/image')
     img?.dispatchEvent(new Event('load'))
     const reportButton = link?.querySelector<HTMLButtonElement>('.moz-ads-placement-report-button')
     expect(reportButton).toBeInstanceOf(HTMLButtonElement)
     expect(reportButton?.title).toEqual('Report ad')
     fetchMock.mockResponseOnce(async () => ({}))
     link?.dispatchEvent(new Event('click'))
-    expect(fetchMock.mock.lastCall?.[0]).toEqual('http://example.com/click')
+    expect(fetchMock.mock.lastCall?.[0]).toEqual('https://example.com/click')
     expect(fetchMock.mock.lastCall?.[1]).toEqual({ keepalive: true })
   })
 })
