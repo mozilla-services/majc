@@ -52,11 +52,11 @@ describe('core/clicks.ts recordClick', () => {
         format: 'billboard',
         url: 'https://getpocket.com/',
         callbacks: {
-          click: 'http://example.com/click',
-          impression: 'http://example.com/impression',
-          report: 'http://example.com/report',
+          click: 'https://example.com/click',
+          impression: 'https://example.com/impression',
+          report: 'https://example.com/report',
         },
-        image_url: 'http://example.com/image',
+        image_url: 'https://example.com/image',
         alt_text: 'Advertiser Name',
         block_key: '1234567890ABCDEFGHabcdefgh',
       },
@@ -70,7 +70,7 @@ describe('core/clicks.ts recordClick', () => {
     // The 0th logError call happens when the impression callback request fails due to mockReject.
     // For this test, it's sufficient to assert that we called the forceImpression function.
     expect(logErrorSpy.mock.calls[1][0]).toBe('Click callback failed for: pocket_billboard_1 with an unknown error.')
-    expect(logErrorSpy.mock.calls[1][1]).toEqual({ 'errorId': 'Error', 'eventLabel': 'fetch_error', 'method': 'GET', 'path': 'http://example.com/click', 'placementId': 'pocket_billboard_1', 'type': 'recordClick.callbackResponseError' })
+    expect(logErrorSpy.mock.calls[1][1]).toEqual({ 'errorId': 'Error', 'eventLabel': 'fetch_error', 'method': 'GET', 'path': 'https://example.com/click', 'placementId': 'pocket_billboard_1', 'type': 'recordClick.callbackResponseError' })
   })
 
   test('catches and logs an unknown error when the fetch fails for an unknown reason', async () => {
@@ -80,11 +80,11 @@ describe('core/clicks.ts recordClick', () => {
         format: 'billboard',
         url: 'https://getpocket.com/',
         callbacks: {
-          click: 'http://example.com/click',
-          impression: 'http://example.com/impression',
-          report: 'http://example.com/report',
+          click: 'https://example.com/click',
+          impression: 'https://example.com/impression',
+          report: 'https://example.com/report',
         },
-        image_url: 'http://example.com/image',
+        image_url: 'https://example.com/image',
         alt_text: 'Advertiser Name',
         block_key: '1234567890ABCDEFGHabcdefgh',
       },
@@ -99,7 +99,7 @@ describe('core/clicks.ts recordClick', () => {
     // The 0th logError call happens when the impression callback request fails due to mockReject.
     // For this test, it's sufficient to assert that we called the forceImpression function.
     expect(logErrorSpy.mock.calls[1][0]).toBe('Click callback failed for: pocket_billboard_1 with an unknown error.')
-    expect(logErrorSpy.mock.calls[1][1]).toEqual({ 'errorId': 'Unknown', 'eventLabel': 'fetch_error', 'method': 'GET', 'path': 'http://example.com/click', 'placementId': 'pocket_billboard_1', 'type': 'recordClick.callbackResponseError' })
+    expect(logErrorSpy.mock.calls[1][1]).toEqual({ 'errorId': 'Unknown', 'eventLabel': 'fetch_error', 'method': 'GET', 'path': 'https://example.com/click', 'placementId': 'pocket_billboard_1', 'type': 'recordClick.callbackResponseError' })
   })
 
   test('successfully sends a request to the click callback', async () => {
@@ -109,11 +109,11 @@ describe('core/clicks.ts recordClick', () => {
         format: 'billboard',
         url: 'https://getpocket.com/',
         callbacks: {
-          click: 'http://example.com/click',
-          impression: 'http://example.com/impression',
-          report: 'http://example.com/report',
+          click: 'https://example.com/click',
+          impression: 'https://example.com/impression',
+          report: 'https://example.com/report',
         },
-        image_url: 'http://example.com/image',
+        image_url: 'https://example.com/image',
         alt_text: 'Advertiser Name',
         block_key: '1234567890ABCDEFGHabcdefgh',
       },
@@ -135,11 +135,11 @@ describe('core/clicks.ts recordClick', () => {
         format: 'billboard',
         url: 'https://getpocket.com/',
         callbacks: {
-          click: 'http://example.com/click',
-          impression: 'http://example.com/impression',
-          report: 'http://example.com/report',
+          click: 'https://example.com/click',
+          impression: 'https://example.com/impression',
+          report: 'https://example.com/report',
         },
-        image_url: 'http://example.com/image',
+        image_url: 'https://example.com/image',
         alt_text: 'Advertiser Name',
         block_key: '1234567890ABCDEFGHabcdefgh',
       },

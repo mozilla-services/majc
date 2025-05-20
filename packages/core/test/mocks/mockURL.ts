@@ -7,12 +7,11 @@ export class MockURLLib {
       'https://fake_click_url',
       'https://fake_impression_url',
       'http://example.com',
+      'https://example.com',
       `${INSTRUMENT_ENDPOINT}`,
     ].reduce((acc, curr): boolean => {
       return acc = acc || urlString.startsWith(curr)
     }, false)
-    console.log(`Testing url ${urlString}: isTestURL: ${isTestURL}`)
-    console.log(isTestURL)
     return isTestURL
   }
 
