@@ -9,13 +9,14 @@ import {
   MozAdsRenderPlacementEvent,
   MozAdsRenderPlacementReportEvent,
 } from './types'
+import { isFallback } from './fallback'
 
 const logger = new DefaultLogger({ name: 'core.display' })
 
 // Some styles derived from [Mozilla Protocol](https://github.com/mozilla/protocol) design system where noted
 const styleHtml = `
   <style>
-    @font-face { 
+    @font-face {
       font-display: swap;
       font-family: Inter;
       font-style: normal;
@@ -421,7 +422,7 @@ export function renderPlacement(element: HTMLElement, { placement, onClick, onEr
                 reportSubmitButton.remove()
 
                 const reason = reportSelect.value
-
+                if (isFallback(placement)) return
                 try {
                   const reportUrl = new URL(placement.content?.callbacks?.report ?? '')
                   reportUrl.searchParams.set('reason', reason)

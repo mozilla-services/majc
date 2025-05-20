@@ -1,5 +1,7 @@
 /* eslint @stylistic/quote-props: 0 */
 
+import { DefaultLogger } from '../src/logger'
+import { FallbackAdURL } from '@core/constants'
 import fetchMock from 'jest-fetch-mock'
 import { tick } from '@/jest.setup'
 import { renderPlacement } from '../src/display'
@@ -384,5 +386,36 @@ describe('iife/display.ts', () => {
     reportForm?.dispatchEvent(new Event('submit'))
     await tick()
     expect(consoleErrorMock).toHaveBeenLastCalledWith('Report callback failed for: pocket_billboard_1 with an unknown error.')
+  })
+
+  test('renderPlacement exits early for fallback ads', async () => {
+    const logErrorSpy = jest.spyOn(DefaultLogger.prototype, 'error')
+    const placementElement = document.createElement('div')
+    const placement = {
+      placementId: 'pocket_billboard_1',
+      content: {
+        format: 'billboard',
+        url: FallbackAdURL['Billboard'],
+        image_url: `blob://billboard-blob-${Date.now()}`,
+      },
+    }
+
+    renderPlacement(placementElement, {
+      placement,
+    })
+    await tick()
+
+    const reportButton = placementElement.querySelector<HTMLButtonElement>('.moz-ads-placement-report-button')
+    reportButton?.dispatchEvent(new MouseEvent('click'))
+    const inner = placementElement.querySelector<HTMLDivElement>('.moz-ads-placement-inner')
+    const reportForm = inner?.querySelector<HTMLFormElement>('.moz-ads-placement-report-form')
+    const reportSelect = reportForm?.querySelector<HTMLSelectElement>('.moz-ads-placement-report-reason-select')
+    reportSelect!.value = 'not_interested'
+    reportSelect?.dispatchEvent(new Event('change'))
+    reportForm?.dispatchEvent(new Event('submit'))
+    await tick()
+
+    expect(logErrorSpy).not.toHaveBeenCalled()
+    expect(fetchMock.mock.calls.length).toBe(0)
   })
 })
