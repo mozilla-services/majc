@@ -9,13 +9,14 @@ import {
   MozAdsRenderPlacementEvent,
   MozAdsRenderPlacementReportEvent,
 } from './types'
+import { isFallback } from './fallback'
 
 const logger = new DefaultLogger({ name: 'core.display' })
 
 // Some styles derived from [Mozilla Protocol](https://github.com/mozilla/protocol) design system where noted
 const styleHtml = `
   <style>
-    @font-face { 
+    @font-face {
       font-display: swap;
       font-family: Inter;
       font-style: normal;
@@ -422,34 +423,44 @@ export function renderPlacement(element: HTMLElement, { placement, onClick, onEr
 
                 const reason = reportSelect.value
 
-                try {
-                  const reportUrl = new URL(placement.content?.callbacks?.report ?? '')
-                  reportUrl.searchParams.set('reason', reason)
+                if (!isFallback(placement)) {
+                  const reportCallback = placement.content?.callbacks?.report
+                  if (!reportCallback || !URL.canParse(reportCallback)) {
+                    logger.error(`Invalid report callback URL for placement ID: ${placement.placementId}`, {
+                      type: 'renderPlacement.reportCallbackInvalid',
+                      eventLabel: 'invalid_url_error',
+                      path: reportCallback || 'null or undefined',
+                      placementId: placement.placementId,
+                    })
+                    return
+                  }
 
                   try {
+                    const reportUrl = new URL(reportCallback)
+                    reportUrl.searchParams.set('reason', reason)
                     await fetch(reportUrl.toString(), { keepalive: true })
-
-                    onReport?.({
-                      placement,
-                      reason,
-                    })
                   }
                   catch (error: unknown) {
-                    logger.error(`Report callback failed for: ${placement.placementId} with an unknown error.`, {
-                      type: 'recordClick.callbackResponseError',
+                    logger.error(`Report callback fetch request failed for: ${placement.placementId}.`, {
+                      type: 'renderPlacement.reportCallbackResponseError',
                       eventLabel: 'fetch_error',
-                      path: reportUrl.toString(),
+                      path: reportCallback,
                       placementId: placement.placementId,
                       method: 'GET',
                       errorId: (error as Error)?.name,
                     })
                   }
                 }
+
+                try {
+                  onReport?.({
+                    placement,
+                    reason,
+                  })
+                }
                 catch (error: unknown) {
-                  logger.error(`Invalid report callback URL for placement ID: ${placement.placementId}`, {
-                    type: 'renderPlacement.reportCallbackInvalid',
-                    eventLabel: 'invalid_url_error',
-                    path: placement.content?.callbacks?.report ?? '',
+                  logger.error(`Builder's report callback failed for: ${placement.placementId}.`, {
+                    type: 'renderPlacement.buildersReportCallbackError',
                     placementId: placement.placementId,
                     errorId: (error as Error)?.name,
                   })

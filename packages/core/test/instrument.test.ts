@@ -122,6 +122,16 @@ describe('core/instrument.ts', () => {
     expect(fetchSpy).not.toHaveBeenCalled()
   })
 
+  test('emitLog does not fetch unless the log message has an event label', () => {
+    const fetchSpy = jest.spyOn(globalThis, 'fetch')
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { eventLabel, ...optionsWithoutEventLabel } = TEST_LOG_OPTIONS_1
+
+    defaultLogReporter.emitLog(TEST_LOG_MESSAGE_1, optionsWithoutEventLabel)
+
+    expect(fetchSpy).not.toHaveBeenCalled()
+  })
+
   test('emitLog sends correct fetch', () => {
     const expectedEndpoint = `${INSTRUMENT_ENDPOINT}?event=fetch_error`
 

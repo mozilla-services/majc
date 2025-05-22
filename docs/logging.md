@@ -47,14 +47,14 @@ table {
 | core.instrument | logReporter.init.success | :grey_question: | The LogReporter has been initailized. This is the soonest a health check message can be sent and because LogReporter is a singleton, should only happen once per user session. This can be treated as an "init ping" |
 | core.clicks | recordClick.clickOccurred | :grey_question: | A click occurred on an ad. Note: this happens regardless of the click callback URL request outcome |
 | core.clicks | recordClick.callbackResponseError | :exclamation: | A non-200 response was returned from the click callback request |
-| core.clicks | recordClick.callbackNotFoundError | :exclamation: | No click callback URL found for a given placement |
+| core.clicks | recordClick.invalidCallbackError | :exclamation: | Invalid callback URL for a given placement |
 | core.display | renderPlacement.reportCallbackResponseError | :exclamation: | A non-200 response was returned from the report callback request |
-| core.display | renderPlacement.reportCallbackNotFoundError | :exclamation: | No report callback URL found for a given placement |
+| core.display | renderPlacement.buildersReportCallbackError | :exclamation: | An error occured while executing the builder's report callback |
 | core.display | renderPlacement.reportCallbackInvalid | :exclamation: | An invalid report callback URL found for a given placement |
 | core.fetch | fetchAds.request.error | :exclamation: | A non-200 response was returned from the getAds request |
 | core.impressions | impressionObserver.recordImpression.viewed | :grey_question: | An impression as registered by the impressionObserver for a given placement. Note: this happens regardless of the callback URL request outcome |
 | core.impressions | impressionObserver.recordImpression.callbackResponseError | :exclamation:  | A non-200 response was returned from the impression callback request |
-| core.impressions | impressionObserver.recordImpression.callbackNotFoundError | :exclamation: | No report callback URL found for a given placement |
+| core.impressions | impressionObserver.recordImpression.invalidCallbackError | :exclamation: | Invalid callback URL for a given placement |
 | core.impressions | impressionObserver.observeAd.adNotFoundError | :warning: | When trying to add a placement to the observer, the querySelector could not find an element with a matching placementId. This doesn't mean the ad won't be shown, but likely impression and click callbacks might fail. |
 | core.impressions | impressionObserver.forceRecordImpression.error | :exclamation:  | When attempting to force an impression (usually as a result of a click before the view thresdhold is hit) the placementId could not be found |
 | react.useMozAdsPlacement | placementComponent.adLoad.success | :grey_question:  | The MozAdsPlacement component loaded placement ad content successfully. |
