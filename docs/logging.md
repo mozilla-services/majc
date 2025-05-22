@@ -49,7 +49,7 @@ table {
 | core.clicks | recordClick.callbackResponseError | :exclamation: | A non-200 response was returned from the click callback request |
 | core.clicks | recordClick.invalidCallbackError | :exclamation: | Invalid callback URL for a given placement |
 | core.display | renderPlacement.reportCallbackResponseError | :exclamation: | A non-200 response was returned from the report callback request |
-| core.display | renderPlacement.reportCallbackNotFoundError | :exclamation: | No report callback URL found for a given placement |
+| core.display | renderPlacement.buildersReportCallbackError | :exclamation: | An error occured while executing the builder's report callback |
 | core.display | renderPlacement.reportCallbackInvalid | :exclamation: | An invalid report callback URL found for a given placement |
 | core.fetch | fetchAds.request.error | :exclamation: | A non-200 response was returned from the getAds request |
 | core.impressions | impressionObserver.recordImpression.viewed | :grey_question: | An impression as registered by the impressionObserver for a given placement. Note: this happens regardless of the callback URL request outcome |

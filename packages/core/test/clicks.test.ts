@@ -40,7 +40,7 @@ describe('core/clicks.ts', () => {
 
       expect(logErrorSpy).toHaveBeenLastCalledWith(
         'Invalid click URL for placement: pocket_billboard_1',
-        { 'eventLabel': 'invalid_url_error', 'placementId': 'pocket_billboard_1', 'type': 'recordClick.invalidCallbackError' },
+        { eventLabel: 'invalid_url_error', placementId: 'pocket_billboard_1', path: 'null or undefined', type: 'recordClick.invalidCallbackError' },
       )
       expect(logInfoSpy).not.toHaveBeenCalled()
       expect(impressionObserverSpy).not.toHaveBeenCalled()
@@ -70,8 +70,8 @@ describe('core/clicks.ts', () => {
       expect(impressionObserverSpy).toHaveBeenCalledWith(placement)
       // The 0th logError call happens when the impression callback request fails due to mockReject.
       // For this test, it's sufficient to assert that we called the forceImpression function.
-      expect(logErrorSpy.mock.calls[1][0]).toBe('Click callback failed for: pocket_billboard_1 with an unknown error.')
-      expect(logErrorSpy.mock.calls[1][1]).toEqual({ 'errorId': 'Error', 'eventLabel': 'fetch_error', 'method': 'GET', 'path': 'https://example.com/click', 'placementId': 'pocket_billboard_1', 'type': 'recordClick.callbackResponseError' })
+      expect(logErrorSpy.mock.calls[1][0]).toBe('Click callback failed for: pocket_billboard_1.')
+      expect(logErrorSpy.mock.calls[1][1]).toEqual({ errorId: 'Error', eventLabel: 'fetch_error', method: 'GET', path: 'https://example.com/click', placementId: 'pocket_billboard_1', type: 'recordClick.callbackResponseError' })
     })
 
     test('catches and logs an unknown error when the fetch fails for an unknown reason', async () => {
@@ -99,7 +99,7 @@ describe('core/clicks.ts', () => {
       expect(impressionObserverSpy).toHaveBeenCalledWith(placement)
       // The 0th logError call happens when the impression callback request fails due to mockReject.
       // For this test, it's sufficient to assert that we called the forceImpression function.
-      expect(logErrorSpy.mock.calls[1][0]).toBe('Click callback failed for: pocket_billboard_1 with an unknown error.')
+      expect(logErrorSpy.mock.calls[1][0]).toBe('Click callback failed for: pocket_billboard_1.')
       expect(logErrorSpy.mock.calls[1][1]).toEqual({ 'errorId': 'Unknown', 'eventLabel': 'fetch_error', 'method': 'GET', 'path': 'https://example.com/click', 'placementId': 'pocket_billboard_1', 'type': 'recordClick.callbackResponseError' })
     })
 

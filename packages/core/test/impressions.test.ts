@@ -76,6 +76,27 @@ describe('core/impresssions.ts', () => {
     })
 
     describe('logs an error', () => {
+      test('and exits early when the impression callback URL is missing', () => {
+        jest.useRealTimers()
+
+        defaultObserver.forceRecordImpression({
+          placementId: 'pocket_billboard_1',
+          content: {
+            callbacks: {
+              click: 'invalid-click-callback-url',
+              impression: null,
+            },
+          },
+        })
+
+        expect(logErrorSpy).toHaveBeenCalledWith(
+          'Invalid impression URL for placement: pocket_billboard_1',
+          { type: 'impressionObserver.recordImpression.invalidCallbackError', path: 'null or undefined', eventLabel: 'invalid_url_error' })
+        expect(logInfoSpy).not.toHaveBeenCalled()
+        expect(fetchMock.mock.calls.length).toBe(1)
+        expect(fetchMock.mock.calls[0][0]).toBe('https://ads.allizom.org/v1/log?event=invalid_url_error')
+      })
+
       test('and exits early when the impression callback URL is invalid', () => {
         jest.useRealTimers()
 
@@ -91,7 +112,7 @@ describe('core/impresssions.ts', () => {
 
         expect(logErrorSpy).toHaveBeenCalledWith(
           'Invalid impression URL for placement: pocket_billboard_1',
-          { type: 'impressionObserver.recordImpression.invalidCallbackError', eventLabel: 'invalid_url_error' })
+          { type: 'impressionObserver.recordImpression.invalidCallbackError', path: 'invalid-impression-callback-url', eventLabel: 'invalid_url_error' })
         expect(logInfoSpy).not.toHaveBeenCalled()
         expect(fetchMock.mock.calls.length).toBe(1)
         expect(fetchMock.mock.calls[0][0]).toBe('https://ads.allizom.org/v1/log?event=invalid_url_error')

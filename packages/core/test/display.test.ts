@@ -7,7 +7,7 @@ import { tick } from '@/jest.setup'
 import { renderPlacement } from '../src/display'
 import { MockImage } from './mocks/mockImage'
 
-describe('iife/display.ts', () => {
+describe('core/display.ts', () => {
   afterEach(() => {
     jest.clearAllMocks()
   })
@@ -330,11 +330,12 @@ describe('iife/display.ts', () => {
     reportSelect!.value = 'not_interested'
     reportSelect?.dispatchEvent(new Event('change'))
     expect(reportSubmitButton?.disabled).toBeFalsy()
-    const consoleErrorMock = jest.spyOn(globalThis.console, 'error')
-    fetchMock.mockReject(new Error('test-error'))
+
+    const logErrorSpy = jest.spyOn(DefaultLogger.prototype, 'error')
     reportForm?.dispatchEvent(new Event('submit'))
     await tick()
-    expect(consoleErrorMock).toHaveBeenLastCalledWith('Invalid report callback URL for placement ID: pocket_billboard_1')
+    expect(logErrorSpy).toHaveBeenLastCalledWith('Invalid report callback URL for placement ID: pocket_billboard_1',
+      { eventLabel: 'invalid_url_error', path: 'null or undefined', placementId: 'pocket_billboard_1', type: 'renderPlacement.reportCallbackInvalid' })
   })
 
   test('renderPlacement logs an error when the fetch to the report callback URL fails', async () => {
@@ -381,11 +382,13 @@ describe('iife/display.ts', () => {
     reportSelect!.value = 'not_interested'
     reportSelect?.dispatchEvent(new Event('change'))
     expect(reportSubmitButton?.disabled).toBeFalsy()
-    const consoleErrorMock = jest.spyOn(globalThis.console, 'error')
+
+    const logErrorSpy = jest.spyOn(DefaultLogger.prototype, 'error')
     fetchMock.mockReject(new Error('test-error'))
     reportForm?.dispatchEvent(new Event('submit'))
     await tick()
-    expect(consoleErrorMock).toHaveBeenLastCalledWith('Report callback failed for: pocket_billboard_1 with an unknown error.')
+    expect(logErrorSpy).toHaveBeenLastCalledWith('Report callback fetch request failed for: pocket_billboard_1.',
+      { errorId: 'Error', eventLabel: 'fetch_error', method: 'GET', path: 'https://example.com/report', placementId: 'pocket_billboard_1', type: 'renderPlacement.reportCallbackResponseError' })
   })
 
   test('renderPlacement exits early for fallback ads', async () => {
@@ -417,5 +420,59 @@ describe('iife/display.ts', () => {
 
     expect(logErrorSpy).not.toHaveBeenCalled()
     expect(fetchMock.mock.calls.length).toBe(0)
+  })
+
+  test('renderPlacement logs an error when the builder\'s callback fails', async () => {
+    const placementElement = document.createElement('div')
+    const placement = {
+      placementId: 'pocket_billboard_1',
+      iabContentCategoryIds: ['IAB1'],
+      content: {
+        format: 'billboard',
+        callbacks: {
+          click: 'https://example.com/click',
+          impression: 'https://example.com/impression',
+          report: 'https://example.com/report',
+        },
+        image_url: 'https://example.com/image',
+        block_key: '1234567890ABCDEFGHabcdefgh',
+      },
+    }
+
+    renderPlacement(placementElement, {
+      placement,
+      onReport: () => { throw new Error ('uh oh') },
+    })
+    await tick()
+
+    const link = placementElement.querySelector<HTMLAnchorElement>('.moz-ads-placement-link[data-placement-id="pocket_billboard_1"]')
+    expect(link).toBeInstanceOf(HTMLAnchorElement)
+    expect(link?.href).toEqual('about:blank')
+    const img = link?.querySelector<HTMLImageElement>('.moz-ads-placement-img[data-placement-id="pocket_billboard_1"]')
+    expect(img).toBeInstanceOf(HTMLImageElement)
+    expect(img?.alt).toEqual('Mozilla Ad')
+    const reportButton = placementElement.querySelector<HTMLButtonElement>('.moz-ads-placement-report-button')
+    expect(reportButton).toBeInstanceOf(HTMLButtonElement)
+    expect(reportButton?.title).toEqual('Report ad')
+    reportButton?.dispatchEvent(new MouseEvent('click'))
+    const inner = placementElement.querySelector<HTMLDivElement>('.moz-ads-placement-inner')
+    expect(inner).toBeInstanceOf(HTMLDivElement)
+    const reportForm = inner?.querySelector<HTMLFormElement>('.moz-ads-placement-report-form')
+    expect(reportForm).toBeInstanceOf(HTMLFormElement)
+    const reportSubmitButton = reportForm?.querySelector<HTMLButtonElement>('.moz-ads-placement-report-submit-button')
+    expect(reportSubmitButton).toBeInstanceOf(HTMLButtonElement)
+    expect(reportSubmitButton?.disabled).toBeTruthy()
+    const reportSelect = reportForm?.querySelector<HTMLSelectElement>('.moz-ads-placement-report-reason-select')
+    expect(reportSelect).toBeInstanceOf(HTMLSelectElement)
+    reportSelect!.value = 'not_interested'
+    reportSelect?.dispatchEvent(new Event('change'))
+    expect(reportSubmitButton?.disabled).toBeFalsy()
+
+    const logErrorSpy = jest.spyOn(DefaultLogger.prototype, 'error')
+    fetchMock.mockReject(new Error('test-error'))
+    reportForm?.dispatchEvent(new Event('submit'))
+    await tick()
+    expect(logErrorSpy).toHaveBeenLastCalledWith('Builder\'s report callback failed for: pocket_billboard_1.',
+      { errorId: 'Error', placementId: 'pocket_billboard_1', type: 'renderPlacement.buildersReportCallbackError' })
   })
 })

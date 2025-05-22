@@ -53,8 +53,8 @@ export type LogType =
   'recordClick.callbackResponseError' |
   'recordClick.invalidCallbackError' |
   'renderPlacement.reportCallbackResponseError' |
-  'renderPlacement.reportCallbackNotFoundError' |
   'renderPlacement.reportCallbackInvalid' |
+  'renderPlacement.buildersReportCallbackError' |
   'fetchAds.request.success' |
   'fetchAds.request.error' |
   'impressionObserver.recordImpression.viewed' |

@@ -16,6 +16,7 @@ export async function recordClick(placement: MozAdsPlacementWithContent) {
     logger.error(`Invalid click URL for placement: ${placement.placementId}`, {
       type: 'recordClick.invalidCallbackError',
       eventLabel: 'invalid_url_error',
+      path: clickUrl || 'null or undefined',
       placementId: placement.placementId,
     })
     return
@@ -32,7 +33,7 @@ export async function recordClick(placement: MozAdsPlacementWithContent) {
     await fetch(clickUrl, { keepalive: true })
   }
   catch (error: unknown) {
-    logger.error(`Click callback failed for: ${placement.placementId} with an unknown error.`, {
+    logger.error(`Click callback failed for: ${placement.placementId}.`, {
       type: 'recordClick.callbackResponseError',
       eventLabel: 'fetch_error',
       path: clickUrl,

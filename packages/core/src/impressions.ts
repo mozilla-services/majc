@@ -49,6 +49,7 @@ export class DefaultMozAdsImpressionObserver implements MozAdsImpressionObserver
       logger.error(`Invalid impression URL for placement: ${placementId}`, {
         type: 'impressionObserver.recordImpression.invalidCallbackError',
         eventLabel: 'invalid_url_error',
+        path: impressionUrl || 'null or undefined',
       })
       return
     }
