@@ -3,6 +3,7 @@ import {
   AdUnitFormatImpressionThreshold,
   DefaultImpressionThreshold,
 } from './constants'
+import { isFallback } from './fallback'
 import { DefaultLogger } from './logger'
 import { MozAdsPlacementWithContent } from './types'
 
@@ -44,40 +45,39 @@ export class DefaultMozAdsImpressionObserver implements MozAdsImpressionObserver
   }
 
   private async recordImpression(placementId: string, impressionUrl?: string | null) {
-    if (impressionUrl) {
-      logger.info(`Impression occurred for placement: ${placementId}`, {
-        type: 'impressionObserver.recordImpression.viewed',
-        placementId: placementId,
+    if (!impressionUrl || !URL.canParse(impressionUrl)) {
+      logger.error(`Invalid impression URL for placement: ${placementId}`, {
+        type: 'impressionObserver.recordImpression.invalidCallbackError',
+        eventLabel: 'invalid_url_error',
+        path: impressionUrl || 'null or undefined',
       })
-      try {
-        const response = await fetch(impressionUrl, { keepalive: true })
-        if (!response.ok) {
-          logger.error(`Impression callback returned a non-200 for placement: ${placementId}`, {
-            type: 'impressionObserver.recordImpression.callbackResponseError',
-            eventLabel: 'fetch_error',
-            path: impressionUrl,
-            placementId: placementId,
-            method: 'GET',
-            errorId: `${response.status}`,
-          })
-        }
-      }
-      catch (error: unknown) {
-        logger.error(`Impression callback threw an unexpected error for placement: ${placementId}`, {
+      return
+    }
+    logger.info(`Impression occurred for placement: ${placementId}`, {
+      type: 'impressionObserver.recordImpression.viewed',
+      placementId: placementId,
+    })
+    try {
+      const response = await fetch(impressionUrl, { keepalive: true })
+      if (!response.ok) {
+        logger.error(`Impression callback returned a non-200 for placement: ${placementId}`, {
           type: 'impressionObserver.recordImpression.callbackResponseError',
           eventLabel: 'fetch_error',
           path: impressionUrl,
           placementId: placementId,
           method: 'GET',
-          errorId: (error as Error)?.name,
+          errorId: `${response.status}`,
         })
       }
     }
-    else {
-      logger.error(`No impression callback URL found for placement: ${placementId}`, {
-        type: 'impressionObserver.recordImpression.callbackNotFoundError',
-        eventLabel: 'invalid_url_error',
+    catch (error: unknown) {
+      logger.error(`Impression callback threw an unexpected error for placement: ${placementId}`, {
+        type: 'impressionObserver.recordImpression.callbackResponseError',
+        eventLabel: 'fetch_error',
+        path: impressionUrl,
         placementId: placementId,
+        method: 'GET',
+        errorId: (error as Error)?.name,
       })
     }
   }
@@ -101,6 +101,9 @@ export class DefaultMozAdsImpressionObserver implements MozAdsImpressionObserver
   }
 
   public observe(placement: MozAdsPlacementWithContent) {
+    // No need to observe fallback ads -- they are meant for an offline experience so they don't
+    // have dynamic impression urls from MARS, so we can't register an impression for them.
+    if (isFallback(placement)) return
     const placementId = placement.placementId
     const placementImage = document.querySelector<HTMLImageElement>(`.moz-ads-placement-img[data-placement-id="${placementId}"]`)
     if (!placementImage) {
