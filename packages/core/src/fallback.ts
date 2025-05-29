@@ -69,3 +69,7 @@ function getSvgUri(svgSrc: string): string {
   const blob = new Blob([svgSrc], { type: 'image/svg+xml' })
   return URL.createObjectURL(blob)
 }
+
+export function isFallback(placement: MozAdsPlacementWithContent): boolean {
+  return placement.content?.image_url?.startsWith('blob:') ? true : false
+}
