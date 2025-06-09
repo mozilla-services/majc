@@ -35,7 +35,7 @@
     "@eslint/js": "^9.27.0",
     "@hey-api/openapi-ts": "^0.69.2",
     "@playwright/test": "^1.52.0",
-    "@stylistic/eslint-plugin": "^4.4.0",
+    "@stylistic/eslint-plugin": "^4.4.1",
     "@testing-library/react": "^16.3.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.15.21",
