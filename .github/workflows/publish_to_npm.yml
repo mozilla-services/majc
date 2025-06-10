@@ -6,7 +6,8 @@ on:
       # - main
       - majc-71-release-to-npm
     tags:
-      - v.[0-9]+rc[0-9]+
+      - test
+      # - v.[0-9]+rc[0-9]+
 
 jobs:
   build:
