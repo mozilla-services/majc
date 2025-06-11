@@ -5,7 +5,6 @@
     "type": "git",
     "url": "git+https://github.com/mozilla-services/majc.git"
   },
-  "private": true,
   "files": [
     "dist/"
   ],
