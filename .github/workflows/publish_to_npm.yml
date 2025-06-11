@@ -24,4 +24,4 @@ jobs:
       - run: npm ci
       - run: npm publish --provenance --access public
         env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
