@@ -5,8 +5,13 @@
 
 2. Merge the PR
 
-3. Tag that PR's commit on `main` with the new version number: `git tag v0.1.1`
+3. Go to our repo's [github Releases page](https://github.com/mozilla-services/majc/releases) and Draft a new release.
+  *  Create a new tag for this release. It should be the same `version` value as the version bump PR created above.
+  *  The release title should also be the same `version` value as the version bump PR, something like `v0.1.2`.
+  *  Use the Generate Release notes to add the detailed commit history to the release.
+  *  Optionally, add a summry of the key points of the release above the generated notes.
+  *  Publish the release.
 
-4. Push the tag to `main`, which will kick off the publishing workflow (see `./.github/workflows/publish_to_npm.yml`)
+4. When the relase the published, the `main` branch will be tagged with the version, and this will kick off the github actions workflow that publishes the release to `npm`. See `./.github/workflows/publish_to_npm.yml` for the details.
 
-5.
+5. Pat yourself on the back, another release is shipped :-)
