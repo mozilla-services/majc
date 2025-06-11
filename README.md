@@ -59,3 +59,7 @@ import { MozAdsPlacement } from '@mozilla-services/majc/dist/react'
 ```
 
 This bundle exports a React component and hooks for inclusion in a React app. Please see the example in `./examples/react` for usage.
+
+##### A Note on SSR
+
+Due to the use of certain hooks (e.g. `useState`, `useEffect` ) and usage of certain browser-only APIs (e.g. `IntersectionObserver`), our React component requires that instances are rendered client-side and not server-side. However, this behavior should be handled automatically by the library as all React components are annotated during the build process with a top-level `"use client"` directive. As a result, applications implementing SSR should not need to take any additional steps when using these React components and they should work "out of the box".
