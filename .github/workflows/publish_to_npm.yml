@@ -2,12 +2,8 @@
 name: Publish to npm
 on:
   push:
-    branches:
-      # - main
-      - majc-71-release-to-npm
     tags:
-      - test
-      # - v.[0-9]+rc[0-9]+
+      - v.[0-9]+rc[0-9]+
 
 jobs:
   build:
