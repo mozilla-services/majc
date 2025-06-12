@@ -25,14 +25,14 @@ This repository is licensed under MPL-2.0. Please see the [LICENSE](https://gith
 In your project's repository:
 
 ```sh
-npm install --save git+https://github.com/mozilla-services/majc.git
+npm install --save @mozilla/majc
 ```
 
-Or, add this repository's Git URL to your project's dependencies in `package.json`:
+Or, add this repository's Git URL to your project's dependencies in `package.json` and then run `npm install`:
 
 ```json
 "dependencies": {
-  "@mozilla-services/majc": "git+https://github.com/mozilla-services/majc.git"
+  "@mozilla/majc": "0.1.2"
 }
 ```
 
@@ -55,7 +55,7 @@ The `iife.global.js` bundle may be found in this repo's `./dist` folder. This bu
 React apps can import the `react` bundle from this repo's `./dist` folder. This bundle is available in both CJS and ESM formats and also includes TypeScript type definitions. The primary export from this bundle is the `MozAdsPlacement` component. To import in a TypeScript React app:
 
 ```ts
-import { MozAdsPlacement } from '@mozilla-services/majc/dist/react'
+import { MozAdsPlacement } from '@mozilla/majc/dist/react'
 ```
 
 This bundle exports a React component and hooks for inclusion in a React app. Please see the example in `./examples/react` for usage.

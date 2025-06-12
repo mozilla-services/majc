@@ -39,9 +39,9 @@
       }
     ],
     "paths": {
-      // Only needed for local development in this repo. Actual external projects consuming the @mozilla-services/majc
+      // Only needed for local development in this repo. Actual external projects consuming the @mozilla/majc
       // package would simply include it in their package.json file.
-      "@mozilla-services/majc/*": [
+      "@mozilla/majc/*": [
         "../../*"
       ],
     },

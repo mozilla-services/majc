@@ -1,5 +1,5 @@
 {
-  "name": "@mozilla-services/majc-react-example",
+  "name": "@mozilla/majc-react-example",
   "version": "0.1.0",
   "private": true,
   "scripts": {
