@@ -8,7 +8,7 @@ export class MockIntersectionObserver implements IntersectionObserver {
   public thresholds: number[]
   public observedElements: Map<Element, mockIntersectionObserverEntry> = new Map()
   root = null
-  rootMargin = ''
+  rootMargin = ""
 
   constructor(callback: IntersectionObserverCallback, options?: IntersectionObserverInit) {
     this.callback = callback

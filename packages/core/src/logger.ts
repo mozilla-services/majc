@@ -1,6 +1,6 @@
-import { LOG_EMIT_FLAG_DEFAULT, LOG_TO_CONSOLE_FLAG_DEFAULT } from './constants'
-import { defaultLogReporter, SeverityLevel } from './instrument'
-import { HttpRequestMethod, LogType, TelemetryEventLabel } from './types'
+import { LOG_EMIT_FLAG_DEFAULT, LOG_TO_CONSOLE_FLAG_DEFAULT } from "./constants"
+import { defaultLogReporter, SeverityLevel } from "./instrument"
+import { HttpRequestMethod, LogType, TelemetryEventLabel } from "./types"
 
 export enum LoggerLevel {
   None = 0,

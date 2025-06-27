@@ -1,34 +1,34 @@
 /* eslint @stylistic/quote-props: ["error", "consistent"] */
 
-import { defineConfig, Options } from 'tsup'
-import { readFileSync, writeFileSync } from 'fs'
-import { ExpectedBuildOutput, validateBuildFiles } from './scripts/validateBuild.ts'
+import { defineConfig, Options } from "tsup"
+import { readFileSync, writeFileSync } from "fs"
+import { ExpectedBuildOutput, validateBuildFiles } from "./scripts/validateBuild.ts"
 
 const expectedBuildOutput: ExpectedBuildOutput = {
-  buildDir: 'dist/',
+  buildDir: "dist/",
   files: [
-    'core.js',
-    'core.mjs',
-    'core.d.ts',
-    'react.d.ts',
-    'react.js',
-    'react.mjs',
-    'heyapi.d.ts',
-    'heyapi.js',
-    'heyapi.mjs',
-    'iife.global.js',
+    "core.js",
+    "core.mjs",
+    "core.d.ts",
+    "react.d.ts",
+    "react.js",
+    "react.mjs",
+    "heyapi.d.ts",
+    "heyapi.js",
+    "heyapi.mjs",
+    "iife.global.js",
   ],
   clientOnlyModules: [
-    'react.js',
-    'react.mjs',
+    "react.js",
+    "react.mjs",
   ],
 }
 
 // Get any environment variables passed to tsup and make them
 // available here.
 const env: Record<string, string> = process.argv.reduce((acc, curr) => {
-  if (curr.startsWith('--env.')) {
-    const [key, value] = curr.substring(6).split('=')
+  if (curr.startsWith("--env.")) {
+    const [key, value] = curr.substring(6).split("=")
     acc[key] = value
   }
 
@@ -36,88 +36,88 @@ const env: Record<string, string> = process.argv.reduce((acc, curr) => {
 }, {})
 
 const commonBundleConfig: Options = {
-  target: 'esnext',
-  platform: 'browser', // Ensure cross-platform modules import a browser-compatible package
+  target: "esnext",
+  platform: "browser", // Ensure cross-platform modules import a browser-compatible package
   clean: true,
   dts: false,
-  minify: env.NODE_ENV === 'production',
-  noExternal: ['uuid'],
+  minify: env.NODE_ENV === "production",
+  noExternal: ["uuid"],
 }
 
 const commonTypesConfig: Options = {
-  target: 'esnext',
+  target: "esnext",
   dts: { only: true },
 }
 
 const configs: Options[] = [
   {
-    name: 'build',
+    name: "build",
     splitting: true,
     entry: {
-      'core': 'packages/core/src/index.ts',
-      'react': 'packages/react/src/index.ts',
-      'heyapi': 'packages/heyapi/src/index.ts',
+      "core": "packages/core/src/index.ts",
+      "react": "packages/react/src/index.ts",
+      "heyapi": "packages/heyapi/src/index.ts",
     },
-    format: ['esm', 'cjs'],
-    plugins: [prependDirective('"use client"', ['dist/react'])],
+    format: ["esm", "cjs"],
+    plugins: [prependDirective("\"use client\"", ["dist/react"])],
     ...commonBundleConfig,
   },
   {
-    name: 'core-types',
+    name: "core-types",
     entry: {
-      'core': 'packages/core/src/index.ts',
+      "core": "packages/core/src/index.ts",
     },
     ...commonTypesConfig,
   },
   {
-    name: 'react-types',
+    name: "react-types",
     entry: {
-      'react': 'packages/react/src/index.ts',
+      "react": "packages/react/src/index.ts",
     },
     ...commonTypesConfig,
   },
   {
-    name: 'heyapi-types',
+    name: "heyapi-types",
     entry: {
-      'heyapi': 'packages/heyapi/src/index.ts',
+      "heyapi": "packages/heyapi/src/index.ts",
     },
     ...commonTypesConfig,
   },
   {
-    name: 'iife',
+    name: "iife",
     entry: {
-      'iife': 'packages/iife/src/index.ts',
+      "iife": "packages/iife/src/index.ts",
     },
-    format: ['iife'],
-    globalName: 'mozAds',
+    format: ["iife"],
+    globalName: "mozAds",
     ...commonBundleConfig,
   },
 ]
 
 export default defineConfig(configs)
 
-process.on('beforeExit', (code) => {
+process.on("beforeExit", (code) => {
   if (code !== 0) {
     process.exit(code)
   }
-  console.log('[POST-BUILD] Validating build files...')
+  console.log("[POST-BUILD] Validating build files...")
   validateBuildFiles(expectedBuildOutput)
-  console.log('[POST-BUILD] Validation successful! Build complete.')
+  console.log("[POST-BUILD] Validation successful! Build complete.")
 })
 
-function prependDirective(directive: string, filePatterns: string[]): NonNullable<Options['plugins']>[number] {
+function prependDirective(directive: string, filePatterns: string[]): NonNullable<Options["plugins"]>[number] {
   if (!Array.isArray(filePatterns)) {
-    throw Error('FilePatterns given to prependDirective plugin must be an array.')
+    throw Error("FilePatterns given to prependDirective plugin must be an array.")
   }
   return {
-    name: 'prepend-directive',
+    name: "prepend-directive",
     // At the end of the build step, directly prepend the specified directive to files with specified pattern
 
     buildEnd(ctx) {
       for (const file of ctx.writtenFiles) {
         for (const filePattern of filePatterns) {
           if (file.name.startsWith(filePattern)) {
-            const fileContent = readFileSync(file.name, 'utf8')
+            const fileContent = readFileSync(file.name, "utf8")
             writeFileSync(file.name, `${directive};${fileContent}`)
             console.log(`Prepended ${directive} directive to ${file.name}`)
           }

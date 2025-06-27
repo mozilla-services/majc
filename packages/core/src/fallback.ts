@@ -1,7 +1,7 @@
-import { AdResponse, ImageAd } from '@heyapi'
-import { AdUnitFormatType, MozAdsPlacementConfig, MozAdsPlacements, MozAdsPlacementWithContent } from './types'
-import { FallbackAdURL, AdUnitFormatTypeLookup } from './constants'
-import { FALLBACK_BILLBOARD_SVG, FALLBACK_MRECTANGLE_SVG, FALLBACK_SKYSCRAPER_SVG } from './images'
+import { AdResponse, ImageAd } from "@heyapi"
+import { AdUnitFormatType, MozAdsPlacementConfig, MozAdsPlacements, MozAdsPlacementWithContent } from "./types"
+import { FallbackAdURL, AdUnitFormatTypeLookup } from "./constants"
+import { FALLBACK_BILLBOARD_SVG, FALLBACK_MRECTANGLE_SVG, FALLBACK_SKYSCRAPER_SVG } from "./images"
 
 const fallbackAdContentLookup: Partial<Record<AdUnitFormatType, ImageAd>> = {
   Billboard: getFallbackBillboard(),
@@ -39,37 +39,37 @@ export function getFallbackAds(placements: MozAdsPlacements): AdResponse {
 
 export function getFallbackBillboard(): ImageAd {
   return {
-    url: FallbackAdURL['Billboard'],
+    url: FallbackAdURL["Billboard"],
     image_url: getSvgUri(FALLBACK_BILLBOARD_SVG),
   }
 }
 
 export function getFallbackSkyscraper(): ImageAd {
   return {
-    url: FallbackAdURL['Skyscraper'],
+    url: FallbackAdURL["Skyscraper"],
     image_url: getSvgUri(FALLBACK_SKYSCRAPER_SVG),
   }
 }
 
 export function getFallbackMediumRectangle(): ImageAd {
   return {
-    url: FallbackAdURL['MediumRectangle'],
+    url: FallbackAdURL["MediumRectangle"],
     image_url: getSvgUri(FALLBACK_MRECTANGLE_SVG),
   }
 }
 
 export function getFallbackSquareDefault(): ImageAd {
   return {
-    url: FallbackAdURL['MediumRectangle'],
+    url: FallbackAdURL["MediumRectangle"],
     image_url: getSvgUri(FALLBACK_MRECTANGLE_SVG),
   }
 }
 
 function getSvgUri(svgSrc: string): string {
-  const blob = new Blob([svgSrc], { type: 'image/svg+xml' })
+  const blob = new Blob([svgSrc], { type: "image/svg+xml" })
   return URL.createObjectURL(blob)
 }
 
 export function isFallback(placement: MozAdsPlacementWithContent): boolean {
-  return placement.content?.image_url?.startsWith('blob:') ? true : false
+  return placement.content?.image_url?.startsWith("blob:") ? true : false
 }
