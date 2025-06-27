@@ -10,11 +10,11 @@ export class MockHTMLImageElement {
       if (shouldDispatchErrorOnNextLoad) {
         shouldDispatchErrorOnNextLoad = false
 
-        this.onerror?.(new Event('error'))
+        this.onerror?.(new Event("error"))
         return
       }
 
-      this.onload?.(new Event('load'))
+      this.onload?.(new Event("load"))
     })
   }
 
