@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync } from 'fs'
+import { readFileSync, readdirSync } from "fs"
 
 export interface ExpectedBuildOutput {
   /**
@@ -16,7 +16,7 @@ export interface ExpectedBuildOutput {
 }
 
 export class MissingBuildFileError extends Error {
-  override name = 'MissingBuildFileError'
+  override name = "MissingBuildFileError"
   constructor(
     public cause: Error,
   ) {
@@ -25,7 +25,7 @@ export class MissingBuildFileError extends Error {
 }
 
 export class MissingClientOnlyDirectiveError extends Error {
-  override name = 'MissingClientOnlyDirectiveError'
+  override name = "MissingClientOnlyDirectiveError"
   constructor(
     public cause: Error,
   ) {
@@ -34,8 +34,8 @@ export class MissingClientOnlyDirectiveError extends Error {
 }
 
 function validateClientOnlyBuildFile(filePath: string) {
-  const fileContent = readFileSync(filePath, 'utf8')
-  if (!fileContent.startsWith('"use client";')) {
+  const fileContent = readFileSync(filePath, "utf8")
+  if (!fileContent.startsWith("\"use client\";")) {
     throw new MissingClientOnlyDirectiveError(Error(`"Client-only" build module ${filePath} does not start with "use client" directive.`))
   }
 }

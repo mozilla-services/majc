@@ -1,17 +1,17 @@
-import { ImageAd } from '@heyapi'
-import { INTER_FONT_BASE64 } from './fonts'
-import { CLOSE_ICON_SVG, REPORT_ICON_SVG } from './images'
-import { l } from './l10n'
-import { DefaultLogger } from './logger'
+import { ImageAd } from "@heyapi"
+import { INTER_FONT_BASE64 } from "./fonts"
+import { CLOSE_ICON_SVG, REPORT_ICON_SVG } from "./images"
+import { l } from "./l10n"
+import { DefaultLogger } from "./logger"
 import {
   MozAdsPlacementWithContent,
   MozAdsRenderPlacementErrorEvent,
   MozAdsRenderPlacementEvent,
   MozAdsRenderPlacementReportEvent,
-} from './types'
-import { isFallback } from './fallback'
+} from "./types"
+import { isFallback } from "./fallback"
 
-const logger = new DefaultLogger({ name: 'core.display' })
+const logger = new DefaultLogger({ name: "core.display" })
 
 // Some styles derived from [Mozilla Protocol](https://github.com/mozilla/protocol) design system where noted
 const styleHtml = `
@@ -226,7 +226,7 @@ const spinnerHtml = `
   ${styleHtml}
   <div class="moz-ads-placement-container">
     <div class="moz-ads-placement-inner" aria-live="polite" aria-atomic="true">
-      <div class="moz-ads-placement-spinner" title="${l('loading_spinner_tooltip')}"></div>
+      <div class="moz-ads-placement-spinner" title="${l("loading_spinner_tooltip")}"></div>
     </div>
   </div>
 `
@@ -245,7 +245,7 @@ const adHtml = `
     <div class="moz-ads-placement-inner" aria-live="polite" aria-atomic="true">
       <a class="moz-ads-placement-link">
         <img class="moz-ads-placement-img">
-        <button type="button" class="moz-ads-placement-button moz-ads-placement-report-button" title="${l('report_ad_button_tooltip')}">
+        <button type="button" class="moz-ads-placement-button moz-ads-placement-report-button" title="${l("report_ad_button_tooltip")}">
           ${REPORT_ICON_SVG}
         </button>
       </a>
@@ -255,17 +255,17 @@ const adHtml = `
 
 const reportFormHtml = `
   <form class="moz-ads-placement-report-form">
-    <button type="button" class="moz-ads-placement-button moz-ads-placement-report-close-button" title="${l('report_form_close_button_tooltip')}">
+    <button type="button" class="moz-ads-placement-button moz-ads-placement-report-close-button" title="${l("report_form_close_button_tooltip")}">
       ${CLOSE_ICON_SVG}
     </button>
-    <p class="moz-ads-placement-report-title">${l('report_form_title_default')}</p>
-    <select class="moz-ads-placement-report-reason-select" aria-label="${l('report_form_title_default')}">
-      <option selected disabled>--${l('report_form_select_reason_option_none')}--</option>
-      <option value="inappropriate">${l('report_form_select_reason_option_inappropriate')}</option>
-      <option value="seen_too_many_times">${l('report_form_select_reason_option_seen_too_many_times')}</option>
-      <option value="not_interested">${l('report_form_select_reason_option_not_interested')}</option>
+    <p class="moz-ads-placement-report-title">${l("report_form_title_default")}</p>
+    <select class="moz-ads-placement-report-reason-select" aria-label="${l("report_form_title_default")}">
+      <option selected disabled>--${l("report_form_select_reason_option_none")}--</option>
+      <option value="inappropriate">${l("report_form_select_reason_option_inappropriate")}</option>
+      <option value="seen_too_many_times">${l("report_form_select_reason_option_seen_too_many_times")}</option>
+      <option value="not_interested">${l("report_form_select_reason_option_not_interested")}</option>
     </select>
-    <button type="submit" class="moz-ads-placement-button moz-ads-placement-report-submit-button" disabled>${l('report_form_submit_button')}</button>
+    <button type="submit" class="moz-ads-placement-button moz-ads-placement-report-submit-button" disabled>${l("report_form_submit_button")}</button>
   </form>
 `
 
@@ -332,15 +332,15 @@ export function renderPlacement(element: HTMLElement, { placement, onClick, onEr
       })
     }
 
-    const link = element.querySelector<HTMLAnchorElement>('.moz-ads-placement-link')
+    const link = element.querySelector<HTMLAnchorElement>(".moz-ads-placement-link")
     if (link) {
       link.onclick = () => onClick?.({ placement })
 
       link.dataset.placementId = placement.placementId
-      link.href = placement.content?.url ?? 'about:blank'
+      link.href = placement.content?.url ?? "about:blank"
     }
 
-    const img = element.querySelector<HTMLImageElement>('.moz-ads-placement-img')
+    const img = element.querySelector<HTMLImageElement>(".moz-ads-placement-img")
     if (img) {
       img.onload = () => onLoad?.({ placement })
       img.onerror = (_event, _source, _lineno, _colno, error) => onError?.({
@@ -349,46 +349,46 @@ export function renderPlacement(element: HTMLElement, { placement, onClick, onEr
       })
 
       img.dataset.placementId = placement.placementId
-      img.alt = (placement.content as ImageAd)?.alt_text ?? l('ad_image_default_alt')
+      img.alt = (placement.content as ImageAd)?.alt_text ?? l("ad_image_default_alt")
       img.src = imageUrl
     }
   }
 
   function updateContainerSize() {
-    const container = element.querySelector<HTMLDivElement>('.moz-ads-placement-container')
+    const container = element.querySelector<HTMLDivElement>(".moz-ads-placement-container")
     if (container) {
       container.dataset.placementId = placement.placementId
 
       if (placement.fixedSize) {
         const { width, height } = placement.fixedSize
-        container.style.width = width !== undefined ? `${width}px` : ''
-        container.style.height = height !== undefined ? `${height}px` : ''
+        container.style.width = width !== undefined ? `${width}px` : ""
+        container.style.height = height !== undefined ? `${height}px` : ""
       }
     }
   }
 
   function attachEventListeners() {
-    const reportButton = element.querySelector<HTMLButtonElement>('.moz-ads-placement-report-button')
+    const reportButton = element.querySelector<HTMLButtonElement>(".moz-ads-placement-report-button")
     if (reportButton) {
       reportButton.onclick = (event) => {
         event.preventDefault()
         event.stopPropagation()
 
-        const inner = element.querySelector<HTMLDivElement>('.moz-ads-placement-inner')
+        const inner = element.querySelector<HTMLDivElement>(".moz-ads-placement-inner")
         if (inner) {
-          inner.insertAdjacentHTML('beforeend', reportFormHtml)
+          inner.insertAdjacentHTML("beforeend", reportFormHtml)
 
-          const link = element.querySelector<HTMLAnchorElement>('.moz-ads-placement-link')
+          const link = element.querySelector<HTMLAnchorElement>(".moz-ads-placement-link")
           if (link) {
             link.hidden = true
           }
 
           reportButton.hidden = true
 
-          const reportForm = element.querySelector<HTMLFormElement>('.moz-ads-placement-report-form')
-          const reportCloseButton = element.querySelector<HTMLButtonElement>('.moz-ads-placement-report-close-button')
-          const reportSelect = element.querySelector<HTMLSelectElement>('.moz-ads-placement-report-reason-select')
-          const reportSubmitButton = element.querySelector<HTMLButtonElement>('.moz-ads-placement-report-submit-button')
+          const reportForm = element.querySelector<HTMLFormElement>(".moz-ads-placement-report-form")
+          const reportCloseButton = element.querySelector<HTMLButtonElement>(".moz-ads-placement-report-close-button")
+          const reportSelect = element.querySelector<HTMLSelectElement>(".moz-ads-placement-report-reason-select")
+          const reportSubmitButton = element.querySelector<HTMLButtonElement>(".moz-ads-placement-report-submit-button")
 
           reportSelect?.focus()
 
@@ -408,9 +408,9 @@ export function renderPlacement(element: HTMLElement, { placement, onClick, onEr
             reportForm.onsubmit = async (event) => {
               event.preventDefault()
 
-              const reportTitleParagraph = element.querySelector<HTMLParagraphElement>('.moz-ads-placement-report-title')
+              const reportTitleParagraph = element.querySelector<HTMLParagraphElement>(".moz-ads-placement-report-title")
               if (reportTitleParagraph) {
-                reportTitleParagraph.textContent = l('report_form_title_success')
+                reportTitleParagraph.textContent = l("report_form_title_success")
 
                 if (link) {
                   link.onclick = event => event.preventDefault()
@@ -427,9 +427,9 @@ export function renderPlacement(element: HTMLElement, { placement, onClick, onEr
                   const reportCallback = placement.content?.callbacks?.report
                   if (!reportCallback || !URL.canParse(reportCallback)) {
                     logger.error(`Invalid report callback URL for placement ID: ${placement.placementId}`, {
-                      type: 'renderPlacement.reportCallbackInvalid',
-                      eventLabel: 'invalid_url_error',
-                      path: reportCallback || 'null or undefined',
+                      type: "renderPlacement.reportCallbackInvalid",
+                      eventLabel: "invalid_url_error",
+                      path: reportCallback || "null or undefined",
                       placementId: placement.placementId,
                     })
                     return
@@ -437,16 +437,16 @@ export function renderPlacement(element: HTMLElement, { placement, onClick, onEr
 
                   try {
                     const reportUrl = new URL(reportCallback)
-                    reportUrl.searchParams.set('reason', reason)
+                    reportUrl.searchParams.set("reason", reason)
                     await fetch(reportUrl.toString(), { keepalive: true })
                   }
                   catch (error: unknown) {
                     logger.error(`Report callback fetch request failed for: ${placement.placementId}.`, {
-                      type: 'renderPlacement.reportCallbackResponseError',
-                      eventLabel: 'fetch_error',
+                      type: "renderPlacement.reportCallbackResponseError",
+                      eventLabel: "fetch_error",
                       path: reportCallback,
                       placementId: placement.placementId,
-                      method: 'GET',
+                      method: "GET",
                       errorId: (error as Error)?.name,
                     })
                   }
@@ -460,7 +460,7 @@ export function renderPlacement(element: HTMLElement, { placement, onClick, onEr
                 }
                 catch (error: unknown) {
                   logger.error(`Builder's report callback failed for: ${placement.placementId}.`, {
-                    type: 'renderPlacement.buildersReportCallbackError',
+                    type: "renderPlacement.buildersReportCallbackError",
                     placementId: placement.placementId,
                     errorId: (error as Error)?.name,
                   })

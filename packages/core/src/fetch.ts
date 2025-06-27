@@ -1,14 +1,14 @@
-import { client, getAds, AdPlacement, AdResponse } from '@heyapi'
-import { DEFAULT_SERVICE_ENDPOINT } from './constants'
-import { DefaultLogger } from './logger'
-import { getOrGenerateContextId } from './store'
-import { MozAdsPlacements, MozAdsPlacementWithContent } from './types'
-import { getFallbackAd, getFallbackAds } from './fallback'
+import { client, getAds, AdPlacement, AdResponse } from "@heyapi"
+import { DEFAULT_SERVICE_ENDPOINT } from "./constants"
+import { DefaultLogger } from "./logger"
+import { getOrGenerateContextId } from "./store"
+import { MozAdsPlacements, MozAdsPlacementWithContent } from "./types"
+import { getFallbackAd, getFallbackAds } from "./fallback"
 
-const logger = new DefaultLogger({ name: 'core.fetch' })
+const logger = new DefaultLogger({ name: "core.fetch" })
 
 export class FetchAdsError extends Error {
-  override name = 'FetchAdsError'
+  override name = "FetchAdsError"
   constructor(
     public cause: Error,
   ) {
@@ -49,7 +49,7 @@ export const fetchAds = async ({
         {
           baseUrl: serviceEndpoint,
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         },
       )
@@ -64,17 +64,17 @@ export const fetchAds = async ({
         if (error || !response) {
           const fetchAdsError = new FetchAdsError(new Error(`getAds failed with response: ${response}. Error: ${error}`))
           logger.error(fetchAdsError.message, {
-            type: 'fetchAds.request.error',
-            eventLabel: 'fetch_error',
-            method: 'POST',
+            type: "fetchAds.request.error",
+            eventLabel: "fetch_error",
+            method: "POST",
             errorId: `${fetchAdsError.name}`,
           })
           throw fetchAdsError
         }
 
         logger.info(`Successfully fetched ads with request: ${JSON.stringify(request)}`, {
-          type: 'fetchAds.request.success',
-          method: 'POST',
+          type: "fetchAds.request.success",
+          method: "POST",
         })
 
         resolve(mapResponseToPlacementsWithContent(response, pendingPlacements))
@@ -82,9 +82,9 @@ export const fetchAds = async ({
       catch (error: unknown) {
         const fetchAdsError = new FetchAdsError(error as Error)
         logger.error(fetchAdsError.message, {
-          type: 'fetchAds.request.error',
-          eventLabel: 'fetch_error',
-          method: 'POST',
+          type: "fetchAds.request.error",
+          eventLabel: "fetch_error",
+          method: "POST",
           errorId: `${fetchAdsError.name}`,
         })
         // Try to render hardcoded fallback Ads

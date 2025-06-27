@@ -1,6 +1,6 @@
-import packageJson from '@/package.json'
-import { INSTRUMENT_ENDPOINT, IS_BROWSER } from './constants'
-import { HttpRequestMethod, LogType, TelemetryEventLabel } from './types'
+import packageJson from "@/package.json"
+import { INSTRUMENT_ENDPOINT, IS_BROWSER } from "./constants"
+import { HttpRequestMethod, LogType, TelemetryEventLabel } from "./types"
 
 export enum SeverityLevel {
   Emergency = 0,
@@ -70,7 +70,7 @@ export class DefaultLogReporter implements LogReporter {
   dupLogCountLimit: number = 2
 
   constructor(config?: DefaultLogReporterConfig) {
-    this.namePrefix = config?.name ? config.name : 'majc'
+    this.namePrefix = config?.name ? config.name : "majc"
     if (config?.defaultOptions) {
       this.defaultOptions = config?.defaultOptions
     }
@@ -81,9 +81,9 @@ export class DefaultLogReporter implements LogReporter {
       this.dupLogCountLimit = config.limiterOps.dupLogCountLimit
     }
     this.emitLog(`MAJC instrumentation is alive in ${process.env.NODE_ENV}`, {
-      logger: 'core.instrument',
-      eventLabel: 'init',
-      type: 'logReporter.init.success',
+      logger: "core.instrument",
+      eventLabel: "init",
+      type: "logReporter.init.success",
       severity: SeverityLevel.Info,
     })
   }
@@ -112,12 +112,12 @@ export class DefaultLogReporter implements LogReporter {
       const logUrl = new URL(INSTRUMENT_ENDPOINT)
 
       if (options.eventLabel) {
-        logUrl.searchParams.set('event', options.eventLabel)
+        logUrl.searchParams.set("event", options.eventLabel)
         await fetch(logUrl.toString(), { keepalive: true })
       }
     }
     catch (error: unknown) {
-      console.debug('Something went wrong when attempting to emit a log.', error)
+      console.debug("Something went wrong when attempting to emit a log.", error)
     }
   }
 
@@ -130,7 +130,7 @@ export class DefaultLogReporter implements LogReporter {
     return {
       Timestamp: nowNanoseconds,
       Type: opts?.type,
-      Logger: `${this.namePrefix}.${opts?.logger ?? 'default'}`,
+      Logger: `${this.namePrefix}.${opts?.logger ?? "default"}`,
       Hostname: opts?.hostname,
       EnvVersion: opts?.envVersion,
       Severity: opts?.severity,
@@ -181,7 +181,7 @@ export class DefaultLogReporter implements LogReporter {
 }
 
 export const defaultLogReporter = new DefaultLogReporter({
-  name: 'majc',
+  name: "majc",
   defaultOptions: {
     envVersion: packageJson.version,
   },

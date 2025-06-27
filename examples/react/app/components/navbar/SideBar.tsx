@@ -1,5 +1,5 @@
-import { MozAdsPlacement } from '@mozilla/majc/dist/react'
-import { FixedSize } from '@mozilla/majc/dist/core'
+import { MozAdsPlacement } from "@mozilla/majc/dist/react"
+import { FixedSize } from "@mozilla/majc/dist/core"
 
 export default function SideBar() {
   return (
