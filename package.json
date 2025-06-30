@@ -33,7 +33,7 @@
   "devDependencies": {
     "@eslint/js": "^9.29.0",
     "@hey-api/openapi-ts": "^0.76.0",
-    "@playwright/test": "^1.52.0",
+    "@playwright/test": "^1.53.1",
     "@stylistic/eslint-plugin": "^5.0.0",
     "@testing-library/react": "^16.3.0",
     "@types/jest": "^29.5.14",
