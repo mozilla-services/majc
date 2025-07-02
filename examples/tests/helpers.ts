@@ -60,8 +60,18 @@ const cssHeightForPlacement = (placementName: string): number => {
  *
  * https://github.com/microsoft/playwright/issues/4282#issuecomment-718602677
  */
-export const getBoundingRectangle = async (locator: Locator): Promise<DOMRect> => {
+const getBoundingRectangle = async (locator: Locator): Promise<DOMRect> => {
   return locator.evaluate(el => el.getBoundingClientRect())
 }
 
-export { expectAdLayout, expectClickNavigation }
+const altTexts = {
+  tile: 'Mozilla Ad',
+  billboard_1: 'Brand Text mock_pocket_billboard_1 0',
+  billboard_2: 'Brand Text mock_pocket_billboard_2 0',
+  skyscraper_1: 'Brand Text mock_pocket_skyscraper_1 0',
+  skyscraper_2: 'Brand Text mock_pocket_skyscraper_2 0',
+  rectangle_1: 'Brand Text mock_pocket_rectangle_1 0',
+  rectangle_2: 'Brand Text mock_pocket_rectangle_2 0',
+}
+
+export { altTexts, expectAdLayout, expectClickNavigation }

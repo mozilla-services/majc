@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { expectAdLayout, expectClickNavigation } from './helpers'
+import { altTexts, expectAdLayout, expectClickNavigation } from './helpers'
 
 test.beforeEach(async ({ page }) => {
   await page.goto('http://127.0.0.1:3000/')
@@ -10,11 +10,11 @@ test.describe('React example', () => {
   test.describe('Billboard', ({ tag: ['@Desktop'] }), () => {
     test.describe('above the fold', () => {
       test('should display the ad', async ({ page }) => {
-        await expectAdLayout(page, 'mock_pocket_billboard_1', 'Brand Text 0')
+        await expectAdLayout(page, 'mock_pocket_billboard_1', altTexts['billboard_1'])
       })
 
       test('should navigate to the landing page on click', async ({ page }) => {
-        await expectClickNavigation(page, 'Brand Text 0')
+        await expectClickNavigation(page, altTexts['billboard_1'])
       })
 
       test.skip('should be able to report the ad', async () => { })
@@ -23,11 +23,11 @@ test.describe('React example', () => {
 
     test.describe('below the fold', () => {
       test('should display the ad', async ({ page }) => {
-        await expectAdLayout(page, 'mock_pocket_billboard_2', 'Brand Text 2')
+        await expectAdLayout(page, 'mock_pocket_billboard_2', altTexts['billboard_2'])
       })
 
       test('should navigate to the landing page on click', async ({ page }) => {
-        await expectClickNavigation(page, 'Brand Text 2')
+        await expectClickNavigation(page, altTexts['billboard_2'])
       })
 
       test.skip('should be able to report the ad', async () => { })
@@ -39,11 +39,11 @@ test.describe('React example', () => {
   // rectangles instead of billboards for mobile
   test.describe('Medium Rectangle', ({ tag: ['@Mobile'] }), () => {
     test.skip('should display the ad', async ({ page }) => {
-      await expectAdLayout(page, 'mock_pocket_rectangle_1', 'Brand Text 2')
+      await expectAdLayout(page, 'mock_pocket_rectangle_1', altTexts['rectangle_1'])
     })
 
     test.skip('should navigate to the landing page on click', async ({ page }) => {
-      await expectClickNavigation(page, 'Brand Text 2')
+      await expectClickNavigation(page, altTexts['rectangle_1'])
     })
 
     test.skip('should be able to report the ad', async () => { })
@@ -54,11 +54,11 @@ test.describe('React example', () => {
   // with clicking on the Skyscraper on Mobile Chrome that needs to be figured out.
   test.describe('Skyscraper', ({ tag: ['@Desktop'/* , @Mobile  */] }), () => {
     test('should display the ad', async ({ page }) => {
-      await expectAdLayout(page, 'mock_pocket_skyscraper_1', 'Brand Text 1')
+      await expectAdLayout(page, 'mock_pocket_skyscraper_1', altTexts['skyscraper_1'])
     })
 
     test('should navigate to the landing page on click', async ({ page }) => {
-      await expectClickNavigation(page, 'Brand Text 1')
+      await expectClickNavigation(page, altTexts['skyscraper_1'])
     })
 
     test.skip('should be able to report the ad', async () => { })
