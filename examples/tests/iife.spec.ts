@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { expectAdLayout, expectClickNavigation } from './helpers'
+import { altTexts, expectAdLayout, expectClickNavigation } from './helpers'
 
 test.beforeEach(async ({ page }) => {
   await page.goto('http://127.0.0.1:8080/examples/iife/')
@@ -10,11 +10,11 @@ test.describe('IIFE example', () => {
   // Tiles won't be returned by MARS for mobile, so we only test them on Desktop
   test.describe('Tile', { tag: ['@Desktop'] }, () => {
     test('should display the ad', async ({ page }) => {
-      await expectAdLayout(page, 'newtab_tile_1', 'Mozilla Ad')
+      await expectAdLayout(page, 'newtab_tile_1', altTexts['tile'])
     })
 
     test('should navigate to the landing page on click', async ({ page }) => {
-      await expectClickNavigation(page, 'Mozilla Ad')
+      await expectClickNavigation(page, altTexts['tile'])
     })
 
     test.skip('should display the fallback ad when a live ad isn\'t available', async () => { })
@@ -24,11 +24,11 @@ test.describe('IIFE example', () => {
   // with clicking on the Rectangle on Mobile Chrome that needs to be figured out.
   test.describe('Medium Rectangle', ({ tag: ['@Desktop'/*  '@Mobile' */] }), () => {
     test('should display the ad', async ({ page }) => {
-      await expectAdLayout(page, 'mock_pocket_rectangle_1', 'Brand Text 2')
+      await expectAdLayout(page, 'mock_pocket_rectangle_1', altTexts['rectangle_1'])
     })
 
     test('should navigate to the landing page on click', async ({ page }) => {
-      await expectClickNavigation(page, 'Brand Text 2')
+      await expectClickNavigation(page, altTexts['rectangle_1'])
     })
 
     test.skip('should be able to report the ad', async () => { })
@@ -37,11 +37,11 @@ test.describe('IIFE example', () => {
 
   test.describe('Billboard', ({ tag: ['@Desktop', '@Mobile'] }), () => {
     test('should display the ad', async ({ page }) => {
-      await expectAdLayout(page, 'mock_pocket_billboard_1', 'Brand Text 0')
+      await expectAdLayout(page, 'mock_pocket_billboard_1', altTexts['billboard_1'])
     })
 
     test('should navigate to the landing page on click', async ({ page }) => {
-      await expectClickNavigation(page, 'Brand Text 0')
+      await expectClickNavigation(page, altTexts['billboard_1'])
     })
 
     test.skip('should be able to report the ad', async () => { })
@@ -52,11 +52,11 @@ test.describe('IIFE example', () => {
   // with clicking on the Skyscraper on Mobile Chrome that needs to be figured out.
   test.describe('Skyscraper', ({ tag: ['@Desktop'/*  '@Mobile' */] }), () => {
     test('should display the ad', async ({ page }) => {
-      await expectAdLayout(page, 'mock_pocket_skyscraper_1', 'Brand Text 1')
+      await expectAdLayout(page, 'mock_pocket_skyscraper_1', altTexts['skyscraper_1'])
     })
 
     test('should navigate to the landing page on click', async ({ page }) => {
-      await expectClickNavigation(page, 'Brand Text 1')
+      await expectClickNavigation(page, altTexts['skyscraper_1'])
     })
 
     test.skip('should be able to report the ad', async () => { })
@@ -74,19 +74,19 @@ test.describe('IIFE example', () => {
         if (request.url().startsWith('https://ads.allizom.org/v1/t?data=')) requestCount += 1
       })
 
-      const tile = page.getByAltText('Mozilla Ad')
+      const tile = page.getByAltText(altTexts['tile'])
       await tile.scrollIntoViewIfNeeded()
       await tile.hover()
 
-      const rectangle = page.getByAltText('Brand Text 2')
+      const rectangle = page.getByAltText(altTexts['rectangle_1'])
       await rectangle.scrollIntoViewIfNeeded()
       await rectangle.hover()
 
-      const billboard = page.getByAltText('Brand Text 0')
+      const billboard = page.getByAltText(altTexts['billboard_1'])
       await billboard.scrollIntoViewIfNeeded()
       await billboard.hover()
 
-      const skyscraper = page.getByAltText('Brand Text 1')
+      const skyscraper = page.getByAltText(altTexts['skyscraper_1'])
       await skyscraper.scrollIntoViewIfNeeded()
       await skyscraper.hover()
 
