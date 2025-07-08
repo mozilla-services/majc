@@ -140,8 +140,8 @@ type AdResponse = {
     [key: string]: Array<ImageAd | Spoc | UaTile>;
 };
 
-type IABAdUnitFormatType = 'Billboard' | 'SmartphoneBanner300' | 'SmartphoneBanner320' | 'Leaderboard' | 'SuperLeaderboardPushdown' | 'Portrait' | 'Skyscraper' | 'MediumRectangle' | 'TwentyBySixty' | 'MobilePhoneInterstitial640' | 'MobilePhoneInterstitial750' | 'MobilePhoneInterstitial1080' | 'FeaturePhoneSmallBanner' | 'FeaturePhoneMediumBanner' | 'FeaturePhoneLargeBanner';
-type NonIABAdUnitFormatType = 'NewTab';
+type IABAdUnitFormatType = "Billboard" | "SmartphoneBanner300" | "SmartphoneBanner320" | "Leaderboard" | "SuperLeaderboardPushdown" | "Portrait" | "Skyscraper" | "MediumRectangle" | "TwentyBySixty" | "MobilePhoneInterstitial640" | "MobilePhoneInterstitial750" | "MobilePhoneInterstitial1080" | "FeaturePhoneSmallBanner" | "FeaturePhoneMediumBanner" | "FeaturePhoneLargeBanner";
+type NonIABAdUnitFormatType = "NewTab";
 type AdUnitFormatType = IABAdUnitFormatType | NonIABAdUnitFormatType;
 type AdUnitFormatTypeLookupKey = `${number}x${number}`;
 type HTTPSURLString = `https://${string}.${string}`;
@@ -149,14 +149,14 @@ interface ImpressionThreshold {
     percent: number;
     duration: number;
 }
-type IABContentTaxonomyType = 'IAB-1.0' | 'IAB-2.0' | 'IAB-2.1' | 'IAB-2.2' | 'IAB-3.0';
+type IABContentTaxonomyType = "IAB-1.0" | "IAB-2.0" | "IAB-2.1" | "IAB-2.2" | "IAB-3.0";
 interface IABContent {
     taxonomy: IABContentTaxonomyType;
     categoryIds: string[];
 }
-type LogType = 'logReporter.init.success' | 'recordClick.clickOccurred' | 'recordClick.success' | 'recordClick.callbackResponseError' | 'recordClick.invalidCallbackError' | 'renderPlacement.reportCallbackResponseError' | 'renderPlacement.reportCallbackInvalid' | 'renderPlacement.buildersReportCallbackError' | 'fetchAds.request.success' | 'fetchAds.request.error' | 'impressionObserver.recordImpression.viewed' | 'impressionObserver.recordImpression.callbackResponseError' | 'impressionObserver.recordImpression.invalidCallbackError' | 'impressionObserver.observeAd.adNotFoundError' | 'impressionObserver.forceRecordImpression.error' | 'placementComponent.adLoad.success' | 'placementComponent.adLoad.failure' | 'placementComponent.render.error';
-type TelemetryEventLabel = 'init' | 'render_error' | 'ad_load_error' | 'fetch_error' | 'invalid_url_error';
-type HttpRequestMethod = 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'CONNECT' | 'OPTIONS' | 'TRACE' | 'PATCH';
+type LogType = "logReporter.init.success" | "recordClick.clickOccurred" | "recordClick.success" | "recordClick.callbackResponseError" | "recordClick.invalidCallbackError" | "renderPlacement.reportCallbackResponseError" | "renderPlacement.reportCallbackInvalid" | "renderPlacement.buildersReportCallbackError" | "fetchAds.request.success" | "fetchAds.request.error" | "impressionObserver.recordImpression.viewed" | "impressionObserver.recordImpression.callbackResponseError" | "impressionObserver.recordImpression.invalidCallbackError" | "impressionObserver.observeAd.adNotFoundError" | "impressionObserver.forceRecordImpression.error" | "placementComponent.adLoad.success" | "placementComponent.adLoad.failure" | "placementComponent.render.error";
+type TelemetryEventLabel = "init" | "render_error" | "ad_load_error" | "fetch_error" | "invalid_url_error";
+type HttpRequestMethod = "GET" | "HEAD" | "POST" | "PUT" | "DELETE" | "CONNECT" | "OPTIONS" | "TRACE" | "PATCH";
 type MozAdsPlacements = Record<string, MozAdsPlacementConfig | MozAdsPlacementWithContent>;
 interface MozAdsRenderPlacementEvent {
     placement?: MozAdsPlacementWithContent;
@@ -240,7 +240,7 @@ declare const FALLBACK_MRECTANGLE_SVG = "\n<svg xmlns=\"http://www.w3.org/2000/s
 
 type MozAdsImpressionTracker = Record<string, PlacementImpressionInfo>;
 interface PlacementImpressionInfo {
-    viewStatus: 'unseen' | 'in-view' | 'viewed';
+    viewStatus: "unseen" | "in-view" | "viewed";
     viewThreshold: number;
     timeThreshold: number;
     impressionUrl?: string | null;
@@ -337,7 +337,7 @@ declare class DefaultLogReporter implements LogReporter {
 }
 declare const defaultLogReporter: DefaultLogReporter;
 
-type MozAdsLocalizedStringKey = 'ad_image_default_alt' | 'loading_spinner_tooltip' | 'report_ad_button_tooltip' | 'report_form_close_button_tooltip' | 'report_form_select_reason_option_none' | 'report_form_select_reason_option_inappropriate' | 'report_form_select_reason_option_seen_too_many_times' | 'report_form_select_reason_option_not_interested' | 'report_form_submit_button' | 'report_form_title_default' | 'report_form_title_success';
+type MozAdsLocalizedStringKey = "ad_image_default_alt" | "loading_spinner_tooltip" | "report_ad_button_tooltip" | "report_form_close_button_tooltip" | "report_form_select_reason_option_none" | "report_form_select_reason_option_inappropriate" | "report_form_select_reason_option_seen_too_many_times" | "report_form_select_reason_option_not_interested" | "report_form_submit_button" | "report_form_title_default" | "report_form_title_success";
 declare function l(key: MozAdsLocalizedStringKey): string;
 
 declare enum LoggerLevel {
@@ -384,7 +384,7 @@ declare class DefaultLogger implements Logger {
     private emitLog;
 }
 
-type MozAdsStoreKey = 'contextId';
+type MozAdsStoreKey = "contextId";
 declare enum StoreType {
     Persistent = 0,
     SessionOnly = 1

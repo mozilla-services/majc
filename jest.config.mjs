@@ -2,13 +2,13 @@
 export default {
   collectCoverage: true,
   collectCoverageFrom: [
-    'packages/core/src/**/*.{js,jsx,ts,tsx}',
-    'packages/iife/src/**/*.{js,jsx,ts,tsx}',
-    'packages/react/src/**/*.{js,jsx,ts,tsx}',
-    'scripts/**/*.{js,jsx,ts,tsx}',
+    "packages/core/src/**/*.{js,jsx,ts,tsx}",
+    "packages/iife/src/**/*.{js,jsx,ts,tsx}",
+    "packages/react/src/**/*.{js,jsx,ts,tsx}",
+    "scripts/**/*.{js,jsx,ts,tsx}",
   ],
-  coverageDirectory: 'coverage',
-  coverageReporters: ['text', 'lcov', 'text-summary'],
+  coverageDirectory: "coverage",
+  coverageReporters: ["text", "lcov", "text-summary"],
   coverageThreshold: {
     global: {
       statements: 100,
@@ -18,19 +18,19 @@ export default {
     },
   },
   setupFilesAfterEnv: [
-    '<rootDir>/jest.setup.ts',
+    "<rootDir>/jest.setup.ts",
   ],
-  testEnvironment: 'jsdom',
-  testPathIgnorePatterns: ['examples/tests'],
+  testEnvironment: "jsdom",
+  testPathIgnorePatterns: ["examples/tests"],
   transform: {
-    '^.+.(ts|tsx)?$': ['ts-jest', {}],
+    "^.+.(ts|tsx)?$": ["ts-jest", {}],
   },
   moduleNameMapper: {
-    '@/jest.setup': ['<rootDir>/jest.setup.ts'],
-    '@/package.json': ['<rootDir>/package.json'],
-    '@core/.*': ['<rootDir>/packages/core/src/$1'],
-    '@heyapi': ['<rootDir>/packages/heyapi/src/index'],
-    '@iife/.*': ['<rootDir>/packages/iife/src/$1'],
-    '@react/.*': ['<rootDir>/packages/react/src/$1'],
+    "@/jest.setup": ["<rootDir>/jest.setup.ts"],
+    "@/package.json": ["<rootDir>/package.json"],
+    "@core/.*": ["<rootDir>/packages/core/src/$1"],
+    "@heyapi": ["<rootDir>/packages/heyapi/src/index"],
+    "@iife/.*": ["<rootDir>/packages/iife/src/$1"],
+    "@react/.*": ["<rootDir>/packages/react/src/$1"],
   },
 }

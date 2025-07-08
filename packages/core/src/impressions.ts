@@ -2,17 +2,17 @@ import {
   AdUnitFormatTypeLookup,
   AdUnitFormatImpressionThreshold,
   DefaultImpressionThreshold,
-} from './constants'
-import { isFallback } from './fallback'
-import { DefaultLogger } from './logger'
-import { MozAdsPlacementWithContent } from './types'
+} from "./constants"
+import { isFallback } from "./fallback"
+import { DefaultLogger } from "./logger"
+import { MozAdsPlacementWithContent } from "./types"
 
-const logger = new DefaultLogger({ name: 'core.impressions' })
+const logger = new DefaultLogger({ name: "core.impressions" })
 
 export type MozAdsImpressionTracker = Record<string, PlacementImpressionInfo>
 
 export interface PlacementImpressionInfo {
-  viewStatus: 'unseen' | 'in-view' | 'viewed'
+  viewStatus: "unseen" | "in-view" | "viewed"
   viewThreshold: number
   timeThreshold: number
   impressionUrl?: string | null
@@ -47,36 +47,36 @@ export class DefaultMozAdsImpressionObserver implements MozAdsImpressionObserver
   private async recordImpression(placementId: string, impressionUrl?: string | null) {
     if (!impressionUrl || !URL.canParse(impressionUrl)) {
       logger.error(`Invalid impression URL for placement: ${placementId}`, {
-        type: 'impressionObserver.recordImpression.invalidCallbackError',
-        eventLabel: 'invalid_url_error',
-        path: impressionUrl || 'null or undefined',
+        type: "impressionObserver.recordImpression.invalidCallbackError",
+        eventLabel: "invalid_url_error",
+        path: impressionUrl || "null or undefined",
       })
       return
     }
     logger.info(`Impression occurred for placement: ${placementId}`, {
-      type: 'impressionObserver.recordImpression.viewed',
+      type: "impressionObserver.recordImpression.viewed",
       placementId: placementId,
     })
     try {
       const response = await fetch(impressionUrl, { keepalive: true })
       if (!response.ok) {
         logger.error(`Impression callback returned a non-200 for placement: ${placementId}`, {
-          type: 'impressionObserver.recordImpression.callbackResponseError',
-          eventLabel: 'fetch_error',
+          type: "impressionObserver.recordImpression.callbackResponseError",
+          eventLabel: "fetch_error",
           path: impressionUrl,
           placementId: placementId,
-          method: 'GET',
+          method: "GET",
           errorId: `${response.status}`,
         })
       }
     }
     catch (error: unknown) {
       logger.error(`Impression callback threw an unexpected error for placement: ${placementId}`, {
-        type: 'impressionObserver.recordImpression.callbackResponseError',
-        eventLabel: 'fetch_error',
+        type: "impressionObserver.recordImpression.callbackResponseError",
+        eventLabel: "fetch_error",
         path: impressionUrl,
         placementId: placementId,
-        method: 'GET',
+        method: "GET",
         errorId: (error as Error)?.name,
       })
     }
@@ -90,12 +90,12 @@ export class DefaultMozAdsImpressionObserver implements MozAdsImpressionObserver
       return
     }
 
-    if (trackedPlacement.viewStatus !== 'viewed') {
+    if (trackedPlacement.viewStatus !== "viewed") {
       clearTimeout(trackedPlacement.timeout)
       trackedPlacement.timeout = undefined
 
       this.recordImpression(placementId, trackedPlacement.impressionUrl)
-      trackedPlacement.viewStatus = 'viewed'
+      trackedPlacement.viewStatus = "viewed"
       this.unobserve(placementId)
     }
   }
@@ -108,7 +108,7 @@ export class DefaultMozAdsImpressionObserver implements MozAdsImpressionObserver
     const placementImage = document.querySelector<HTMLImageElement>(`.moz-ads-placement-img[data-placement-id="${placementId}"]`)
     if (!placementImage) {
       logger.warn(`Could not find element with ID: ${placementId} while attempting to observe ad`, {
-        type: 'impressionObserver.observeAd.adNotFoundError',
+        type: "impressionObserver.observeAd.adNotFoundError",
         placementId: placementId,
       })
       return
@@ -117,7 +117,7 @@ export class DefaultMozAdsImpressionObserver implements MozAdsImpressionObserver
     const adUnitFormatType = AdUnitFormatTypeLookup[`${placementImage.width}x${placementImage.height}`]
     const threshold = AdUnitFormatImpressionThreshold[adUnitFormatType]
     this.impressionTracker[placementId] = {
-      viewStatus: 'unseen',
+      viewStatus: "unseen",
       viewThreshold: threshold?.percent ?? DefaultImpressionThreshold.percent,
       timeThreshold: threshold?.duration ?? DefaultImpressionThreshold.duration,
       impressionUrl: placement.content?.callbacks?.impression,
@@ -135,9 +135,9 @@ export class DefaultMozAdsImpressionObserver implements MozAdsImpressionObserver
 
   private observeAgainLater(placementId: string, delay: number) {
     const recordImpressionIfInView = () => {
-      if (this.impressionTracker[placementId].viewStatus === 'in-view') {
+      if (this.impressionTracker[placementId].viewStatus === "in-view") {
         this.recordImpression(placementId, this.impressionTracker[placementId].impressionUrl)
-        this.impressionTracker[placementId].viewStatus = 'viewed'
+        this.impressionTracker[placementId].viewStatus = "viewed"
         this.impressionTracker[placementId].timeout = undefined
         this.unobserve(placementId)
       }
@@ -161,13 +161,13 @@ export class DefaultMozAdsImpressionObserver implements MozAdsImpressionObserver
       const intersectionRatio = entry.intersectionRatio
 
       if (intersectionRatio >= placementImpressionInfo.viewThreshold) {
-        if (this.impressionTracker[placementId].viewStatus !== 'in-view') {
-          this.impressionTracker[placementId].viewStatus = 'in-view'
+        if (this.impressionTracker[placementId].viewStatus !== "in-view") {
+          this.impressionTracker[placementId].viewStatus = "in-view"
           this.observeAgainLater(placementId, this.impressionTracker[placementId].timeThreshold)
         }
       }
       else {
-        this.impressionTracker[placementId].viewStatus = 'unseen'
+        this.impressionTracker[placementId].viewStatus = "unseen"
         clearTimeout(this.impressionTracker[placementId].timeout)
         this.impressionTracker[placementId].timeout = undefined
       }

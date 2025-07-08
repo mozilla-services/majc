@@ -1,2 +1,2 @@
-export * from './components/MozAdsPlacement'
-export * from './hooks/useMozAdsPlacement'
+export * from "./components/MozAdsPlacement"
+export * from "./hooks/useMozAdsPlacement"
