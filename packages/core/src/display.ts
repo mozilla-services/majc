@@ -297,41 +297,18 @@ export function renderPlacement(element: HTMLElement, { placement, onClick, onEr
     updateContainerSize()
   }
 
-  async function renderAd() {
-    const content = placement.content
-    const imageUrl = placement.content?.image_url
+  function setElementWithErrorHTML() {
+    element.innerHTML = erroredAdHtml
+    updateContainerSize()
+  }
 
-    if (!content) {
-      // No content likely means nothing has returned yet so we don't do anything
-      return
-    }
+  function setElementWithAdHTML() {
+    element.innerHTML = adHtml
+    updateContainerSize()
+    attachEventListeners()
+  }
 
-    if (!imageUrl) {
-      // This could only happen if the API failed to supply the correct content for an ad.
-      onError?.({
-        placement,
-        error: new Error(`No imageURL found for advertisement: ${placement.placementId}`),
-      })
-      element.innerHTML = erroredAdHtml
-      updateContainerSize()
-      return
-    }
-
-    try {
-      await preloadImage(imageUrl)
-
-      element.innerHTML = adHtml
-      updateContainerSize()
-      attachEventListeners()
-    }
-
-    catch (error: unknown) {
-      onError?.({
-        placement,
-        error: error as Error,
-      })
-    }
-
+  function attachLinksToElement() {
     const link = element.querySelector<HTMLAnchorElement>(".moz-ads-placement-link")
     if (link) {
       link.onclick = () => onClick?.({ placement })
@@ -339,7 +316,9 @@ export function renderPlacement(element: HTMLElement, { placement, onClick, onEr
       link.dataset.placementId = placement.placementId
       link.href = placement.content?.url ?? "about:blank"
     }
+  }
 
+  function attachImageToElement(imageUrl: string) {
     const img = element.querySelector<HTMLImageElement>(".moz-ads-placement-img")
     if (img) {
       img.onload = () => onLoad?.({ placement })
@@ -352,6 +331,45 @@ export function renderPlacement(element: HTMLElement, { placement, onClick, onEr
       img.alt = (placement.content as ImageAd)?.alt_text ?? l("ad_image_default_alt")
       img.src = imageUrl
     }
+  }
+
+  async function renderAd() {
+    const content = placement.content
+    const imageUrl = placement.content?.image_url
+
+    if (!content) {
+      // No content likely means nothing has returned yet so we don't do anything
+      return
+    }
+
+    if (!imageUrl) {
+      // This could only happen if the API failed to supply the correct content for an ad.
+      setElementWithErrorHTML()
+      onError?.({
+        placement,
+        error: new Error(`No imageURL found for advertisement: ${placement.placementId}`),
+      })
+      return
+    }
+
+    try {
+      await preloadImage(imageUrl)
+      setElementWithAdHTML()
+    }
+
+    catch (error: unknown) {
+      // Failure here means that likely the image proxy in MARS failed.
+      // We should display fallback content if possible.
+      setElementWithErrorHTML()
+      onError?.({
+        placement,
+        error: error as Error,
+      })
+      return
+    }
+
+    attachLinksToElement()
+    attachImageToElement(imageUrl)
   }
 
   function updateContainerSize() {

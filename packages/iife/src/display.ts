@@ -1,5 +1,6 @@
 import { recordClick } from "@core/clicks"
 import { renderPlacement as renderPlacementCore } from "@core/display"
+import { getFallbackAd } from "@core/fallback"
 import { fetchAds } from "@core/fetch"
 import { defaultImpressionObserver } from "@core/impressions"
 import { DefaultLogger } from "@core/logger"
@@ -28,14 +29,23 @@ export async function renderPlacement(elementOrId: HTMLElement | string, placeme
       },
     })
 
-    renderPlacementCore(element, {
-      placement,
-
+    const callbacks = {
       onLoad: () => {
         defaultImpressionObserver.observe(placement)
       },
       onClick: () => {
         recordClick(placement)
+      },
+    }
+
+    renderPlacementCore(element, {
+      placement,
+      ...callbacks,
+      onError: () => {
+        const fallback = getFallbackAd(placement)
+        renderPlacementCore(element, {
+          placement: { ...placement, content: fallback, ...callbacks },
+        })
       },
     })
   }
