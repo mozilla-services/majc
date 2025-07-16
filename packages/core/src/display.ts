@@ -336,6 +336,7 @@ export function renderPlacement(element: HTMLElement, { placement, onClick, onEr
   async function renderAd() {
     const content = placement.content
     const imageUrl = placement.content?.image_url
+    console.log(imageUrl)
 
     if (!content) {
       // No content likely means nothing has returned yet so we don't do anything
