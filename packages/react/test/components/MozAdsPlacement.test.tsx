@@ -6,7 +6,11 @@ import { cleanup, render, waitFor } from "@testing-library/react"
 import * as coreFetch from "@core/fetch"
 import { MockImage } from "../../../core/test/mocks/mockImage"
 import { MozAdsPlacement } from "../../src/components/MozAdsPlacement"
+import * as innerFallback from "../../../core/src/fallback"
+import * as coreFallback from "@core/fallback"
+
 import { tick } from "@/jest.setup"
+import { FixedSize } from "@core/constants"
 
 jest.mock("react", () => {
   return {
@@ -20,6 +24,14 @@ jest.mock("@core/fetch", () => {
     __esModule: true,
     ...jest.requireActual("@core/fetch"),
     fetchAds: jest.fn(),
+  }
+})
+
+jest.mock("@core/fallback", () => {
+  return {
+    __esModule: true,
+    ...jest.requireActual("@core/fallback"),
+    getFallbackAd: jest.fn(),
   }
 })
 
@@ -84,15 +96,7 @@ describe("react/components/MozAdsPlacement.tsx", () => {
     expect(onErrorMock).toHaveBeenCalled()
   })
 
-  test("<MozAdsPlacement /> calls the onError callback function when the image cannot be loaded", async () => {
-    const onErrorMock = jest.fn()
-
-    Object.defineProperty(globalThis, "Image", {
-      value: MockImage,
-    })
-
-    MockImage.dispatchErrorOnNextLoad()
-
+  test("<MozAdsPlacement /> calls the fallback function when the image url is missing", async () => {
     jest.spyOn(coreFetch, "fetchAds").mockResolvedValueOnce({
       "pocket_billboard_3": {
         placementId: "pocket_billboard_3",
@@ -104,23 +108,26 @@ describe("react/components/MozAdsPlacement.tsx", () => {
             impression: "https://example.com/impression",
             report: "https://example.com/report",
           },
-          image_url: "https://example.com/image",
           alt_text: "Advertiser Name",
           block_key: "1234567890ABCDEFGHabcdefgh",
         },
       },
     })
 
+    const fallbackData = innerFallback.getFallbackBillboard()
+    const fallbackSpy = jest.spyOn(coreFallback, "getFallbackAd").mockReturnValueOnce(fallbackData)
+
     render(
-      <MozAdsPlacement placementId="pocket_billboard_3" onError={onErrorMock} />,
+      <MozAdsPlacement placementId="pocket_billboard_3" />,
     )
 
     await waitFor(() => {
-      expect(onErrorMock).toHaveBeenCalled()
+      expect(fallbackSpy).toHaveBeenCalled()
     })
   })
 
-  test("<MozAdsPlacement /> produces the correct DOM markup for the requested ad placement", async () => {
+  test("<MozAdsPlacement /> calls the user defined error callback when ad and fallback fail", async () => {
+    const onErrorMock = jest.fn()
     jest.spyOn(coreFetch, "fetchAds").mockResolvedValueOnce({
       "pocket_billboard_4": {
         placementId: "pocket_billboard_4",
@@ -132,41 +139,25 @@ describe("react/components/MozAdsPlacement.tsx", () => {
             impression: "https://example.com/impression",
             report: "https://example.com/report",
           },
-          image_url: "https://example.com/image",
           alt_text: "Advertiser Name",
           block_key: "1234567890ABCDEFGHabcdefgh",
         },
       },
     })
 
-    const result = render(
-      <MozAdsPlacement placementId="pocket_billboard_4" fixedSize={{ width: 100, height: 200 }} />,
+    const fallbackData = innerFallback.getFallbackBillboard()
+    jest.spyOn(coreFallback, "getFallbackAd").mockReturnValueOnce({ ...fallbackData, image_url: undefined })
+
+    render(
+      <MozAdsPlacement placementId="pocket_billboard_4" onError={onErrorMock} fixedSize={FixedSize.Billboard} />,
     )
 
-    const placementElement = result.baseElement
-
     await waitFor(() => {
-      const link = placementElement.querySelector<HTMLAnchorElement>(".moz-ads-placement-link[data-placement-id=\"pocket_billboard_4\"]")
-      expect(link).toBeInstanceOf(HTMLAnchorElement)
+      expect(onErrorMock).toHaveBeenCalled()
     })
-
-    const link = placementElement.querySelector<HTMLAnchorElement>(".moz-ads-placement-link[data-placement-id=\"pocket_billboard_4\"]")
-    expect(link).toBeInstanceOf(HTMLAnchorElement)
-    const img = link?.querySelector<HTMLImageElement>(".moz-ads-placement-img[data-placement-id=\"pocket_billboard_4\"]")
-    expect(img).toBeInstanceOf(HTMLImageElement)
-    expect(img?.alt).toEqual("Advertiser Name")
-    expect(img?.src).toEqual("https://example.com/image")
-    img?.dispatchEvent(new Event("load"))
-    const reportButton = link?.querySelector<HTMLButtonElement>(".moz-ads-placement-report-button")
-    expect(reportButton).toBeInstanceOf(HTMLButtonElement)
-    expect(reportButton?.title).toEqual("Report ad")
-    fetchMock.mockResponseOnce(async () => ({}))
-    link?.dispatchEvent(new Event("click"))
-    expect(fetchMock.mock.lastCall?.[0]).toEqual("https://example.com/click")
-    expect(fetchMock.mock.lastCall?.[1]).toEqual({ keepalive: true })
   })
 
-  test("<MozAdsPlacement /> calls the onReport callback function", async () => {
+  test("<MozAdsPlacement /> produces the correct DOM markup for the requested ad placement", async () => {
     jest.spyOn(coreFetch, "fetchAds").mockResolvedValueOnce({
       "pocket_billboard_5": {
         placementId: "pocket_billboard_5",
@@ -185,9 +176,8 @@ describe("react/components/MozAdsPlacement.tsx", () => {
       },
     })
 
-    const onReportMock = jest.fn()
     const result = render(
-      <MozAdsPlacement placementId="pocket_billboard_5" fixedSize={{ width: 100, height: 200 }} onReport={onReportMock} />,
+      <MozAdsPlacement placementId="pocket_billboard_5" fixedSize={{ width: 100, height: 200 }} />,
     )
 
     const placementElement = result.baseElement
@@ -200,6 +190,53 @@ describe("react/components/MozAdsPlacement.tsx", () => {
     const link = placementElement.querySelector<HTMLAnchorElement>(".moz-ads-placement-link[data-placement-id=\"pocket_billboard_5\"]")
     expect(link).toBeInstanceOf(HTMLAnchorElement)
     const img = link?.querySelector<HTMLImageElement>(".moz-ads-placement-img[data-placement-id=\"pocket_billboard_5\"]")
+    expect(img).toBeInstanceOf(HTMLImageElement)
+    expect(img?.alt).toEqual("Advertiser Name")
+    expect(img?.src).toEqual("https://example.com/image")
+    img?.dispatchEvent(new Event("load"))
+    const reportButton = link?.querySelector<HTMLButtonElement>(".moz-ads-placement-report-button")
+    expect(reportButton).toBeInstanceOf(HTMLButtonElement)
+    expect(reportButton?.title).toEqual("Report ad")
+    fetchMock.mockResponseOnce(async () => ({}))
+    link?.dispatchEvent(new Event("click"))
+    expect(fetchMock.mock.lastCall?.[0]).toEqual("https://example.com/click")
+    expect(fetchMock.mock.lastCall?.[1]).toEqual({ keepalive: true })
+  })
+
+  test("<MozAdsPlacement /> calls the onReport callback function", async () => {
+    jest.spyOn(coreFetch, "fetchAds").mockResolvedValueOnce({
+      "pocket_billboard_6": {
+        placementId: "pocket_billboard_6",
+        content: {
+          format: "billboard",
+          url: "https://getpocket.com/",
+          callbacks: {
+            click: "https://example.com/click",
+            impression: "https://example.com/impression",
+            report: "https://example.com/report",
+          },
+          image_url: "https://example.com/image",
+          alt_text: "Advertiser Name",
+          block_key: "1234567890ABCDEFGHabcdefgh",
+        },
+      },
+    })
+
+    const onReportMock = jest.fn()
+    const result = render(
+      <MozAdsPlacement placementId="pocket_billboard_6" fixedSize={{ width: 100, height: 200 }} onReport={onReportMock} />,
+    )
+
+    const placementElement = result.baseElement
+
+    await waitFor(() => {
+      const link = placementElement.querySelector<HTMLAnchorElement>(".moz-ads-placement-link[data-placement-id=\"pocket_billboard_6\"]")
+      expect(link).toBeInstanceOf(HTMLAnchorElement)
+    })
+
+    const link = placementElement.querySelector<HTMLAnchorElement>(".moz-ads-placement-link[data-placement-id=\"pocket_billboard_6\"]")
+    expect(link).toBeInstanceOf(HTMLAnchorElement)
+    const img = link?.querySelector<HTMLImageElement>(".moz-ads-placement-img[data-placement-id=\"pocket_billboard_6\"]")
     expect(img).toBeInstanceOf(HTMLImageElement)
     expect(img?.alt).toEqual("Advertiser Name")
     expect(img?.src).toEqual("https://example.com/image")
@@ -222,5 +259,42 @@ describe("react/components/MozAdsPlacement.tsx", () => {
     expect(fetchMock.mock.lastCall?.[1]).toEqual({ keepalive: true })
     await tick()
     expect(onReportMock).toHaveBeenCalled()
+  })
+
+  test("<MozAdsPlacement /> calls the fallback function when the image cannot be loaded", async () => {
+    Object.defineProperty(globalThis, "Image", {
+      value: MockImage,
+    })
+
+    MockImage.dispatchErrorOnNextLoad()
+
+    jest.spyOn(coreFetch, "fetchAds").mockResolvedValueOnce({
+      "pocket_billboard_7": {
+        placementId: "pocket_billboard_7",
+        content: {
+          format: "billboard",
+          url: "https://getpocket.com/",
+          callbacks: {
+            click: "https://example.com/click",
+            impression: "https://example.com/impression",
+            report: "https://example.com/report",
+          },
+          image_url: "https://example.com/image",
+          alt_text: "Advertiser Name",
+          block_key: "1234567890ABCDEFGHabcdefgh",
+        },
+      },
+    })
+
+    const fallbackData = innerFallback.getFallbackBillboard()
+    const fallbackSpy = jest.spyOn(coreFallback, "getFallbackAd").mockReturnValueOnce(fallbackData)
+
+    render(
+      <MozAdsPlacement placementId="pocket_billboard_7" />,
+    )
+
+    await waitFor(() => {
+      expect(fallbackSpy).toHaveBeenCalled()
+    })
   })
 })

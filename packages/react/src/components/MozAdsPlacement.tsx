@@ -12,6 +12,7 @@ import {
   MozAdsRenderPlacementReportEvent,
 } from "@core/types"
 import { useMozAdsPlacement } from "../hooks/useMozAdsPlacement"
+import { getFallbackAd } from "@core/fallback"
 
 let logger: DefaultLogger
 
@@ -46,30 +47,47 @@ export function MozAdsPlacement({
 
       onError,
     })
+
     const containerRef = useRef<HTMLDivElement>(null)
+
+    const callbacks = {
+      onClick: (event: MozAdsRenderPlacementEvent) => {
+        recordClick(placement)
+        onClick?.(event)
+      },
+      onReport: (event: MozAdsRenderPlacementReportEvent) => {
+        onReport?.(event)
+      },
+      onError: (event: MozAdsRenderPlacementErrorEvent) => {
+        onError?.(event)
+      },
+      onLoad: (event: MozAdsRenderPlacementEvent) => {
+        defaultImpressionObserver.observe(placement)
+        onLoad?.(event)
+      },
+    }
 
     useLayoutEffect(() => {
       if (containerRef.current) {
         renderPlacement(containerRef.current, {
           placement,
-
-          onClick: (event: MozAdsRenderPlacementEvent) => {
-            recordClick(placement)
-            onClick?.(event)
-          },
-          onReport: (event: MozAdsRenderPlacementReportEvent) => {
-            onReport?.(event)
-          },
-          onError: (event: MozAdsRenderPlacementErrorEvent) => {
-            onError?.(event)
-          },
-          onLoad: (event: MozAdsRenderPlacementEvent) => {
-            defaultImpressionObserver.observe(placement)
-            onLoad?.(event)
+          ...callbacks,
+          onError: () => {
+            // if an render error occurs, we try and render a fallback instead
+            const fallback = getFallbackAd(placement)
+            if (containerRef.current) {
+              renderPlacement(containerRef.current, {
+                placement: {
+                  ...placement,
+                  content: fallback,
+                },
+                ...callbacks,
+              })
+            }
           },
         })
       }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [placement])
 
     return (

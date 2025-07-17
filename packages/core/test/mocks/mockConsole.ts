@@ -8,15 +8,15 @@ class MockConsole implements Partial<Console> {
   }
 
   // @ts-expect-error Mocked function is intentionally a NO-OP, so unused arguments are expected
-  debug(_message?: unknown, ..._optionalParams?: unknown[]) {}
+  debug(_message?: unknown, ..._optionalParams?: unknown[]) { }
   // @ts-expect-error Mocked function is intentionally a NO-OP, so unused arguments are expected
-  error(_message?: unknown, ..._optionalParams?: unknown[]) {}
+  error(_message?: unknown, ..._optionalParams?: unknown[]) { }
   // @ts-expect-error Mocked function is intentionally a NO-OP, so unused arguments are expected
-  info(_message?: unknown, ..._optionalParams?: unknown[]) {}
+  info(_message?: unknown, ..._optionalParams?: unknown[]) { }
   // @ts-expect-error Mocked function is intentionally a NO-OP, so unused arguments are expected
-  log(_message?: unknown, ..._optionalParams?: unknown[]) {}
+  log(_message?: unknown, ..._optionalParams?: unknown[]) { }
   // @ts-expect-error Mocked function is intentionally a NO-OP, so unused arguments are expected
-  warn(_message?: unknown, ..._optionalParams?: unknown[]) {}
+  warn(_message?: unknown, ..._optionalParams?: unknown[]) { }
 }
 
 export default new MockConsole()
