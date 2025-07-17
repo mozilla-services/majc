@@ -157,8 +157,8 @@ describe("iife/display.ts", () => {
 
     await renderPlacement(placementElement, placementConfig)
     await tick()
-    expect(fallbackSpy).toHaveBeenCalledTimes(1)
 
+    expect(fallbackSpy).toHaveBeenCalledTimes(1)
     const link = placementElement.querySelector<HTMLAnchorElement>(".moz-ads-placement-link[data-placement-id=\"pocket_billboard_6\"]")
     expect(link).toBeInstanceOf(HTMLAnchorElement)
     const img = link?.querySelector<HTMLImageElement>(".moz-ads-placement-img[data-placement-id=\"pocket_billboard_6\"]")
@@ -167,13 +167,12 @@ describe("iife/display.ts", () => {
     expect(img?.src).toEqual(fallbackData.image_url)
   })
 
-  test("renderPlacement calls fallback on failure to pre-load load image", async () => {
+  test("renderPlacement calls fallback on failure to pre-load image", async () => {
     const placementElement = document.createElement("div")
     const placementConfig = {
       placementId: "pocket_billboard_7",
       iabContentCategoryIds: ["IAB1"],
     }
-
     const fallbackData = innerFallback.getFallbackBillboard()
     const fallbackSpy = jest.spyOn(coreFallback, "getFallbackAd").mockReturnValueOnce(fallbackData)
     Object.defineProperty(globalThis, "Image", {
@@ -184,7 +183,6 @@ describe("iife/display.ts", () => {
 
     await renderPlacement(placementElement, placementConfig)
     await tick()
-
     expect(fallbackSpy).toHaveBeenCalledTimes(1)
   })
 })

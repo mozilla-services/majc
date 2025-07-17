@@ -42,6 +42,7 @@ export async function renderPlacement(elementOrId: HTMLElement | string, placeme
       placement,
       ...callbacks,
       onError: () => {
+        // if an render error occurs, we try and render a fallback instead
         const fallback = getFallbackAd(placement)
         renderPlacementCore(element, {
           placement: { ...placement, content: fallback },

@@ -82,9 +82,7 @@ export function MozAdsPlacement({
                   content: fallback,
                 },
                 ...callbacks,
-              },
-
-              )
+              })
             }
           },
         })
