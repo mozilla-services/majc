@@ -44,7 +44,8 @@ export async function renderPlacement(elementOrId: HTMLElement | string, placeme
       onError: () => {
         const fallback = getFallbackAd(placement)
         renderPlacementCore(element, {
-          placement: { ...placement, content: fallback, ...callbacks },
+          placement: { ...placement, content: fallback },
+          ...callbacks,
         })
       },
     })

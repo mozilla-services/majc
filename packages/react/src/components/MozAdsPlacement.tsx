@@ -73,15 +73,18 @@ export function MozAdsPlacement({
           placement,
           ...callbacks,
           onError: () => {
+            // if an render error occurs, we try and render a fallback instead
             const fallback = getFallbackAd(placement)
             if (containerRef.current) {
               renderPlacement(containerRef.current, {
                 placement: {
                   ...placement,
                   content: fallback,
-                  ...callbacks,
                 },
-              })
+                ...callbacks,
+              },
+
+              )
             }
           },
         })
