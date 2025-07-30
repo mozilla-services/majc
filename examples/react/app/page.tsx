@@ -1,5 +1,11 @@
+"use client"
+
+import { setConfigValue } from "@mozilla/majc/dist/react"
+
 import Article from "./components/article/Article"
 import NavBar from "./components/navbar/Navbar"
+
+setConfigValue("gppEnabled", true)
 
 export default function Home() {
   return (

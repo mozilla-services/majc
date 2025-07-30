@@ -2,11 +2,16 @@
 
 import * as heyapi from "@heyapi"
 import * as fallback from "../src/fallback"
+import * as gpp from "../src/gpp"
+
 import { mockGetAdsPartialResponse, mockGetAdsResponse } from "./mocks/mockGetAdsResponse"
+
+import { tick } from "@/jest.setup"
+
+import { setConfigValue } from "../src/config"
+import { IABFixedSize } from "../src/constants"
 import { buildPlacementsRequest, fetchAds, FetchAdsError, FetchAdsParams } from "../src/fetch"
 import { MozAdsPlacements, MozAdsPlacementWithContent } from "../src/types"
-import { tick } from "@/jest.setup"
-import { IABFixedSize } from "@core/constants"
 
 jest.mock("@heyapi", () => {
   return {
@@ -223,5 +228,29 @@ describe("core/fetch.ts", () => {
     fetchAds(params)
     await tick()
     expect(getAdsMock).toHaveBeenCalledTimes(1)
+  })
+
+  test("fetchAds waits for GPP consent string before requesting ads when enabled", async () => {
+    setConfigValue("gppEnabled", true)
+    // @ts-expect-error Jest types create difficult to resolve union for test code
+    const getAdsMock = jest.spyOn(heyapi, "getAds").mockResolvedValueOnce({ data: mockGetAdsResponse })
+    fetchAds(params)
+    await tick()
+    expect(getAdsMock).not.toHaveBeenCalled()
+  })
+
+  test("fetchAds gets fallback ads when an error occurs getting the GPP consent string when enabled", async () => {
+    setConfigValue("gppEnabled", true)
+    // @ts-expect-error Jest types create difficult to resolve union for test code
+    const getAdsMock = jest.spyOn(heyapi, "getAds").mockResolvedValueOnce({ data: mockGetAdsResponse })
+    const getGPPPingMock = jest.spyOn(gpp, "getGPPPing").mockImplementationOnce(() => {
+      throw new Error("test-error")
+    })
+    const getFallbackAdsMock = jest.spyOn(fallback, "getFallbackAds")
+    fetchAds(params)
+    await tick()
+    expect(getAdsMock).not.toHaveBeenCalled()
+    expect(getGPPPingMock).toHaveBeenCalledTimes(1)
+    expect(getFallbackAdsMock).toHaveBeenCalledTimes(1)
   })
 })

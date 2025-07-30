@@ -678,6 +678,9 @@ components:
           example:
             - CAISEm15IHNwZWNpYWwgc3BvbnNvcg
           description: A list of strings specifying blocked content. The string values come from the `block_key` field in returned ads.
+        consent:
+          type: object
+          $ref: '#/components/schemas/Consent'
       required:
         - context_id
         - placements
@@ -706,6 +709,14 @@ components:
         - taxonomy
         - categories
 
+    Consent:
+      type: object
+      description: An object to specify consent specifiers for this request
+      properties:
+        gpp:
+          type: string
+          description: Global Privacy Platform consent string
+
     #### Unified API Response ####
 
     AdCallbacks:
@@ -728,6 +739,49 @@ components:
         - click
         - impression
 
+    Attributions:
+      type: object
+      description: An object containing attribution configuration for enabled ads.
+      properties:
+        partner_id:
+          type: string
+          description: Advertising partner associated with the ad.
+        conversion:
+          $ref: '#/components/schemas/Task'
+      required:
+        - partner_id
+
+    Task:
+      type: object
+      properties:
+        task_id:
+          type: string
+          description: DAP task ID.
+        vdaf:
+          type: string
+          description: DAP data type of the task.
+        bits:
+          type: number
+          description: DAP data size of the task.
+        length:
+          type: number
+          description: DAP legnth of the task.
+        time_precision:
+          type: number
+          description: DAP time precision. Determines rounding of dates in DAP report.
+        default_measurement:
+          type: number
+          description: Measurement to be used when a default report is sent.
+        index:
+          type: number
+          description: Index allocated to be used when a non-default report is sent.
+      required:
+        - task_id
+        - vdaf
+        - length
+        - time_precision
+        - index
+
     AdFormatBase:
       type: object
       properties:
@@ -740,6 +794,8 @@ components:
           description: The target destination URL of the ad.
         callbacks:
           $ref: '#/components/schemas/AdCallbacks'
+        attributions:
+          $ref: '#/components/schemas/Attributions'
 
     SpocFrequencyCaps:
       type: object

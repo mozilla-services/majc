@@ -215,6 +215,7 @@ export type AdRequest = {
      * A list of strings specifying blocked content. The string values come from the `block_key` field in returned ads.
      */
     blocks?: Array<string>;
+    consent?: Consent;
 };
 
 export type AdContent = {
@@ -223,6 +224,16 @@ export type AdContent = {
      */
     taxonomy: 'IAB-1.0' | 'IAB-2.0' | 'IAB-2.1' | 'IAB-2.2' | 'IAB-3.0';
     categories: Array<string>;
+};
+
+/**
+ * An object to specify consent specifiers for this request
+ */
+export type Consent = {
+    /**
+     * Global Privacy Platform consent string
+     */
+    gpp?: string;
 };
 
 /**
@@ -243,6 +254,48 @@ export type AdCallbacks = {
     report?: string | null;
 };
 
+/**
+ * An object containing attribution configuration for enabled ads.
+ */
+export type Attributions = {
+    /**
+     * Advertising partner associated with the ad.
+     */
+    partner_id: string;
+    conversion?: Task;
+};
+
+export type Task = {
+    /**
+     * DAP task ID.
+     */
+    task_id: string;
+    /**
+     * DAP data type of the task.
+     */
+    vdaf: string;
+    /**
+     * DAP data size of the task.
+     */
+    bits?: number;
+    /**
+     * DAP legnth of the task.
+     */
+    length: number;
+    /**
+     * DAP time precision. Determines rounding of dates in DAP report.
+     */
+    time_precision: number;
+    /**
+     * Measurement to be used when a default report is sent.
+     */
+    default_measurement?: number;
+    /**
+     * Index allocated to be used when a non-default report is sent.
+     */
+    index: number;
+};
+
 export type AdFormatBase = {
     /**
      * The format type of the ad.
@@ -253,6 +306,7 @@ export type AdFormatBase = {
      */
     url?: string;
     callbacks?: AdCallbacks;
+    attributions?: Attributions;
 };
 
 /**

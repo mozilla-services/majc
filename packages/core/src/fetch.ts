@@ -2,8 +2,10 @@ import { client, getAds, AdPlacement, AdResponse } from "@heyapi"
 import { DEFAULT_SERVICE_ENDPOINT } from "./constants"
 import { DefaultLogger } from "./logger"
 import { getOrGenerateContextId } from "./store"
-import { MozAdsPlacements, MozAdsPlacementWithContent } from "./types"
+import { GPPPing, MozAdsPlacements, MozAdsPlacementWithContent } from "./types"
 import { getFallbackAd, getFallbackAds } from "./fallback"
+import { getGPPPing } from "./gpp"
+import { getConfigValue } from "./config"
 
 const logger = new DefaultLogger({ name: "core.fetch" })
 
@@ -36,6 +38,18 @@ export const fetchAds = async ({
     ...placements,
   }
 
+  let gppPing: GPPPing | undefined
+
+  const gppEnabled = getConfigValue("gppEnabled")
+  if (gppEnabled) {
+    try {
+      gppPing = await getGPPPing()
+    }
+    catch {
+      return mapResponseToPlacementsWithContent(getFallbackAds(pendingPlacements), pendingPlacements)
+    }
+  }
+
   // Return the existing promise if we're already waiting to fetch a batch of placements
   if (fetchPromise) {
     return fetchPromise
@@ -57,6 +71,7 @@ export const fetchAds = async ({
         body: {
           context_id: contextId,
           placements: buildPlacementsRequest(pendingPlacements),
+          consent: gppEnabled ? { gpp: gppPing?.gppString } : undefined,
         },
       }
       try {
