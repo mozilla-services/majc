@@ -1,5 +1,56 @@
 import { ImageAd, Spoc, UaTile } from "@heyapi"
 
+declare global {
+  var __gpp: GPPFunction | undefined
+}
+
+// https://github.com/InteractiveAdvertisingBureau/Global-Privacy-Platform/blob/main/Core/CMP%20API%20Specification.md#what-required-api-commands-must-a-cmp-support-
+export interface GPPCommand {
+  addEventListener: GPPAddEventListenerCallback
+  getField: GPPGetFieldCallback
+  getSection: GPPGetSectionCallback
+  hasSection: GPPHasSectionCallback
+  ping: GPPPingCallback
+  removeEventListener: GPPRemoveEventListenerCallback
+}
+
+export type GPPAddEventListenerCallback = (data: GPPEvent, success: boolean) => void
+export type GPPGetFieldCallback = (data: unknown | null, success: boolean) => void
+export type GPPGetSectionCallback = (data: unknown[] | null, success: boolean) => void
+export type GPPHasSectionCallback = (data: boolean, success: boolean) => void
+export type GPPPingCallback = (data: GPPPing, success: boolean) => void
+export type GPPRemoveEventListenerCallback = (data: boolean, success: boolean) => void
+
+// https://github.com/InteractiveAdvertisingBureau/Global-Privacy-Platform/blob/main/Core/CMP%20API%20Specification.md#pingreturn-
+export interface GPPEvent {
+  eventName: string
+  listenerId: number
+  data: unknown
+  pingData: GPPPing
+}
+
+// https://github.com/InteractiveAdvertisingBureau/Global-Privacy-Platform/blob/main/Core/CMP%20API%20Specification.md#pingreturn-
+export interface GPPPing {
+  gppVersion: string
+  cmpStatus: string
+  cmpDisplayStatus: string
+  signalStatus: string
+  supportedAPIs: string[]
+  cmpId: number
+  sectionList: number[]
+  applicableSections: number[]
+  gppString: string
+  parsedSections: Record<string, unknown[]>
+}
+
+// https://github.com/InteractiveAdvertisingBureau/Global-Privacy-Platform/blob/main/Core/CMP%20API%20Specification.md#how-does-the-cmp-provide-the-api
+export type GPPFunction = <K extends keyof GPPCommand>(
+  command: K,
+  callback: GPPCommand[K],
+  parameter?: unknown,
+  version?: string,
+) => void
+
 // https://www.iab.com/wp-content/uploads/2019/04/IABNewAdPortfolio_LW_FixedSizeSpec.pdf
 export type IABAdUnitFormatType = "Billboard"
   | "SmartphoneBanner300"

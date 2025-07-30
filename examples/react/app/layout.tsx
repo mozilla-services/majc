@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+
 import "./globals.css"
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -15,6 +16,9 @@ export default function RootLayout({
     <html lang="en">
       <body>
         {children}
+
+        {/* Replace mock-gpp-bundle.js with actual GPP-compliant consent provider */}
+        <script src="/mock-gpp-bundle.js"></script>
       </body>
     </html>
   )
