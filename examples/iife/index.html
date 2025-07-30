@@ -4,9 +4,16 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Moz Ads JS Demo Page" />
+  <!-- OneTrust Cookies Consent Notice start for experiment.getpocket.com -->
+  <script src="https://cdn.cookielaw.org/consent/01985d0a-1347-7874-a68a-836a25dab7de/otSDKStub.js" type="text/javascript" data-domain-script="01985d0a-1347-7874-a68a-836a25dab7de"></script>
+  <script type="text/javascript">
+  function OptanonWrapper() { }
+  </script>
+  <!-- OneTrust Cookies Consent Notice end for experiment.getpocket.com -->
   <script src="../../dist/iife.global.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      mozAds.setConfigValue('gppEnabled', true);
       mozAds.renderPlacement(document.getElementById('placement-1'), {
         placementId: 'newtab_tile_1',
         fixedSize: { width: 64, height: 64 }
@@ -80,6 +87,10 @@
   </style>
 </head>
 <body>
+  <button onclick="__gpp('ping', function(data) { console.log(data) })">Log GPP Ping</button>
+  <!-- OneTrust Cookies Settings button start -->
+  <button id="ot-sdk-btn" class="ot-sdk-show-settings">Cookie Settings</button>
+  <!-- OneTrust Cookies Settings button end -->
   <main role="main">
     <h1>Moz Ads Examples Page, powered by MAJC</h1>
 
