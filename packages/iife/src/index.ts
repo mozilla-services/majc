@@ -1,3 +1,6 @@
+import "@core/polyfills"
+
+export * from "@core/config"
 export * from "@core/constants"
 
-export { renderPlacement } from "./display"
+export * from "./display"
