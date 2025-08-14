@@ -1,13 +1,15 @@
 import * as react_jsx_runtime from 'react/jsx-runtime';
-import * as react from 'react';
+import * as React from 'react';
+import React__default from 'react';
 
-interface Config {
+interface MozAdsConfig {
     gppEnabled: boolean;
     gppReadyTimeout: number;
 }
-declare function getConfig(): Config;
-declare function getConfigValue<K extends keyof Config>(key: K): Config[K];
-declare function setConfigValue<K extends keyof Config>(key: K, value: Config[K]): void;
+declare function getConfig(): MozAdsConfig;
+declare function setConfig(newConfig: Partial<MozAdsConfig>): void;
+declare function getConfigValue<K extends keyof MozAdsConfig>(key: K): MozAdsConfig[K];
+declare function setConfigValue<K extends keyof MozAdsConfig>(key: K, value: MozAdsConfig[K]): void;
 
 /**
  * An object containing callback URLs for interactions with an ad.
@@ -263,13 +265,25 @@ declare const FallbackAdURL: Partial<Record<AdUnitFormatType, HTTPSURLString>>;
 declare const AdUnitFormatImpressionThreshold: Record<AdUnitFormatType, ImpressionThreshold>;
 declare const DefaultImpressionThreshold: ImpressionThreshold;
 
-declare function MozAdsPlacement({ placementId, iabContent, fixedSize, onClick, onReport, onError, onLoad, }: MozAdsPlacementConfig): react_jsx_runtime.JSX.Element;
+interface MozAdsConfigProviderProps {
+    children?: React__default.ReactNode;
+    config?: Partial<MozAdsConfig>;
+}
+declare const MozAdsConfigProvider: ({ children, config, }: MozAdsConfigProviderProps) => react_jsx_runtime.JSX.Element;
+
+interface MozAdsPlacementProps extends MozAdsPlacementConfig {
+    config?: Partial<MozAdsConfig>;
+}
+declare function MozAdsPlacement({ config, placementId, iabContent, fixedSize, onClick, onReport, onError, onLoad, }: MozAdsPlacementProps): react_jsx_runtime.JSX.Element;
+
+declare const MozAdsConfigContext: React__default.Context<Partial<MozAdsConfig>>;
+declare const useMozAdsConfig: () => Partial<MozAdsConfig>;
 
 declare class MozAdsPlacementContextState {
     placements: MozAdsPlacements;
     getPlacementWithContent(placement: MozAdsPlacementConfig): Promise<MozAdsPlacementWithContent>;
 }
-declare const mozAdsPlacementContext: react.Context<MozAdsPlacementContextState>;
-declare const useMozAdsPlacement: ({ placementId, iabContent, fixedSize, onError, }: MozAdsPlacementConfig) => MozAdsPlacementWithContent;
+declare const mozAdsPlacementContext: React.Context<MozAdsPlacementContextState>;
+declare const useMozAdsPlacement: ({ config, placementId, iabContent, fixedSize, onError, }: MozAdsPlacementProps) => MozAdsPlacementWithContent;
 
-export { AdUnitFormatImpressionThreshold, AdUnitFormatTypeLookup, type Config, DEFAULT_SERVICE_ENDPOINT, DefaultImpressionThreshold, FallbackAdURL, FixedSize, IABFixedSize, INSTRUMENT_ENDPOINT, IS_BROWSER, IS_PRODUCTION, LOG_EMIT_FLAG_DEFAULT, LOG_TO_CONSOLE_FLAG_DEFAULT, MozAdsPlacement, MozAdsPlacementContextState, NonIABFixedSize, getConfig, getConfigValue, mozAdsPlacementContext, setConfigValue, useMozAdsPlacement };
+export { AdUnitFormatImpressionThreshold, AdUnitFormatTypeLookup, DEFAULT_SERVICE_ENDPOINT, DefaultImpressionThreshold, FallbackAdURL, FixedSize, IABFixedSize, INSTRUMENT_ENDPOINT, IS_BROWSER, IS_PRODUCTION, LOG_EMIT_FLAG_DEFAULT, LOG_TO_CONSOLE_FLAG_DEFAULT, type MozAdsConfig, MozAdsConfigContext, MozAdsConfigProvider, type MozAdsConfigProviderProps, MozAdsPlacement, MozAdsPlacementContextState, type MozAdsPlacementProps, NonIABFixedSize, getConfig, getConfigValue, mozAdsPlacementContext, setConfig, setConfigValue, useMozAdsConfig, useMozAdsPlacement };

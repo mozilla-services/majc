@@ -2,6 +2,9 @@ import { createContext, useContext, useEffect, useState } from "react"
 import { fetchAds } from "@core/fetch"
 import { DefaultLogger } from "@core/logger"
 import { MozAdsPlacementConfig, MozAdsPlacements, MozAdsPlacementWithContent } from "@core/types"
+import { useMozAdsConfig } from "./useMozAdsConfig"
+import { setConfig } from "@core/config"
+import { MozAdsPlacementProps } from "@react/components/MozAdsPlacement"
 
 let logger: DefaultLogger
 
@@ -52,12 +55,18 @@ export class MozAdsPlacementContextState {
 export const mozAdsPlacementContext = createContext<MozAdsPlacementContextState>(new MozAdsPlacementContextState())
 
 export const useMozAdsPlacement = ({
+  config,
   placementId,
   iabContent,
   fixedSize,
 
   onError,
-}: MozAdsPlacementConfig): MozAdsPlacementWithContent => {
+}: MozAdsPlacementProps): MozAdsPlacementWithContent => {
+  setConfig({
+    ...useMozAdsConfig(),
+    ...config,
+  })
+
   const [placement, setPlacement] = useState<MozAdsPlacementWithContent>({
     placementId,
     iabContent,

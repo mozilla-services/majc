@@ -13,6 +13,7 @@ import {
 } from "@core/types"
 import { useMozAdsPlacement } from "../hooks/useMozAdsPlacement"
 import { getFallbackAd } from "@core/fallback"
+import { MozAdsConfig } from "@core/config"
 
 let logger: DefaultLogger
 
@@ -23,7 +24,12 @@ catch (error: unknown) {
   console.debug(`DefaultLogger for react.components.MozAdsPlacement could not be instantiated: ${error}`)
 }
 
+export interface MozAdsPlacementProps extends MozAdsPlacementConfig {
+  config?: Partial<MozAdsConfig>
+}
+
 export function MozAdsPlacement({
+  config,
   placementId,
   iabContent,
   fixedSize,
@@ -32,7 +38,7 @@ export function MozAdsPlacement({
   onReport,
   onError,
   onLoad,
-}: MozAdsPlacementConfig) {
+}: MozAdsPlacementProps) {
   const { width, height } = fixedSize || {}
   const style = {
     width: width && `${width}px`,
@@ -41,6 +47,7 @@ export function MozAdsPlacement({
 
   try {
     const placement = useMozAdsPlacement({
+      config,
       placementId,
       iabContent,
       fixedSize,

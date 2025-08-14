@@ -1,27 +1,31 @@
-import { DefaultLogger } from "./logger"
-
-const logger = new DefaultLogger({ name: "core.config" })
-
-export interface Config {
+export interface MozAdsConfig {
   gppEnabled: boolean
   gppReadyTimeout: number
 }
 
-const config: Config = {
+const config: MozAdsConfig = {
   gppEnabled: false,
   gppReadyTimeout: 10_000,
 }
 
-export function getConfig(): Config {
+export function getConfig(): MozAdsConfig {
   return { ...config }
 }
 
-export function getConfigValue<K extends keyof Config>(key: K): Config[K] {
+export function setConfig(newConfig: Partial<MozAdsConfig>) {
+  for (const key in newConfig) {
+    const value = newConfig[key as keyof MozAdsConfig]
+    if (value !== undefined) {
+      setConfigValue(key as keyof MozAdsConfig, value)
+    }
+  }
+  console.log("CONFIG", config)
+}
+
+export function getConfigValue<K extends keyof MozAdsConfig>(key: K): MozAdsConfig[K] {
   return config[key]
 }
 
-export function setConfigValue<K extends keyof Config>(key: K, value: Config[K]) {
+export function setConfigValue<K extends keyof MozAdsConfig>(key: K, value: MozAdsConfig[K]) {
   config[key] = value
-
-  logger.info(`Set Config key "${key}" to value: ${value}`)
 }
