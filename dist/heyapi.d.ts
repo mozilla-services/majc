@@ -201,6 +201,7 @@ type AdRequest = {
      * A list of strings specifying blocked content. The string values come from the `block_key` field in returned ads.
      */
     blocks?: Array<string>;
+    consent?: Consent;
 };
 type AdContent = {
     /**
@@ -208,6 +209,15 @@ type AdContent = {
      */
     taxonomy: 'IAB-1.0' | 'IAB-2.0' | 'IAB-2.1' | 'IAB-2.2' | 'IAB-3.0';
     categories: Array<string>;
+};
+/**
+ * An object to specify consent specifiers for this request
+ */
+type Consent = {
+    /**
+     * Global Privacy Platform consent string
+     */
+    gpp?: string;
 };
 /**
  * An object containing callback URLs for interactions with an ad.
@@ -226,6 +236,46 @@ type AdCallbacks = {
      */
     report?: string | null;
 };
+/**
+ * An object containing attribution configuration for enabled ads.
+ */
+type Attributions = {
+    /**
+     * Advertising partner associated with the ad.
+     */
+    partner_id: string;
+    conversion?: Task;
+};
+type Task = {
+    /**
+     * DAP task ID.
+     */
+    task_id: string;
+    /**
+     * DAP data type of the task.
+     */
+    vdaf: string;
+    /**
+     * DAP data size of the task.
+     */
+    bits?: number;
+    /**
+     * DAP legnth of the task.
+     */
+    length: number;
+    /**
+     * DAP time precision. Determines rounding of dates in DAP report.
+     */
+    time_precision: number;
+    /**
+     * Measurement to be used when a default report is sent.
+     */
+    default_measurement?: number;
+    /**
+     * Index allocated to be used when a non-default report is sent.
+     */
+    index: number;
+};
 type AdFormatBase = {
     /**
      * The format type of the ad.
@@ -236,6 +286,7 @@ type AdFormatBase = {
      */
     url?: string;
     callbacks?: AdCallbacks;
+    attributions?: Attributions;
 };
 /**
  * Client-side enforced frequency capping information.
@@ -523,211 +574,9 @@ type GetTilesResponses = {
     204: void;
 };
 type GetTilesResponse = GetTilesResponses[keyof GetTilesResponses];
-type ClientOptions$2 = {
+type ClientOptions$1 = {
     baseUrl: 'https://ads.mozilla.org' | (string & {});
 };
-
-type AuthToken$1 = string | undefined;
-interface Auth$1 {
-    /**
-     * Which part of the request do we use to send the auth?
-     *
-     * @default 'header'
-     */
-    in?: 'header' | 'query';
-    /**
-     * Header or query parameter name.
-     *
-     * @default 'Authorization'
-     */
-    name?: string;
-    scheme?: 'basic' | 'bearer';
-    type: 'apiKey' | 'http';
-}
-interface SerializerOptions$1<T> {
-    /**
-     * @default true
-     */
-    explode: boolean;
-    style: T;
-}
-type ArrayStyle$1 = 'form' | 'spaceDelimited' | 'pipeDelimited';
-type ObjectStyle$1 = 'form' | 'deepObject';
-
-type QuerySerializer$1 = (query: Record<string, unknown>) => string;
-type BodySerializer$1 = (body: any) => any;
-interface QuerySerializerOptions$1 {
-    allowReserved?: boolean;
-    array?: SerializerOptions$1<ArrayStyle$1>;
-    object?: SerializerOptions$1<ObjectStyle$1>;
-}
-
-interface Client$1$1<RequestFn = never, Config = unknown, MethodFn = never, BuildUrlFn = never> {
-    /**
-     * Returns the final request URL.
-     */
-    buildUrl: BuildUrlFn;
-    connect: MethodFn;
-    delete: MethodFn;
-    get: MethodFn;
-    getConfig: () => Config;
-    head: MethodFn;
-    options: MethodFn;
-    patch: MethodFn;
-    post: MethodFn;
-    put: MethodFn;
-    request: RequestFn;
-    setConfig: (config: Config) => Config;
-    trace: MethodFn;
-}
-interface Config$1$1 {
-    /**
-     * Auth token or a function returning auth token. The resolved value will be
-     * added to the request payload as defined by its `security` array.
-     */
-    auth?: ((auth: Auth$1) => Promise<AuthToken$1> | AuthToken$1) | AuthToken$1;
-    /**
-     * A function for serializing request body parameter. By default,
-     * {@link JSON.stringify()} will be used.
-     */
-    bodySerializer?: BodySerializer$1 | null;
-    /**
-     * An object containing any HTTP headers that you want to pre-populate your
-     * `Headers` object with.
-     *
-     * {@link https://developer.mozilla.org/docs/Web/API/Headers/Headers#init See more}
-     */
-    headers?: RequestInit['headers'] | Record<string, string | number | boolean | (string | number | boolean)[] | null | undefined | unknown>;
-    /**
-     * The request method.
-     *
-     * {@link https://developer.mozilla.org/docs/Web/API/fetch#method See more}
-     */
-    method?: 'CONNECT' | 'DELETE' | 'GET' | 'HEAD' | 'OPTIONS' | 'PATCH' | 'POST' | 'PUT' | 'TRACE';
-    /**
-     * A function for serializing request query parameters. By default, arrays
-     * will be exploded in form style, objects will be exploded in deepObject
-     * style, and reserved characters are percent-encoded.
-     *
-     * This method will have no effect if the native `paramsSerializer()` Axios
-     * API function is used.
-     *
-     * {@link https://swagger.io/docs/specification/serialization/#query View examples}
-     */
-    querySerializer?: QuerySerializer$1 | QuerySerializerOptions$1;
-    /**
-     * A function transforming response data before it's returned. This is useful
-     * for post-processing data, e.g. converting ISO strings into Date objects.
-     */
-    responseTransformer?: (data: unknown) => Promise<unknown>;
-    /**
-     * A function validating response data. This is useful if you want to ensure
-     * the response conforms to the desired shape, so it can be safely passed to
-     * the transformers and returned to the user.
-     */
-    responseValidator?: (data: unknown) => Promise<unknown>;
-}
-
-type ErrInterceptor$1<Err, Res, Req, Options> = (error: Err, response: Res, request: Req, options: Options) => Err | Promise<Err>;
-type ReqInterceptor$1<Req, Options> = (request: Req, options: Options) => Req | Promise<Req>;
-type ResInterceptor$1<Res, Req, Options> = (response: Res, request: Req, options: Options) => Res | Promise<Res>;
-declare class Interceptors$1<Interceptor> {
-    _fns: Interceptor[];
-    constructor();
-    clear(): void;
-    exists(fn: Interceptor): boolean;
-    eject(fn: Interceptor): void;
-    use(fn: Interceptor): void;
-}
-interface Middleware$1<Req, Res, Err, Options> {
-    error: Pick<Interceptors$1<ErrInterceptor$1<Err, Res, Req, Options>>, 'eject' | 'use'>;
-    request: Pick<Interceptors$1<ReqInterceptor$1<Req, Options>>, 'eject' | 'use'>;
-    response: Pick<Interceptors$1<ResInterceptor$1<Res, Req, Options>>, 'eject' | 'use'>;
-}
-
-interface Config$2<T extends ClientOptions$1 = ClientOptions$1> extends Omit<RequestInit, 'body' | 'headers' | 'method'>, Config$1$1 {
-    /**
-     * Base URL for all requests made by this client.
-     */
-    baseUrl?: T['baseUrl'];
-    /**
-     * Fetch API implementation. You can use this option to provide a custom
-     * fetch instance.
-     *
-     * @default globalThis.fetch
-     */
-    fetch?: (request: Request) => ReturnType<typeof fetch>;
-    /**
-     * Return the response data parsed in a specified format. By default, `auto`
-     * will infer the appropriate method from the `Content-Type` response header.
-     * You can override this behavior with any of the {@link Body} methods.
-     * Select `stream` if you don't want to parse response data at all.
-     *
-     * @default 'auto'
-     */
-    parseAs?: Exclude<keyof Body, 'body' | 'bodyUsed'> | 'auto' | 'stream';
-    /**
-     * Throw an error instead of returning it in the response?
-     *
-     * @default false
-     */
-    throwOnError?: T['throwOnError'];
-}
-interface RequestOptions$1<ThrowOnError extends boolean = boolean, Url extends string = string> extends Config$2<{
-    throwOnError: ThrowOnError;
-}> {
-    /**
-     * Any body that you want to add to your request.
-     *
-     * {@link https://developer.mozilla.org/docs/Web/API/fetch#body}
-     */
-    body?: unknown;
-    path?: Record<string, unknown>;
-    query?: Record<string, unknown>;
-    /**
-     * Security mechanism(s) to use for the request.
-     */
-    security?: ReadonlyArray<Auth$1>;
-    url: Url;
-}
-type RequestResult$1<TData = unknown, TError = unknown, ThrowOnError extends boolean = boolean> = ThrowOnError extends true ? Promise<{
-    data: TData;
-    request: Request;
-    response: Response;
-}> : Promise<({
-    data: TData;
-    error: undefined;
-} | {
-    data: undefined;
-    error: TError;
-}) & {
-    request: Request;
-    response: Response;
-}>;
-interface ClientOptions$1 {
-    baseUrl?: string;
-    throwOnError?: boolean;
-}
-type MethodFn$1 = <TData = unknown, TError = unknown, ThrowOnError extends boolean = false>(options: Omit<RequestOptions$1<ThrowOnError>, 'method'>) => RequestResult$1<TData, TError, ThrowOnError>;
-type RequestFn$1 = <TData = unknown, TError = unknown, ThrowOnError extends boolean = false>(options: Omit<RequestOptions$1<ThrowOnError>, 'method'> & Pick<Required<RequestOptions$1<ThrowOnError>>, 'method'>) => RequestResult$1<TData, TError, ThrowOnError>;
-type BuildUrlFn$1 = <TData extends {
-    body?: unknown;
-    path?: Record<string, unknown>;
-    query?: Record<string, unknown>;
-    url: string;
-}>(options: Pick<TData, 'url'> & Options$2<TData>) => string;
-type Client$2 = Client$1$1<RequestFn$1, Config$2, MethodFn$1, BuildUrlFn$1> & {
-    interceptors: Middleware$1<Request, Response, unknown, RequestOptions$1>;
-};
-interface TDataShape$1 {
-    body?: unknown;
-    headers?: unknown;
-    path?: unknown;
-    query?: unknown;
-    url: string;
-}
-type OmitKeys$1<T, K> = Pick<T, Exclude<keyof T, K>>;
-type Options$2<TData extends TDataShape$1 = TDataShape$1, ThrowOnError extends boolean = boolean> = OmitKeys$1<RequestOptions$1<ThrowOnError>, 'body' | 'path' | 'query' | 'url'> & Omit<TData, 'url'>;
 
 type AuthToken = string | undefined;
 interface Auth {
@@ -736,7 +585,7 @@ interface Auth {
      *
      * @default 'header'
      */
-    in?: 'header' | 'query';
+    in?: 'header' | 'query' | 'cookie';
     /**
      * Header or query parameter name.
      *
@@ -746,6 +595,7 @@ interface Auth {
     scheme?: 'basic' | 'bearer';
     type: 'apiKey' | 'http';
 }
+
 interface SerializerOptions<T> {
     /**
      * @default true
@@ -818,6 +668,12 @@ interface Config$1 {
      */
     querySerializer?: QuerySerializer | QuerySerializerOptions;
     /**
+     * A function validating request data. This is useful if you want to ensure
+     * the request conforms to the desired shape, so it can be safely sent to
+     * the server.
+     */
+    requestValidator?: (data: unknown) => Promise<unknown>;
+    /**
      * A function transforming response data before it's returned. This is useful
      * for post-processing data, e.g. converting ISO strings into Date objects.
      */
@@ -834,12 +690,14 @@ type ErrInterceptor<Err, Res, Req, Options> = (error: Err, response: Res, reques
 type ReqInterceptor<Req, Options> = (request: Req, options: Options) => Req | Promise<Req>;
 type ResInterceptor<Res, Req, Options> = (response: Res, request: Req, options: Options) => Res | Promise<Res>;
 declare class Interceptors<Interceptor> {
-    _fns: Interceptor[];
+    _fns: (Interceptor | null)[];
     constructor();
     clear(): void;
-    exists(fn: Interceptor): boolean;
-    eject(fn: Interceptor): void;
-    use(fn: Interceptor): void;
+    getInterceptorIndex(id: number | Interceptor): number;
+    exists(id: number | Interceptor): boolean;
+    eject(id: number | Interceptor): void;
+    update(id: number | Interceptor, fn: Interceptor): number | false | Interceptor;
+    use(fn: Interceptor): number;
 }
 interface Middleware<Req, Res, Err, Options> {
     error: Pick<Interceptors<ErrInterceptor<Err, Res, Req, Options>>, 'eject' | 'use'>;
@@ -847,6 +705,7 @@ interface Middleware<Req, Res, Err, Options> {
     response: Pick<Interceptors<ResInterceptor<Res, Req, Options>>, 'eject' | 'use'>;
 }
 
+type ResponseStyle = 'data' | 'fields';
 interface Config<T extends ClientOptions = ClientOptions> extends Omit<RequestInit, 'body' | 'headers' | 'method'>, Config$1 {
     /**
      * Base URL for all requests made by this client.
@@ -860,6 +719,13 @@ interface Config<T extends ClientOptions = ClientOptions> extends Omit<RequestIn
      */
     fetch?: (request: Request) => ReturnType<typeof fetch>;
     /**
+     * Please don't use the Fetch client for Next.js applications. The `next`
+     * options won't have any effect.
+     *
+     * Install {@link https://www.npmjs.com/package/@hey-api/client-next `@hey-api/client-next`} instead.
+     */
+    next?: never;
+    /**
      * Return the response data parsed in a specified format. By default, `auto`
      * will infer the appropriate method from the `Content-Type` response header.
      * You can override this behavior with any of the {@link Body} methods.
@@ -867,7 +733,13 @@ interface Config<T extends ClientOptions = ClientOptions> extends Omit<RequestIn
      *
      * @default 'auto'
      */
-    parseAs?: Exclude<keyof Body, 'body' | 'bodyUsed'> | 'auto' | 'stream';
+    parseAs?: 'arrayBuffer' | 'auto' | 'blob' | 'formData' | 'json' | 'stream' | 'text';
+    /**
+     * Should we return only data or multiple fields (data, error, response, etc.)?
+     *
+     * @default 'fields'
+     */
+    responseStyle?: ResponseStyle;
     /**
      * Throw an error instead of returning it in the response?
      *
@@ -875,7 +747,8 @@ interface Config<T extends ClientOptions = ClientOptions> extends Omit<RequestIn
      */
     throwOnError?: T['throwOnError'];
 }
-interface RequestOptions<ThrowOnError extends boolean = boolean, Url extends string = string> extends Config<{
+interface RequestOptions<TResponseStyle extends ResponseStyle = 'fields', ThrowOnError extends boolean = boolean, Url extends string = string> extends Config<{
+    responseStyle: TResponseStyle;
     throwOnError: ThrowOnError;
 }> {
     /**
@@ -892,26 +765,27 @@ interface RequestOptions<ThrowOnError extends boolean = boolean, Url extends str
     security?: ReadonlyArray<Auth>;
     url: Url;
 }
-type RequestResult<TData = unknown, TError = unknown, ThrowOnError extends boolean = boolean> = ThrowOnError extends true ? Promise<{
-    data: TData;
+type RequestResult<TData = unknown, TError = unknown, ThrowOnError extends boolean = boolean, TResponseStyle extends ResponseStyle = 'fields'> = ThrowOnError extends true ? Promise<TResponseStyle extends 'data' ? TData extends Record<string, unknown> ? TData[keyof TData] : TData : {
+    data: TData extends Record<string, unknown> ? TData[keyof TData] : TData;
     request: Request;
     response: Response;
-}> : Promise<({
-    data: TData;
+}> : Promise<TResponseStyle extends 'data' ? (TData extends Record<string, unknown> ? TData[keyof TData] : TData) | undefined : ({
+    data: TData extends Record<string, unknown> ? TData[keyof TData] : TData;
     error: undefined;
 } | {
     data: undefined;
-    error: TError;
+    error: TError extends Record<string, unknown> ? TError[keyof TError] : TError;
 }) & {
     request: Request;
     response: Response;
 }>;
 interface ClientOptions {
     baseUrl?: string;
+    responseStyle?: ResponseStyle;
     throwOnError?: boolean;
 }
-type MethodFn = <TData = unknown, TError = unknown, ThrowOnError extends boolean = false>(options: Omit<RequestOptions<ThrowOnError>, 'method'>) => RequestResult<TData, TError, ThrowOnError>;
-type RequestFn = <TData = unknown, TError = unknown, ThrowOnError extends boolean = false>(options: Omit<RequestOptions<ThrowOnError>, 'method'> & Pick<Required<RequestOptions<ThrowOnError>>, 'method'>) => RequestResult<TData, TError, ThrowOnError>;
+type MethodFn = <TData = unknown, TError = unknown, ThrowOnError extends boolean = false, TResponseStyle extends ResponseStyle = 'fields'>(options: Omit<RequestOptions<TResponseStyle, ThrowOnError>, 'method'>) => RequestResult<TData, TError, ThrowOnError, TResponseStyle>;
+type RequestFn = <TData = unknown, TError = unknown, ThrowOnError extends boolean = false, TResponseStyle extends ResponseStyle = 'fields'>(options: Omit<RequestOptions<TResponseStyle, ThrowOnError>, 'method'> & Pick<Required<RequestOptions<TResponseStyle, ThrowOnError>>, 'method'>) => RequestResult<TData, TError, ThrowOnError, TResponseStyle>;
 type BuildUrlFn = <TData extends {
     body?: unknown;
     path?: Record<string, unknown>;
@@ -929,7 +803,7 @@ interface TDataShape {
     url: string;
 }
 type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
-type Options$1<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'path' | 'query' | 'url'> & Omit<TData, 'url'>;
+type Options$1<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponseStyle extends ResponseStyle = 'fields'> = OmitKeys<RequestOptions<TResponseStyle, ThrowOnError>, 'body' | 'path' | 'query' | 'url'> & Omit<TData, 'url'>;
 
 type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options$1<TData, ThrowOnError> & {
     /**
@@ -947,49 +821,41 @@ type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean
 /**
  * Get Unified API ads
  */
-declare const getAds: <ThrowOnError extends boolean = false>(options: Options<GetAdsData, ThrowOnError>) => RequestResult$1<AdResponse, unknown, ThrowOnError>;
+declare const getAds: <ThrowOnError extends boolean = false>(options: Options<GetAdsData, ThrowOnError>) => RequestResult<GetAdsResponses, GetAdsErrors, ThrowOnError, "fields">;
 /**
  * Report ad interaction
  * Interaction callback URLs are returned in an ad response. When the corresponding action on the client occurs, those URLs should be fetched.
  */
-declare const getV1T: <ThrowOnError extends boolean = false>(options: Options<GetV1tData, ThrowOnError>) => RequestResult$1<unknown, unknown, ThrowOnError>;
+declare const getV1T: <ThrowOnError extends boolean = false>(options: Options<GetV1tData, ThrowOnError>) => RequestResult<GetV1tResponses, unknown, ThrowOnError, "fields">;
 /**
  * Record client events
  * This endpoint can be used to persist a prometheus metric.
  */
-declare const getV1Log: <ThrowOnError extends boolean = false>(options?: Options<GetV1LogData, ThrowOnError>) => RequestResult$1<unknown, unknown, ThrowOnError>;
+declare const getV1Log: <ThrowOnError extends boolean = false>(options?: Options<GetV1LogData, ThrowOnError>) => RequestResult<GetV1LogResponses, GetV1LogErrors, ThrowOnError, "fields">;
 /**
  * Delete user data
  * Delete any data persisted associated with a given context_id.
  */
-declare const deleteV1DeleteUser: <ThrowOnError extends boolean = false>(options: Options<DeleteV1DeleteUserData, ThrowOnError>) => RequestResult$1<unknown, unknown, ThrowOnError>;
+declare const deleteV1DeleteUser: <ThrowOnError extends boolean = false>(options: Options<DeleteV1DeleteUserData, ThrowOnError>) => RequestResult<DeleteV1DeleteUserResponses, unknown, ThrowOnError, "fields">;
 /**
  * Get ad image
  * Proxies an ad image from an encoded URL. Encoded image URLs are returned in an ad response, calls to this endpoint shouldn't be constructed manually.
  */
-declare const getV1Images: <ThrowOnError extends boolean = false>(options: Options<GetV1ImagesData, ThrowOnError>) => RequestResult$1<unknown, unknown, ThrowOnError>;
+declare const getV1Images: <ThrowOnError extends boolean = false>(options: Options<GetV1ImagesData, ThrowOnError>) => RequestResult<GetV1ImagesResponses, unknown, ThrowOnError, "fields">;
 /**
  * (legacy) Get sponsored content
  * Get a list of spocs based on region and pocket_id. The IP address is used to deduce a rough geographic region, for example "Texas" in the U.S. or "England" in the U.K. The IP is not stored or shared to preserve privacy.
  */
-declare const getSpocs: <ThrowOnError extends boolean = false>(options: Options<GetSpocsData, ThrowOnError>) => RequestResult$1<{
-    [key: string]: Settings | SpocFeed | {
-        [key: string]: unknown;
-    } | undefined;
-    settings?: Settings;
-    __debug__?: {
-        [key: string]: unknown;
-    };
-}, unknown, ThrowOnError>;
+declare const getSpocs: <ThrowOnError extends boolean = false>(options: Options<GetSpocsData, ThrowOnError>) => RequestResult<GetSpocsResponses, unknown, ThrowOnError, "fields">;
 /**
  * (legacy) Delete a user's personal data
  * Used when a user opts-out of sponsored content to delete the user's data.
  */
-declare const deleteUser: <ThrowOnError extends boolean = false>(options: Options<DeleteUserData, ThrowOnError>) => RequestResult$1<unknown, unknown, ThrowOnError>;
+declare const deleteUser: <ThrowOnError extends boolean = false>(options: Options<DeleteUserData, ThrowOnError>) => RequestResult<DeleteUserResponses, unknown, ThrowOnError, "fields">;
 /**
  * (legacy) Get tiles
  */
-declare const getTiles: <ThrowOnError extends boolean = false>(options?: Options<GetTilesData, ThrowOnError>) => RequestResult$1<GetTilesResponse, unknown, ThrowOnError>;
+declare const getTiles: <ThrowOnError extends boolean = false>(options?: Options<GetTilesData, ThrowOnError>) => RequestResult<GetTilesResponses, GetTilesErrors, ThrowOnError, "fields">;
 
 /**
  * The `createClientConfig()` function will be called on client initialization
@@ -999,7 +865,7 @@ declare const getTiles: <ThrowOnError extends boolean = false>(options?: Options
  * `setConfig()`. This is useful for example if you're using Next.js
  * to ensure your client always has the correct values.
  */
-type CreateClientConfig<T extends ClientOptions$1 = ClientOptions$2> = (override?: Config$2<ClientOptions$1 & T>) => Config$2<Required<ClientOptions$1> & T>;
-declare const client: Client$2;
+type CreateClientConfig<T extends ClientOptions = ClientOptions$1> = (override?: Config<ClientOptions & T>) => Config<Required<ClientOptions> & T>;
+declare const client: Client;
 
-export { type AdCallbacks, type AdContent, type AdFormatBase, type AdPlacement, type AdRequest, type AdResponse, type Caps, type ClientOptions$2 as ClientOptions, type CreateClientConfig, type DeleteUserData, type DeleteUserResponses, type DeleteV1DeleteUserData, type DeleteV1DeleteUserResponses, type DomainAffinityParameterSet, type FeatureFlags, type GetAdsData, type GetAdsErrors, type GetAdsResponse, type GetAdsResponses, type GetSpocsData, type GetSpocsResponse, type GetSpocsResponses, type GetTilesData, type GetTilesErrors, type GetTilesResponse, type GetTilesResponses, type GetV1ImagesData, type GetV1ImagesResponses, type GetV1LogData, type GetV1LogErrors, type GetV1LogResponses, type GetV1tData, type GetV1tResponses, type ImageAd, type Options, type Placement, type Settings, type Shim, type Spoc, type SpocFeed, type SpocFeedItem, type SpocFrequencyCaps, type SpocRanking, type SpocRequest, type TelemetryResponse, type Tile, type TimeSegment, type UaTile, client, deleteUser, deleteV1DeleteUser, getAds, getSpocs, getTiles, getV1Images, getV1Log, getV1T };
+export { type AdCallbacks, type AdContent, type AdFormatBase, type AdPlacement, type AdRequest, type AdResponse, type Attributions, type Caps, type ClientOptions$1 as ClientOptions, type Consent, type CreateClientConfig, type DeleteUserData, type DeleteUserResponses, type DeleteV1DeleteUserData, type DeleteV1DeleteUserResponses, type DomainAffinityParameterSet, type FeatureFlags, type GetAdsData, type GetAdsErrors, type GetAdsResponse, type GetAdsResponses, type GetSpocsData, type GetSpocsResponse, type GetSpocsResponses, type GetTilesData, type GetTilesErrors, type GetTilesResponse, type GetTilesResponses, type GetV1ImagesData, type GetV1ImagesResponses, type GetV1LogData, type GetV1LogErrors, type GetV1LogResponses, type GetV1tData, type GetV1tResponses, type ImageAd, type Options, type Placement, type Settings, type Shim, type Spoc, type SpocFeed, type SpocFeedItem, type SpocFrequencyCaps, type SpocRanking, type SpocRequest, type Task, type TelemetryResponse, type Tile, type TimeSegment, type UaTile, client, deleteUser, deleteV1DeleteUser, getAds, getSpocs, getTiles, getV1Images, getV1Log, getV1T };

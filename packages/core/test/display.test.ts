@@ -282,7 +282,7 @@ describe("core/display.ts", () => {
     expect(reportTitleParagraph?.textContent).toEqual("Thank you for your feedback.")
     const disabledLinkClickEvent = new MouseEvent("click")
     disabledLinkClickEvent.preventDefault = jest.fn(disabledLinkClickEvent.preventDefault)
-    link?.onclick?.(disabledLinkClickEvent)
+    link?.onclick?.(disabledLinkClickEvent as PointerEvent)
     expect(disabledLinkClickEvent.preventDefault).toHaveBeenCalled()
   })
 

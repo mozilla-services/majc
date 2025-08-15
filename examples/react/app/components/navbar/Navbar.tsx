@@ -8,7 +8,7 @@ export default function NavBar() {
         Top Bar
       </div>
       <div>
-        Delor
+        <button id="ot-sdk-btn" className="ot-sdk-show-settings">Cookie Settings</button>
       </div>
     </div>
   )

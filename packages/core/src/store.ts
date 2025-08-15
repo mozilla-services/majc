@@ -39,5 +39,5 @@ export const getOrGenerateContextId = (forceRegenerate: boolean = false): string
 }
 
 function getStorage(storeType: StoreType): Storage {
-  return storeType === StoreType.Persistent ? window.localStorage : window.sessionStorage
+  return storeType === StoreType.Persistent ? localStorage : sessionStorage
 }

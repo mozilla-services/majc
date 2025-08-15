@@ -1,5 +1,15 @@
 import * as react_jsx_runtime from 'react/jsx-runtime';
-import * as react from 'react';
+import * as React from 'react';
+import React__default from 'react';
+
+interface MozAdsConfig {
+    gppEnabled: boolean;
+    gppReadyTimeout: number;
+}
+declare function getConfig(): MozAdsConfig;
+declare function setConfig(newConfig: Partial<MozAdsConfig>): void;
+declare function getConfigValue<K extends keyof MozAdsConfig>(key: K): MozAdsConfig[K];
+declare function setConfigValue<K extends keyof MozAdsConfig>(key: K, value: MozAdsConfig[K]): void;
 
 /**
  * An object containing callback URLs for interactions with an ad.
@@ -18,6 +28,46 @@ type AdCallbacks = {
      */
     report?: string | null;
 };
+/**
+ * An object containing attribution configuration for enabled ads.
+ */
+type Attributions = {
+    /**
+     * Advertising partner associated with the ad.
+     */
+    partner_id: string;
+    conversion?: Task;
+};
+type Task = {
+    /**
+     * DAP task ID.
+     */
+    task_id: string;
+    /**
+     * DAP data type of the task.
+     */
+    vdaf: string;
+    /**
+     * DAP data size of the task.
+     */
+    bits?: number;
+    /**
+     * DAP legnth of the task.
+     */
+    length: number;
+    /**
+     * DAP time precision. Determines rounding of dates in DAP report.
+     */
+    time_precision: number;
+    /**
+     * Measurement to be used when a default report is sent.
+     */
+    default_measurement?: number;
+    /**
+     * Index allocated to be used when a non-default report is sent.
+     */
+    index: number;
+};
 type AdFormatBase = {
     /**
      * The format type of the ad.
@@ -28,6 +78,7 @@ type AdFormatBase = {
      */
     url?: string;
     callbacks?: AdCallbacks;
+    attributions?: Attributions;
 };
 /**
  * Client-side enforced frequency capping information.
@@ -122,6 +173,51 @@ type UaTile = AdFormatBase & {
     block_key?: string;
 };
 
+declare global {
+    var __gpp: GPPFunction | undefined;
+}
+interface GPPCommand {
+    addEventListener: GPPAddEventListenerCallback;
+    getField: GPPGetFieldCallback;
+    getSection: GPPGetSectionCallback;
+    hasSection: GPPHasSectionCallback;
+    ping: GPPPingCallback;
+    removeEventListener: GPPRemoveEventListenerCallback;
+}
+type GPPAddEventListenerCallback = (data: GPPEvent, success: boolean) => void;
+type GPPGetFieldCallback = (data: unknown | null, success: boolean) => void;
+type GPPGetSectionCallback = (data: unknown[] | null, success: boolean) => void;
+type GPPHasSectionCallback = (data: boolean, success: boolean) => void;
+type GPPPingCallback = (data: GPPPing, success: boolean) => void;
+type GPPRemoveEventListenerCallback = (data: boolean, success: boolean) => void;
+interface GPPEvent {
+    eventName: string;
+    listenerId: number;
+    data: unknown;
+    pingData: GPPPing;
+}
+interface GPPPing {
+    gppVersion: string;
+    cmpStatus: string;
+    cmpDisplayStatus: string;
+    signalStatus: string;
+    supportedAPIs: string[];
+    cmpId: number;
+    sectionList: number[];
+    applicableSections: number[];
+    gppString: string;
+    parsedSections: Record<string, unknown[]>;
+}
+type GPPFunction = <K extends keyof GPPCommand>(command: K, callback: GPPCommand[K], parameter?: unknown, version?: string) => void;
+type IABAdUnitFormatType = "Billboard" | "SmartphoneBanner300" | "SmartphoneBanner320" | "Leaderboard" | "SuperLeaderboardPushdown" | "Portrait" | "Skyscraper" | "MediumRectangle" | "TwentyBySixty" | "MobilePhoneInterstitial640" | "MobilePhoneInterstitial750" | "MobilePhoneInterstitial1080" | "FeaturePhoneSmallBanner" | "FeaturePhoneMediumBanner" | "FeaturePhoneLargeBanner";
+type NonIABAdUnitFormatType = "NewTab";
+type AdUnitFormatType = IABAdUnitFormatType | NonIABAdUnitFormatType;
+type AdUnitFormatTypeLookupKey = `${number}x${number}`;
+type HTTPSURLString = `https://${string}.${string}`;
+interface ImpressionThreshold {
+    percent: number;
+    duration: number;
+}
 type IABContentTaxonomyType = "IAB-1.0" | "IAB-2.0" | "IAB-2.1" | "IAB-2.2" | "IAB-3.0";
 interface IABContent {
     taxonomy: IABContentTaxonomyType;
@@ -155,13 +251,39 @@ interface MozAdsSize {
     height: number;
 }
 
-declare function MozAdsPlacement({ placementId, iabContent, fixedSize, onClick, onReport, onError, onLoad, }: MozAdsPlacementConfig): react_jsx_runtime.JSX.Element;
+declare const IS_BROWSER: boolean;
+declare const IS_PRODUCTION: boolean;
+declare const DEFAULT_SERVICE_ENDPOINT: HTTPSURLString;
+declare const INSTRUMENT_ENDPOINT: HTTPSURLString;
+declare const LOG_TO_CONSOLE_FLAG_DEFAULT: boolean;
+declare const LOG_EMIT_FLAG_DEFAULT = true;
+declare const IABFixedSize: Record<IABAdUnitFormatType, MozAdsSize>;
+declare const NonIABFixedSize: Record<NonIABAdUnitFormatType, MozAdsSize>;
+declare const FixedSize: Record<AdUnitFormatType, MozAdsSize>;
+declare const AdUnitFormatTypeLookup: Record<AdUnitFormatTypeLookupKey, AdUnitFormatType>;
+declare const FallbackAdURL: Partial<Record<AdUnitFormatType, HTTPSURLString>>;
+declare const AdUnitFormatImpressionThreshold: Record<AdUnitFormatType, ImpressionThreshold>;
+declare const DefaultImpressionThreshold: ImpressionThreshold;
+
+interface MozAdsConfigProviderProps {
+    children?: React__default.ReactNode;
+    config?: Partial<MozAdsConfig>;
+}
+declare const MozAdsConfigProvider: ({ children, config, }: MozAdsConfigProviderProps) => react_jsx_runtime.JSX.Element;
+
+interface MozAdsPlacementProps extends MozAdsPlacementConfig {
+    config?: Partial<MozAdsConfig>;
+}
+declare function MozAdsPlacement({ config, placementId, iabContent, fixedSize, onClick, onReport, onError, onLoad, }: MozAdsPlacementProps): react_jsx_runtime.JSX.Element;
+
+declare const MozAdsConfigContext: React__default.Context<Partial<MozAdsConfig>>;
+declare const useMozAdsConfig: () => Partial<MozAdsConfig>;
 
 declare class MozAdsPlacementContextState {
     placements: MozAdsPlacements;
     getPlacementWithContent(placement: MozAdsPlacementConfig): Promise<MozAdsPlacementWithContent>;
 }
-declare const mozAdsPlacementContext: react.Context<MozAdsPlacementContextState>;
-declare const useMozAdsPlacement: ({ placementId, iabContent, fixedSize, onError, }: MozAdsPlacementConfig) => MozAdsPlacementWithContent;
+declare const mozAdsPlacementContext: React.Context<MozAdsPlacementContextState>;
+declare const useMozAdsPlacement: ({ config, placementId, iabContent, fixedSize, onError, }: MozAdsPlacementProps) => MozAdsPlacementWithContent;
 
-export { MozAdsPlacement, MozAdsPlacementContextState, mozAdsPlacementContext, useMozAdsPlacement };
+export { AdUnitFormatImpressionThreshold, AdUnitFormatTypeLookup, DEFAULT_SERVICE_ENDPOINT, DefaultImpressionThreshold, FallbackAdURL, FixedSize, IABFixedSize, INSTRUMENT_ENDPOINT, IS_BROWSER, IS_PRODUCTION, LOG_EMIT_FLAG_DEFAULT, LOG_TO_CONSOLE_FLAG_DEFAULT, type MozAdsConfig, MozAdsConfigContext, MozAdsConfigProvider, type MozAdsConfigProviderProps, MozAdsPlacement, MozAdsPlacementContextState, type MozAdsPlacementProps, NonIABFixedSize, getConfig, getConfigValue, mozAdsPlacementContext, setConfig, setConfigValue, useMozAdsConfig, useMozAdsPlacement };
