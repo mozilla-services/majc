@@ -44,12 +44,18 @@ export async function getGPPPing(): Promise<GPPPing> {
 
   return new Promise((resolve, reject) => {
     gpp("addEventListener", (data, success) => {
+      if (data.eventName !== "signalStatus") {
+        return
+      }
+
       if (success) {
         resolve(data.pingData)
       }
       else {
         reject(data)
       }
+
+      gpp("removeEventListener", () => {}, data.listenerId)
     })
   })
 }

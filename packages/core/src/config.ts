@@ -19,7 +19,6 @@ export function setConfig(newConfig: Partial<MozAdsConfig>) {
       setConfigValue(key as keyof MozAdsConfig, value)
     }
   }
-  console.log("CONFIG", config)
 }
 
 export function getConfigValue<K extends keyof MozAdsConfig>(key: K): MozAdsConfig[K] {

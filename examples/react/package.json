@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
     "build": "next build",
+    "copy-public:mock-gpp-bundle": "node ./scripts/copy-public.mjs ../mock-gpp-bundle.js",
+    "dev": "next dev --turbopack",
     "start": "next start"
   },
   "dependencies": {
