@@ -17,7 +17,7 @@ export default function RootLayout({
       <body>
         {children}
 
-        <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" type="text/javascript" data-domain-script="01985d0a-1347-7874-a68a-836a25dab7de" />
+        <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" type="text/javascript" data-domain-script="0198ae37-ce9e-7da0-b98e-269bd00d6e36" />
       </body>
     </html>
   )
