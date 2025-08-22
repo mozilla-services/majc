@@ -328,9 +328,24 @@ export function renderPlacement(element: HTMLElement, { placement, onClick, onEr
       })
 
       img.dataset.placementId = placement.placementId
-      img.alt = (placement.content as ImageAd)?.alt_text ?? l("ad_image_default_alt")
+      const imageAd = placement.content as ImageAd
+      img.alt = imageAd.alt_text ? placementIdToAltTextPrefix(placement.placementId, imageAd.alt_text) : l("ad_image_default_alt")
       img.src = imageUrl
     }
+  }
+
+  function placementIdToAltTextPrefix(placementId: string, altText: string): string {
+    const words = placementId.split("_")
+    let placementType = words.find((word) => {
+      return ["billboard", "skyscraper", "rectangle"].includes(word)
+    })
+    if (placementType) {
+      placementType = placementType[0].toUpperCase() + placementType.substring(1)
+      console.log(placementType)
+      const placementNumber = words[words.length - 1]
+      return `${placementType} Ad ${placementNumber}: ${altText}`
+    }
+    return l("ad_image_default_alt")
   }
 
   async function renderAd() {

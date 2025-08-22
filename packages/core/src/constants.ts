@@ -13,7 +13,7 @@ export const IS_PRODUCTION = process.env.NODE_ENV === "production"
 
 export const DEFAULT_SERVICE_ENDPOINT: HTTPSURLString = IS_PRODUCTION
   ? "https://ads.mozilla.org/" // production
-  : "https://ads.allizom.org/" // staging
+  : "https://ads.mozilla.org/" // staging
 export const INSTRUMENT_ENDPOINT: HTTPSURLString = `${DEFAULT_SERVICE_ENDPOINT}v1/log`
 
 export const LOG_TO_CONSOLE_FLAG_DEFAULT = !IS_PRODUCTION
