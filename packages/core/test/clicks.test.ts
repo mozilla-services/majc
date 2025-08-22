@@ -58,7 +58,7 @@ describe("core/clicks.ts", () => {
             report: "https://example.com/report",
           },
           image_url: "https://example.com/image",
-          alt_text: "Advertiser Name",
+          alt_text: "Billboard Ad 1: Advertiser Name",
           block_key: "1234567890ABCDEFGHabcdefgh",
         },
       }
@@ -86,7 +86,7 @@ describe("core/clicks.ts", () => {
             report: "https://example.com/report",
           },
           image_url: "https://example.com/image",
-          alt_text: "Advertiser Name",
+          alt_text: "Billboard Ad 1: Advertiser Name",
           block_key: "1234567890ABCDEFGHabcdefgh",
         },
       }
