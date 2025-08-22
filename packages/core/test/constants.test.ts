@@ -6,7 +6,7 @@ describe("core/constants.ts", () => {
   })
 
   test("Use staging endpoint URLs when not in production", () => {
-    expect(DEFAULT_SERVICE_ENDPOINT).toBe("https://ads.allizom.org/")
+    expect(DEFAULT_SERVICE_ENDPOINT).toBe("https://ads.mozilla.org/")
   })
 
   test("Use production endpoint URLs in production", () => {

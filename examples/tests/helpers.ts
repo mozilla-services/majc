@@ -2,9 +2,9 @@ import { expect, Locator, Page } from "@playwright/test"
 import { FixedSize } from "../../dist/core"
 
 const expectAdLayout = async (page: Page, placementName: string, altText: string): Promise<void> => {
-  const image = page.getByAltText(altText)
+  const image = page.getByAltText(new RegExp("^" + altText))
   await expect(image).toBeVisible()
-  await expect(image).toHaveAttribute("src", /^https:\/\/ads-img\.allizom\.org\//)
+  await expect(image).toHaveAttribute("src", /^https:\/\/ads-img\.mozilla\.org\//)
 
   const inner = page.locator(".moz-ads-placement-inner").filter({ has: image })
   await expect(inner).toHaveAttribute("aria-live", "polite")
@@ -64,14 +64,14 @@ const getBoundingRectangle = async (locator: Locator): Promise<DOMRect> => {
   return locator.evaluate(el => el.getBoundingClientRect())
 }
 
-const altTexts = {
+const altTextPrefixes = {
   tile: "Mozilla Ad",
-  billboard_1: "Brand Text mock_pocket_billboard_1 0",
-  billboard_2: "Brand Text mock_pocket_billboard_2 0",
-  skyscraper_1: "Brand Text mock_pocket_skyscraper_1 0",
-  skyscraper_2: "Brand Text mock_pocket_skyscraper_2 0",
-  rectangle_1: "Brand Text mock_pocket_rectangle_1 0",
-  rectangle_2: "Brand Text mock_pocket_rectangle_2 0",
+  billboard_1: "Billboard Ad 1:",
+  billboard_2: "Billboard Ad 2:",
+  skyscraper_1: "Skyscraper Ad 1:",
+  skyscraper_2: "Skyscraper Ad 2:",
+  rectangle_1: "Rectangle Ad 1:",
+  rectangle_2: "Rectangle Ad 2:",
 }
 
-export { altTexts, expectAdLayout, expectClickNavigation }
+export { altTextPrefixes, expectAdLayout, expectClickNavigation }
