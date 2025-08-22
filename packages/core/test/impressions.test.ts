@@ -54,7 +54,7 @@ describe("core/impresssions.ts", () => {
 
         expect(logInfoSpy).toHaveBeenCalledWith("Impression occurred for placement: pocket_billboard_1", { placementId: "pocket_billboard_1", type: "impressionObserver.recordImpression.viewed" })
         expect(fetchMock.mock.calls.length).toBe(2)
-        expect(fetchMock.mock.calls[0][0]).toBe("https://ads.allizom.org/v1/log?event=init")
+        expect(fetchMock.mock.calls[0][0]).toBe("https://ads.mozilla.org/v1/log?event=init")
         expect(fetchMock.mock.calls[1][0]).toBe("https://fake_impression_url.abc/1")
       })
 
@@ -94,7 +94,7 @@ describe("core/impresssions.ts", () => {
           { type: "impressionObserver.recordImpression.invalidCallbackError", path: "null or undefined", eventLabel: "invalid_url_error" })
         expect(logInfoSpy).not.toHaveBeenCalled()
         expect(fetchMock.mock.calls.length).toBe(1)
-        expect(fetchMock.mock.calls[0][0]).toBe("https://ads.allizom.org/v1/log?event=invalid_url_error")
+        expect(fetchMock.mock.calls[0][0]).toBe("https://ads.mozilla.org/v1/log?event=invalid_url_error")
       })
 
       test("and exits early when the impression callback URL is invalid", () => {
@@ -115,7 +115,7 @@ describe("core/impresssions.ts", () => {
           { type: "impressionObserver.recordImpression.invalidCallbackError", path: "invalid-impression-callback-url", eventLabel: "invalid_url_error" })
         expect(logInfoSpy).not.toHaveBeenCalled()
         expect(fetchMock.mock.calls.length).toBe(1)
-        expect(fetchMock.mock.calls[0][0]).toBe("https://ads.allizom.org/v1/log?event=invalid_url_error")
+        expect(fetchMock.mock.calls[0][0]).toBe("https://ads.mozilla.org/v1/log?event=invalid_url_error")
       })
 
       test("when the impression callback request fails", async () => {
