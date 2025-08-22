@@ -25,7 +25,7 @@ describe("core/display.ts", () => {
           report: "https://example.com/report",
         },
         image_url: "https://example.com/image",
-        alt_text: "Advertiser Name",
+        alt_text: "Billboard Ad 1: Advertiser Name",
         block_key: "1234567890ABCDEFGHabcdefgh",
       },
     }
@@ -144,7 +144,7 @@ describe("core/display.ts", () => {
           report: "https://example.com/report",
         },
         image_url: "https://example.com/image",
-        alt_text: "Advertiser Name",
+        alt_text: "Billboard Ad 1: Advertiser Name",
         block_key: "1234567890ABCDEFGHabcdefgh",
       },
     }
@@ -159,7 +159,7 @@ describe("core/display.ts", () => {
     expect(link?.href).toEqual("https://getpocket.com/")
     const img = link?.querySelector<HTMLImageElement>(".moz-ads-placement-img[data-placement-id=\"pocket_billboard_1\"]")
     expect(img).toBeInstanceOf(HTMLImageElement)
-    expect(img?.alt).toEqual("Advertiser Name")
+    expect(img?.alt).toEqual("Billboard Ad 1: Advertiser Name")
     expect(img?.src).toEqual("https://example.com/image")
     const reportButton = link?.querySelector<HTMLButtonElement>(".moz-ads-placement-report-button")
     expect(reportButton).toBeInstanceOf(HTMLButtonElement)
@@ -189,7 +189,7 @@ describe("core/display.ts", () => {
           report: "https://example.com/report",
         },
         image_url: "https://example.com/image",
-        alt_text: "Advertiser Name",
+        alt_text: "Billboard Ad 1: Advertiser Name",
         block_key: "1234567890ABCDEFGHabcdefgh",
       },
     }
@@ -204,7 +204,7 @@ describe("core/display.ts", () => {
     expect(link?.href).toEqual("https://getpocket.com/")
     const img = link?.querySelector<HTMLImageElement>(".moz-ads-placement-img[data-placement-id=\"pocket_billboard_1\"]")
     expect(img).toBeInstanceOf(HTMLImageElement)
-    expect(img?.alt).toEqual("Advertiser Name")
+    expect(img?.alt).toEqual("Billboard Ad 1: Advertiser Name")
     expect(img?.src).toEqual("https://example.com/image")
     const reportButton = link?.querySelector<HTMLButtonElement>(".moz-ads-placement-report-button")
     expect(reportButton).toBeInstanceOf(HTMLButtonElement)

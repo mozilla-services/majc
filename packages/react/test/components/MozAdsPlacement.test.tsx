@@ -55,7 +55,7 @@ describe("react/components/MozAdsPlacement.tsx", () => {
             report: "https://example.com/report",
           },
           image_url: "https://example.com/image",
-          alt_text: "Advertiser Name",
+          alt_text: "Billboard Ad 1: Advertiser Name",
           block_key: "1234567890ABCDEFGHabcdefgh",
         },
       },
@@ -108,7 +108,7 @@ describe("react/components/MozAdsPlacement.tsx", () => {
             impression: "https://example.com/impression",
             report: "https://example.com/report",
           },
-          alt_text: "Advertiser Name",
+          alt_text: "Billboard 3: Advertiser Name",
           block_key: "1234567890ABCDEFGHabcdefgh",
         },
       },
@@ -139,7 +139,7 @@ describe("react/components/MozAdsPlacement.tsx", () => {
             impression: "https://example.com/impression",
             report: "https://example.com/report",
           },
-          alt_text: "Advertiser Name",
+          alt_text: "Billboard 4: Advertiser Name",
           block_key: "1234567890ABCDEFGHabcdefgh",
         },
       },
@@ -170,7 +170,7 @@ describe("react/components/MozAdsPlacement.tsx", () => {
             report: "https://example.com/report",
           },
           image_url: "https://example.com/image",
-          alt_text: "Advertiser Name",
+          alt_text: "Billboard Ad 5: Advertiser Name",
           block_key: "1234567890ABCDEFGHabcdefgh",
         },
       },
@@ -191,7 +191,7 @@ describe("react/components/MozAdsPlacement.tsx", () => {
     expect(link).toBeInstanceOf(HTMLAnchorElement)
     const img = link?.querySelector<HTMLImageElement>(".moz-ads-placement-img[data-placement-id=\"pocket_billboard_5\"]")
     expect(img).toBeInstanceOf(HTMLImageElement)
-    expect(img?.alt).toEqual("Advertiser Name")
+    expect(img?.alt).toEqual("Billboard Ad 5: Advertiser Name")
     expect(img?.src).toEqual("https://example.com/image")
     img?.dispatchEvent(new Event("load"))
     const reportButton = link?.querySelector<HTMLButtonElement>(".moz-ads-placement-report-button")
@@ -216,7 +216,7 @@ describe("react/components/MozAdsPlacement.tsx", () => {
             report: "https://example.com/report",
           },
           image_url: "https://example.com/image",
-          alt_text: "Advertiser Name",
+          alt_text: "Billboard Ad 6: Advertiser Name",
           block_key: "1234567890ABCDEFGHabcdefgh",
         },
       },
@@ -238,7 +238,7 @@ describe("react/components/MozAdsPlacement.tsx", () => {
     expect(link).toBeInstanceOf(HTMLAnchorElement)
     const img = link?.querySelector<HTMLImageElement>(".moz-ads-placement-img[data-placement-id=\"pocket_billboard_6\"]")
     expect(img).toBeInstanceOf(HTMLImageElement)
-    expect(img?.alt).toEqual("Advertiser Name")
+    expect(img?.alt).toEqual("Billboard Ad 6: Advertiser Name")
     expect(img?.src).toEqual("https://example.com/image")
     img?.dispatchEvent(new Event("load"))
     const reportButton = link?.querySelector<HTMLButtonElement>(".moz-ads-placement-report-button")
@@ -280,7 +280,7 @@ describe("react/components/MozAdsPlacement.tsx", () => {
             report: "https://example.com/report",
           },
           image_url: "https://example.com/image",
-          alt_text: "Advertiser Name",
+          alt_text: "Billboard 7: Advertiser Name",
           block_key: "1234567890ABCDEFGHabcdefgh",
         },
       },
