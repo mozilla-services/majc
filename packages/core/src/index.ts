@@ -1,4 +1,5 @@
 export * from "./clicks"
+export * from "./config"
 export * from "./constants"
 export * from "./display"
 export * from "./fetch"
