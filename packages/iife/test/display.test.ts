@@ -95,7 +95,7 @@ describe("iife/display.ts", () => {
               report: "https://example.com/report",
             },
             image_url: "https://example.com/image",
-            alt_text: "Billboard Ad 5: Advertiser Name",
+            alt_text: "Advertiser Name",
             block_key: "1234567890ABCDEFGHabcdefgh",
           },
         ],
@@ -145,7 +145,7 @@ describe("iife/display.ts", () => {
               impression: "https://example.com/impression",
               report: "https://example.com/report",
             },
-            alt_text: "Billboard Ad 6: Advertiser Name",
+            alt_text: "Advertiser Name",
             block_key: "1234567890ABCDEFGHabcdefgh",
             // image_url Missing
           },
@@ -163,7 +163,7 @@ describe("iife/display.ts", () => {
     expect(link).toBeInstanceOf(HTMLAnchorElement)
     const img = link?.querySelector<HTMLImageElement>(".moz-ads-placement-img[data-placement-id=\"pocket_billboard_6\"]")
     expect(img).toBeInstanceOf(HTMLImageElement)
-    expect(img?.alt).toEqual("Mozilla Ad")
+    expect(img?.alt).toEqual("Billboard Ad 6")
     expect(img?.src).toEqual(fallbackData.image_url)
   })
 

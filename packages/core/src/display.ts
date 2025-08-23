@@ -1,7 +1,7 @@
 import { ImageAd } from "@heyapi"
 import { INTER_FONT_BASE64 } from "./fonts"
 import { CLOSE_ICON_SVG, REPORT_ICON_SVG } from "./images"
-import { l } from "./l10n"
+import { l, MozAdsLocalizedStringKey } from "./l10n"
 import { DefaultLogger } from "./logger"
 import {
   MozAdsPlacementWithContent,
@@ -329,21 +329,21 @@ export function renderPlacement(element: HTMLElement, { placement, onClick, onEr
 
       img.dataset.placementId = placement.placementId
       const imageAd = placement.content as ImageAd
-      img.alt = imageAd.alt_text ? placementIdToAltTextPrefix(placement.placementId, imageAd.alt_text) : l("ad_image_default_alt")
+      img.alt = imageAd.alt_text = buildAltText(placement.placementId, imageAd.alt_text)
       img.src = imageUrl
     }
   }
 
-  function placementIdToAltTextPrefix(placementId: string, altText: string): string {
+  function buildAltText(placementId: string, altText: string | undefined): string {
     const words = placementId.split("_")
-    let placementType = words.find((word) => {
+    const placementType = words.find((word) => {
       return ["billboard", "skyscraper", "rectangle"].includes(word)
     })
     if (placementType) {
-      placementType = placementType[0].toUpperCase() + placementType.substring(1)
-      console.log(placementType)
+      const placementL10NKey = `alt_prefix_${placementType}_ad_image` as MozAdsLocalizedStringKey
       const placementNumber = words[words.length - 1]
-      return `${placementType} Ad ${placementNumber}: ${altText}`
+      if (altText) return `${l(placementL10NKey)} ${placementNumber}: ${altText}`
+      return `${l(placementL10NKey)} ${placementNumber}`
     }
     return l("ad_image_default_alt")
   }
