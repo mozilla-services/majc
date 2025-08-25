@@ -337,7 +337,7 @@ export function renderPlacement(element: HTMLElement, { placement, onClick, onEr
   function buildAltText(placementId: string, altText: string | undefined): string {
     const words = placementId.split("_")
     const placementType = words.find((word) => {
-      return ["billboard", "skyscraper", "rectangle"].includes(word)
+      return ["billboard", "skyscraper", "rectangle", "tile"].includes(word)
     })
     if (placementType) {
       const placementL10NKey = `alt_prefix_${placementType}_ad_image` as MozAdsLocalizedStringKey

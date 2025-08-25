@@ -21,7 +21,7 @@ const expectAdLayout = async (page: Page, placementName: string, altText: string
 }
 
 const expectClickNavigation = async (page: Page, altText: string): Promise<void> => {
-  const link = page.getByRole("link", { name: altText })
+  const link = page.getByRole("link", { name: new RegExp("^" + altText) })
   const href = await link.getAttribute("href") || ""
   const clickPromise = page.waitForRequest(href)
   await link.click()
@@ -65,13 +65,13 @@ const getBoundingRectangle = async (locator: Locator): Promise<DOMRect> => {
 }
 
 const altTextPrefixes = {
-  tile: "Mozilla Ad",
-  billboard_1: "Billboard Ad 1:",
-  billboard_2: "Billboard Ad 2:",
-  skyscraper_1: "Skyscraper Ad 1:",
-  skyscraper_2: "Skyscraper Ad 2:",
-  rectangle_1: "Rectangle Ad 1:",
-  rectangle_2: "Rectangle Ad 2:",
+  tile_1: "Tile Ad 1",
+  billboard_1: "Billboard Ad 1",
+  billboard_2: "Billboard Ad 2",
+  skyscraper_1: "Skyscraper Ad 1",
+  skyscraper_2: "Skyscraper Ad 2",
+  rectangle_1: "Rectangle Ad 1",
+  rectangle_2: "Rectangle Ad 2",
 }
 
 export { altTextPrefixes, expectAdLayout, expectClickNavigation }
