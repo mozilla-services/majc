@@ -10,11 +10,11 @@ test.describe("IIFE example", () => {
   // Tiles won't be returned by MARS for mobile, so we only test them on Desktop
   test.describe("Tile", { tag: ["@Desktop"] }, () => {
     test("should display the ad", async ({ page }) => {
-      await expectAdLayout(page, "newtab_tile_1", altTextPrefixes["tile"])
+      await expectAdLayout(page, "newtab_tile_1", altTextPrefixes["tile_1"])
     })
 
     test("should navigate to the landing page on click", async ({ page }) => {
-      await expectClickNavigation(page, altTextPrefixes["tile"])
+      await expectClickNavigation(page, altTextPrefixes["tile_1"])
     })
 
     test.skip("should display the fallback ad when a live ad isn't available", async () => { })
