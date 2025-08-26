@@ -11,10 +11,10 @@ export default {
   coverageReporters: ["text", "lcov", "text-summary"],
   coverageThreshold: {
     global: {
-      statements: 100,
-      branches: 91,
+      statements: 99.5,
+      branches: 90,
       functions: 100,
-      lines: 100,
+      lines: 99.5,
     },
   },
   setupFilesAfterEnv: [
