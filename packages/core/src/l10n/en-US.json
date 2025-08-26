@@ -1,6 +1,6 @@
 {
-  "ad_image_default_alt": "Mozilla Ad",
   "alt_prefix_billboard_ad_image": "Billboard Ad",
+  "alt_prefix_default_ad_image": "Mozilla Ad",
   "alt_prefix_rectangle_ad_image": "Rectangle Ad",
   "alt_prefix_skyscraper_ad_image": "Skyscraper Ad",
   "alt_prefix_tile_ad_image": "Tile Ad",

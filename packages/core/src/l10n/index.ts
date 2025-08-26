@@ -4,8 +4,8 @@ const DEFAULT_LANGUAGE: MozAdsLanguage = "en-US"
 
 type MozAdsLanguage = "en-US"
 
-export type MozAdsLocalizedStringKey = "ad_image_default_alt"
-  | "alt_prefix_billboard_ad_image"
+export type MozAdsLocalizedStringKey = "alt_prefix_billboard_ad_image"
+  | "alt_prefix_default_ad_image"
   | "alt_prefix_rectangle_ad_image"
   | "alt_prefix_skyscraper_ad_image"
   | "loading_spinner_tooltip"

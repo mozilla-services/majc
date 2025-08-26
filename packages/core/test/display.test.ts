@@ -4,7 +4,7 @@ import { DefaultLogger } from "../src/logger"
 import { FallbackAdURL } from "@core/constants"
 import fetchMock from "jest-fetch-mock"
 import { tick } from "@/jest.setup"
-import { renderPlacement } from "../src/display"
+import { renderPlacement, buildAltText } from "../src/display"
 import { MockImage } from "./mocks/mockImage"
 
 describe("core/display.ts", () => {
@@ -474,5 +474,38 @@ describe("core/display.ts", () => {
     await tick()
     expect(logErrorSpy).toHaveBeenLastCalledWith("Builder's report callback failed for: pocket_billboard_1.",
       { errorId: "Error", placementId: "pocket_billboard_1", type: "renderPlacement.buildersReportCallbackError" })
+  })
+
+  test("renderPlacement buildAltText builds expected alt text", async () => {
+    const placementsToTest: { [key: string]: string | undefined } = {
+      "pocket_billboard_1": "Mozilla Monitor",
+      "pocket_billboard_2": "Mozilla Foundation",
+      "pocket_billboard": "Solo From Mozilla",
+      "pocket_skyscraper_1": "Mozilla Monitor",
+      "pocket_skyscraper_2": "Mozilla Foundation",
+      "pocket_rectangle_1": undefined,
+      "pocket_rectangle_2": "",
+      "newtab_tile_1": "Glamazon",
+      "newtab_tile_2": "Temure",
+      "newtab_tile_3": "",
+      "some_unknown_placement": "Fadvertiser",
+    }
+    const expectedAltTexts: { [key: string]: string } = {
+      "pocket_billboard_1": "Billboard Ad 1: Mozilla Monitor",
+      "pocket_billboard_2": "Billboard Ad 2: Mozilla Foundation",
+      "pocket_billboard": "Billboard Ad: Solo From Mozilla",
+      "pocket_skyscraper_1": "Skyscraper Ad 1: Mozilla Monitor",
+      "pocket_skyscraper_2": "Skyscraper Ad 2: Mozilla Foundation",
+      "pocket_rectangle_1": "Rectangle Ad 1",
+      "pocket_rectangle_2": "Rectangle Ad 2",
+      "newtab_tile_1": "Tile Ad 1: Glamazon",
+      "newtab_tile_2": "Tile Ad 2: Temure",
+      "newtab_tile_3": "Tile Ad 3",
+      "some_unknown_placement": "Mozilla Ad: Fadvertiser",
+    }
+    for (const placementName in placementsToTest) {
+      const altText = buildAltText(placementName, placementsToTest[placementName])
+      expect(expectedAltTexts[placementName]).toEqual(altText)
+    }
   })
 })
