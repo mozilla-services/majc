@@ -288,6 +288,24 @@ export function preloadImage(imageUrl: string): Promise<HTMLImageElement> {
   })
 }
 
+export function buildAltText(placementId: string, altText: string | undefined): string {
+  let fullAltText = ""
+
+  const words = placementId.split("_")
+  let placementType = words.find((word) => {
+    return ["billboard", "skyscraper", "rectangle", "tile"].includes(word)
+  })
+  if (!placementType) placementType = "default"
+  const placementL10NKey = `alt_prefix_${placementType}_ad_image` as MozAdsLocalizedStringKey
+  fullAltText += l(placementL10NKey)
+
+  const placementNumber = Number.parseInt(words[words.length - 1])
+  if (!Number.isNaN(placementNumber)) fullAltText += ` ${placementNumber}`
+
+  if (altText) fullAltText += `: ${altText}`
+  return fullAltText
+}
+
 export function renderPlacement(element: HTMLElement, { placement, onClick, onError, onLoad, onReport }: MozAdsRenderPlacementProps) {
   renderSpinner()
   renderAd()
@@ -332,20 +350,6 @@ export function renderPlacement(element: HTMLElement, { placement, onClick, onEr
       img.alt = imageAd.alt_text = buildAltText(placement.placementId, imageAd.alt_text)
       img.src = imageUrl
     }
-  }
-
-  function buildAltText(placementId: string, altText: string | undefined): string {
-    const words = placementId.split("_")
-    const placementType = words.find((word) => {
-      return ["billboard", "skyscraper", "rectangle", "tile"].includes(word)
-    })
-    if (placementType) {
-      const placementL10NKey = `alt_prefix_${placementType}_ad_image` as MozAdsLocalizedStringKey
-      const placementNumber = words[words.length - 1]
-      if (altText) return `${l(placementL10NKey)} ${placementNumber}: ${altText}`
-      return `${l(placementL10NKey)} ${placementNumber}`
-    }
-    return l("ad_image_default_alt")
   }
 
   async function renderAd() {
