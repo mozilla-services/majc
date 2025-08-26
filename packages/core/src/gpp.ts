@@ -43,18 +43,26 @@ export async function getGPPPing(): Promise<GPPPing> {
   const gpp = await getGPP()
 
   return new Promise((resolve, reject) => {
-    gpp("addEventListener", (data, success) => {
-      if (!success) {
-        reject(data)
+    gpp("ping", (pingData, success) => {
+      if (success && pingData.signalStatus === "ready") {
+        resolve(pingData)
       }
 
-      if (data.eventName !== "signalStatus") {
-        return
+      else {
+        gpp("addEventListener", (data, success) => {
+          if (!success) {
+            reject(data)
+          }
+
+          if (data.eventName !== "signalStatus") {
+            return
+          }
+
+          resolve(data.pingData)
+
+          gpp("removeEventListener", () => {}, data.listenerId)
+        })
       }
-
-      resolve(data.pingData)
-
-      gpp("removeEventListener", () => {}, data.listenerId)
     })
   })
 }

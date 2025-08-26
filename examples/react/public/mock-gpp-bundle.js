@@ -31,7 +31,7 @@
     gppVersion: "1.1",
     cmpStatus: "loaded",
     cmpDisplayStatus: "hidden",
-    signalStatus: "ready",
+    signalStatus: Math.random() > 0.5 ? "ready" : "not ready",
     supportedAPIs: ["8:usca"],
     cmpId: 28,
     sectionList: [8],
@@ -62,7 +62,7 @@
   const gppCommands = {
     ping: function (callback) {
       window.setTimeout(() => {
-        callback(getPingData())
+        callback(getPingData(), true)
       })
     },
     addEventListener: function (callback) {
@@ -73,6 +73,7 @@
         callback({ eventName: "cmpStatus", listenerId: listenerId, data: "loaded", pingData: getPingData() }, true)
 
         window.setTimeout(() => {
+          pingData.signalStatus = "ready"
           callback({ eventName: "signalStatus", listenerId: listenerId, data: "ready", pingData: getPingData() }, true)
 
           window.setTimeout(() => {
