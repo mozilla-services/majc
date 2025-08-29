@@ -1,87 +1,221 @@
-import "../src/polyfills"
-
-import { MockDate } from "./mocks/mockDate"
-
-import { setConfigValue } from "../src/config"
-import { getGPP, GetGPPError, getGPPPing } from "../src/gpp"
-
-const mockGPPPing = {
-  gppVersion: "",
-  cmpStatus: "",
-  cmpDisplayStatus: "",
-  signalStatus: "",
-  supportedAPIs: [],
-  cmpId: 0,
-  sectionList: [],
-  applicableSections: [],
-  gppString: "",
-  parsedSections: {},
-}
-
-const mockGPPFunction = jest.fn((_command, callback) => {
-  callback({ eventName: "signalStatus", pingData: mockGPPPing }, true)
-})
+import { GPPAddEventListenerCallback, GPPCommand, GPPEvent, GPPPing, GPPPingCallback, GPPRemoveEventListenerCallback } from "@core/types"
+import { isolateAndMockGPP } from "./mocks/mockGPP"
+import { mockLocalStorage } from "./mocks/mockStorage"
+import { getItemFromStore, setItemInStore, StoreType } from "@core/store"
+import { tick, wait } from "@/jest.setup"
 
 describe("core/gpp.ts", () => {
   afterEach(() => {
     jest.clearAllMocks()
+
+    mockLocalStorage.clear()
   })
 
-  test("getGPP rejects after timeout when the GPPFunction is unavailable", async () => {
-    delete globalThis.__gpp
-    setConfigValue("gppReadyTimeout", 500)
-
-    const getGPPPromise = getGPP()
-    MockDate.currentTimeMs += 500 // Global time t+500ms
-    await expect(getGPPPromise).rejects.toThrow(GetGPPError)
+  Object.defineProperty(globalThis, "localStorage", {
+    value: mockLocalStorage,
   })
 
-  test("getGPPPing rejects after timeout when the GPPFunction is unavailable", async () => {
-    delete globalThis.__gpp
-    setConfigValue("gppReadyTimeout", 500)
-
-    const getGPPPingPromise = getGPPPing()
-    MockDate.currentTimeMs += 500 // Global time t+500ms
-    await expect(getGPPPingPromise).rejects.toThrow(GetGPPError)
-  })
-
-  test("getGPP resolves with the GPPFunction when available", async () => {
-    delete globalThis.__gpp
-
-    Object.defineProperty(globalThis, "__gpp", {
-      configurable: true,
-      value: mockGPPFunction,
+  test("addEventListener invokes 'addEventListener' command on __gpp global function when available", async () => {
+    const [mockGPPFunction, gppWrapper] = await isolateAndMockGPP()
+    mockGPPFunction.mockImplementationOnce((command: keyof GPPCommand, callback: GPPAddEventListenerCallback) => {
+      setTimeout(() => callback({ eventName: "signalStatus" } as GPPEvent, true))
+      return { listenerId: 1001 }
     })
 
-    const gpp = await getGPP()
-    expect(gpp).toEqual(mockGPPFunction)
+    const listener = jest.fn()
+    await gppWrapper.addEventListener("signalStatus", listener)
+    expect(mockGPPFunction).toHaveBeenNthCalledWith(1, "addEventListener", expect.any(Function))
+    await tick()
+    expect(listener).toHaveBeenCalled()
   })
 
-  test("getGPPPing resolves with the GPPPing when the GPPFunction is available and ready", async () => {
-    delete globalThis.__gpp
-
-    Object.defineProperty(globalThis, "__gpp", {
-      configurable: true,
-      value: mockGPPFunction,
+  test("addEventListener does not invoke its specified listener if the event has a different name", async () => {
+    const [mockGPPFunction, gppWrapper] = await isolateAndMockGPP()
+    mockGPPFunction.mockImplementationOnce((command: keyof GPPCommand, callback: GPPAddEventListenerCallback) => {
+      setTimeout(() => callback({ eventName: "error" } as GPPEvent, true))
+      return { listenerId: 1001 }
     })
 
-    const gppPing = await getGPPPing()
-    expect(gppPing).toEqual(mockGPPPing)
+    const listener = jest.fn()
+    await gppWrapper.addEventListener("signalStatus", listener)
+    expect(mockGPPFunction).toHaveBeenNthCalledWith(1, "addEventListener", expect.any(Function))
+    await tick()
+    expect(listener).not.toHaveBeenCalled()
   })
 
-  // test("getGPPPing rejects when the GPPFunction is available but fails to retrieve the GPPPing", async () => {
-  //   delete globalThis.__gpp
+  test("addEventListener does not invoke its specified listener if the event was unsuccessful", async () => {
+    const [mockGPPFunction, gppWrapper] = await isolateAndMockGPP()
+    mockGPPFunction.mockImplementationOnce((command: keyof GPPCommand, callback: GPPAddEventListenerCallback) => {
+      setTimeout(() => callback({ eventName: "signalStatus" } as GPPEvent, false))
+      return { listenerId: 1001 }
+    })
 
-  //   Object.defineProperty(globalThis, "__gpp", {
-  //     configurable: true,
-  //     value: mockGPPFunction,
-  //   })
+    const listener = jest.fn()
+    await gppWrapper.addEventListener("signalStatus", listener)
+    expect(mockGPPFunction).toHaveBeenNthCalledWith(1, "addEventListener", expect.any(Function))
+    await tick()
+    expect(listener).not.toHaveBeenCalled()
+  })
 
-  //   mockGPPFunction.mockImplementationOnce((_command, callback) => {
-  //     callback("FAILURE", false)
-  //   })
+  test("addEventListener invokes 'removeEventListener' automatically when the 'once' option is specified", async () => {
+    const [mockGPPFunction, gppWrapper] = await isolateAndMockGPP()
+    mockGPPFunction.mockImplementationOnce((command: keyof GPPCommand, callback: GPPAddEventListenerCallback) => {
+      setTimeout(() => callback({ eventName: "signalStatus" } as GPPEvent, true))
+      return { listenerId: 1001 }
+    })
 
-  //   const getGPPPingPromise = getGPPPing()
-  //   await expect(getGPPPingPromise).rejects.toEqual("FAILURE")
-  // })
+    mockGPPFunction.mockImplementationOnce((command: keyof GPPCommand, callback: GPPRemoveEventListenerCallback) => {
+      setTimeout(() => callback(true, true))
+    })
+
+    const listener = jest.fn()
+    await gppWrapper.addEventListener("signalStatus", listener, { once: true })
+    expect(mockGPPFunction).toHaveBeenNthCalledWith(1, "addEventListener", expect.any(Function))
+    await tick()
+    expect(listener).toHaveBeenCalled()
+    await tick()
+    expect(mockGPPFunction).toHaveBeenNthCalledWith(2, "removeEventListener", expect.any(Function), 1001)
+  })
+
+  test("removeEventListener invokes 'removeEventListener' command on __gpp global function when available", async () => {
+    const [mockGPPFunction, gppWrapper] = await isolateAndMockGPP()
+    mockGPPFunction.mockImplementationOnce((command: keyof GPPCommand, callback: GPPAddEventListenerCallback) => {
+      setTimeout(() => callback({ eventName: "signalStatus" } as GPPEvent, true))
+      return { listenerId: 1001 }
+    })
+
+    mockGPPFunction.mockImplementationOnce((command: keyof GPPCommand, callback: GPPRemoveEventListenerCallback) => {
+      setTimeout(() => callback(true, true))
+    })
+
+    const listener = jest.fn()
+    await gppWrapper.addEventListener("signalStatus", listener)
+    expect(mockGPPFunction).toHaveBeenNthCalledWith(1, "addEventListener", expect.any(Function))
+    await tick()
+    expect(listener).toHaveBeenCalled()
+    await gppWrapper.removeEventListener("signalStatus", listener)
+    await tick()
+    expect(mockGPPFunction).toHaveBeenNthCalledWith(2, "removeEventListener", expect.any(Function), 1001)
+  })
+
+  test("removeEventListener avoids invoking 'removeEventListener' command on __gpp global function if the specified listener is not already added", async () => {
+    const [mockGPPFunction, gppWrapper] = await isolateAndMockGPP()
+    mockGPPFunction.mockImplementationOnce((command: keyof GPPCommand, callback: GPPRemoveEventListenerCallback) => {
+      setTimeout(() => callback(true, true))
+    })
+
+    const listener = jest.fn()
+    await gppWrapper.removeEventListener("signalStatus", listener)
+    await tick()
+    expect(mockGPPFunction).not.toHaveBeenCalled()
+  })
+
+  test("ping invokes 'ping' command on __gpp global function when available", async () => {
+    const [mockGPPFunction, gppWrapper] = await isolateAndMockGPP()
+    mockGPPFunction.mockImplementationOnce((command: keyof GPPCommand, callback: GPPPingCallback) => {
+      setTimeout(() => callback({ signalStatus: "ready" } as GPPPing, true))
+    })
+
+    const ping = await gppWrapper.ping()
+    expect(ping).toEqual({ signalStatus: "ready" })
+    expect(mockGPPFunction).toHaveBeenNthCalledWith(1, "ping", expect.any(Function))
+  })
+
+  test("ping waits for a 'ready' signalStatus event if it is not ready when invoked", async () => {
+    const [mockGPPFunction, gppWrapper] = await isolateAndMockGPP()
+    mockGPPFunction.mockImplementationOnce((command: keyof GPPCommand, callback: GPPPingCallback) => {
+      setTimeout(() => callback({ signalStatus: "not ready" } as GPPPing, true))
+    })
+    mockGPPFunction.mockImplementation((command: keyof GPPCommand, callback: GPPAddEventListenerCallback) => {
+      setTimeout(() => callback({ eventName: "signalStatus", pingData: { signalStatus: "ready" } } as GPPEvent, true))
+      return { listenerId: 1001 }
+    })
+
+    const ping = await gppWrapper.ping()
+    expect(ping).toEqual({ signalStatus: "ready" })
+    expect(mockGPPFunction).toHaveBeenNthCalledWith(1, "ping", expect.any(Function))
+    expect(mockGPPFunction).toHaveBeenNthCalledWith(2, "addEventListener", expect.any(Function))
+    expect(mockGPPFunction).toHaveBeenNthCalledWith(3, "addEventListener", expect.any(Function))
+  })
+
+  test("ping immediately returns the last-cached ping from localStorage if it exists", async () => {
+    const [mockGPPFunction, gppWrapper] = await isolateAndMockGPP()
+    mockGPPFunction.mockImplementationOnce((command: keyof GPPCommand, callback: GPPPingCallback) => {
+      setTimeout(() => callback({ signalStatus: "not ready" } as GPPPing, true))
+    })
+
+    setItemInStore("gppPing", JSON.stringify({ foo: "bar" }), StoreType.Persistent)
+
+    const ping = await gppWrapper.ping()
+    expect(ping).toEqual({ foo: "bar" })
+  })
+
+  test("ping invokes 'ping' command on __gpp global if the last-cached ping data is invalid", async () => {
+    const [mockGPPFunction, gppWrapper] = await isolateAndMockGPP()
+    mockGPPFunction.mockImplementationOnce((command: keyof GPPCommand, callback: GPPPingCallback) => {
+      setTimeout(() => callback({ signalStatus: "ready" } as GPPPing, true))
+    })
+
+    setItemInStore("gppPing", "invalid", StoreType.Persistent)
+
+    const ping = await gppWrapper.ping()
+    expect(ping).toEqual({ signalStatus: "ready" })
+    expect(mockGPPFunction).toHaveBeenNthCalledWith(1, "ping", expect.any(Function))
+  })
+
+  test("ping starts monitoring for 'signalStatus' events on __gpp global function when available", async () => {
+    const [mockGPPFunction, gppWrapper] = await isolateAndMockGPP()
+    mockGPPFunction.mockImplementationOnce((command: keyof GPPCommand, callback: GPPPingCallback) => {
+      setTimeout(() => callback({ signalStatus: "ready" } as GPPPing, true))
+    })
+
+    const gppWrapperAddEventListenerMock = jest.spyOn(gppWrapper, "addEventListener")
+
+    setItemInStore("gppPing", JSON.stringify({ foo: "bar" }), StoreType.Persistent)
+
+    const ping = await gppWrapper.ping()
+    expect(ping).toEqual({ foo: "bar" })
+    await tick()
+    expect(mockGPPFunction).toHaveBeenNthCalledWith(1, "addEventListener", expect.any(Function))
+    expect(gppWrapperAddEventListenerMock).toHaveBeenCalledWith("sectionChange", expect.any(Function))
+
+    // Simulate incoming "signalStatus" event from `__gpp` global.
+    mockGPPFunction.mock.calls[0][1]({ eventName: "sectionChange", pingData: { baz: "zzz" } }, true)
+
+    const updatedPing = JSON.parse(getItemFromStore("gppPing", StoreType.Persistent) ?? "null")
+    expect(updatedPing).toEqual({ baz: "zzz" })
+  })
+
+  test("ping auto-retries monitoring for 'signalStatus' events on __gpp global function when an error occurs", async () => {
+    const [mockGPPFunction, gppWrapper] = await isolateAndMockGPP()
+    mockGPPFunction.mockImplementationOnce(() => {
+      throw new Error("test-error")
+    })
+    mockGPPFunction.mockImplementationOnce((command: keyof GPPCommand, callback: GPPPingCallback) => {
+      setTimeout(() => callback({ signalStatus: "ready" } as GPPPing, true))
+    })
+
+    const gppWrapperAddEventListenerMock = jest.spyOn(gppWrapper, "addEventListener")
+
+    setItemInStore("gppPing", JSON.stringify({ foo: "bar" }), StoreType.Persistent)
+
+    const ping = await gppWrapper.ping()
+    expect(ping).toEqual({ foo: "bar" })
+    await tick()
+    expect(mockGPPFunction).toHaveBeenCalledTimes(1)
+    expect(mockGPPFunction).toHaveBeenNthCalledWith(1, "addEventListener", expect.any(Function))
+    expect(gppWrapperAddEventListenerMock).toHaveBeenCalledWith("sectionChange", expect.any(Function))
+    await wait(1)
+    expect(mockGPPFunction).toHaveBeenCalledTimes(1)
+    await wait(1_000)
+    expect(mockGPPFunction).toHaveBeenCalledTimes(2)
+    expect(mockGPPFunction).toHaveBeenNthCalledWith(2, "addEventListener", expect.any(Function))
+    expect(gppWrapperAddEventListenerMock).toHaveBeenCalledWith("sectionChange", expect.any(Function))
+
+    // Simulate incoming "signalStatus" event from `__gpp` global.
+    mockGPPFunction.mock.calls[1][1]({ eventName: "sectionChange", pingData: { baz: "zzz" } }, true)
+
+    const updatedPing = JSON.parse(getItemFromStore("gppPing", StoreType.Persistent) ?? "null")
+    expect(updatedPing).toEqual({ baz: "zzz" })
+  })
 })
