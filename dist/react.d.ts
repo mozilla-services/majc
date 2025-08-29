@@ -193,7 +193,7 @@ type GPPHasSectionCallback = (data: boolean, success: boolean) => void;
 type GPPPingCallback = (data: GPPPing, success: boolean) => void;
 type GPPRemoveEventListenerCallback = (data: boolean, success: boolean) => void;
 interface GPPEvent {
-    eventName: string;
+    eventName: GPPEventNameType;
     listenerId: number;
     data: unknown;
     pingData: GPPPing;
@@ -210,7 +210,8 @@ interface GPPPing {
     gppString: string;
     parsedSections: Record<string, unknown[]>;
 }
-type GPPFunction = <K extends keyof GPPCommand>(command: K, callback: GPPCommand[K], parameter?: unknown, version?: string) => void;
+type GPPFunction = <K extends keyof GPPCommand>(command: K, callback: GPPCommand[K], parameter?: unknown, version?: string) => K extends "addEventListener" ? GPPEvent : void;
+type GPPEventNameType = "listenerRegistered" | "listenerRemoved" | "cmpStatus" | "cmpDisplayStatus" | "signalStatus" | "error" | "sectionChange";
 type IABContentTaxonomyType = "IAB-1.0" | "IAB-2.0" | "IAB-2.1" | "IAB-2.2" | "IAB-3.0";
 interface IABContent {
     taxonomy: IABContentTaxonomyType;

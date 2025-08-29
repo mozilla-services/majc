@@ -23,7 +23,7 @@ export type GPPRemoveEventListenerCallback = (data: boolean, success: boolean) =
 
 // https://github.com/InteractiveAdvertisingBureau/Global-Privacy-Platform/blob/main/Core/CMP%20API%20Specification.md#pingreturn-
 export interface GPPEvent {
-  eventName: string
+  eventName: GPPEventNameType
   listenerId: number
   data: unknown
   pingData: GPPPing
@@ -49,7 +49,16 @@ export type GPPFunction = <K extends keyof GPPCommand>(
   callback: GPPCommand[K],
   parameter?: unknown,
   version?: string,
-) => void
+) => K extends "addEventListener" ? GPPEvent : void
+
+// https://github.com/InteractiveAdvertisingBureau/Global-Privacy-Platform/blob/main/Core/CMP%20API%20Specification.md#eventlistener-
+export type GPPEventNameType = "listenerRegistered"
+  | "listenerRemoved"
+  | "cmpStatus"
+  | "cmpDisplayStatus"
+  | "signalStatus"
+  | "error"
+  | "sectionChange"
 
 // https://www.iab.com/wp-content/uploads/2019/04/IABNewAdPortfolio_LW_FixedSizeSpec.pdf
 export type IABAdUnitFormatType = "Billboard"

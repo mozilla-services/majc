@@ -3,7 +3,7 @@ import { DefaultLogger } from "./logger"
 
 const MOZ_ADS_STORE_PREFIX = "__mozads__"
 
-export type MozAdsStoreKey = "contextId"
+export type MozAdsStoreKey = "contextId" | "gppPing"
 
 export enum StoreType {
   Persistent,
