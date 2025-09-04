@@ -1,4 +1,4 @@
-interface mockIntersectionObserverEntry {
+interface MockIntersectionObserverEntry {
   intersectionRatio: number
   target: Element
 }
@@ -6,7 +6,7 @@ interface mockIntersectionObserverEntry {
 export class MockIntersectionObserver implements IntersectionObserver {
   public callback: IntersectionObserverCallback
   public thresholds: number[]
-  public observedElements: Map<Element, mockIntersectionObserverEntry> = new Map()
+  public observedElements: Map<Element, MockIntersectionObserverEntry> = new Map()
   root = null
   rootMargin = ""
 
