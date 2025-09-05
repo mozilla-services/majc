@@ -52,7 +52,7 @@
     "tslib": "^2.8.1",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.36.0"
+    "typescript-eslint": "^8.42.0"
   },
   "scripts": {
     "build": "tsup --env.NODE_ENV=development",
