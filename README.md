@@ -16,7 +16,7 @@ This project and repository is governed by Mozilla's code of conduct and etiquet
 
 ## License
 
-This repository is licensed under MPL-2.0. Please see the [LICENSE](https://github.com/mozilla-services/majc/blob/main/.github/LICENSE) file for more details.
+This repository is licensed under MPL-2.0. Please see the [LICENSE](https://github.com/mozilla-services/majc/blob/main/LICENSE) file for more details.
 
 ## Documentation
 
