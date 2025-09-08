@@ -1,7 +1,7 @@
 import { ImageAd } from "@heyapi"
 import { INTER_FONT_BASE64 } from "./fonts"
 import { CLOSE_ICON_SVG, REPORT_ICON_SVG } from "./images"
-import { l } from "./l10n"
+import { l, MozAdsLocalizedStringKey } from "./l10n"
 import { DefaultLogger } from "./logger"
 import {
   MozAdsPlacementWithContent,
@@ -288,6 +288,24 @@ export function preloadImage(imageUrl: string): Promise<HTMLImageElement> {
   })
 }
 
+export function buildAltText(placementId: string, altText: string | undefined): string {
+  let fullAltText = ""
+
+  const words = placementId.split("_")
+  let placementType = words.find((word) => {
+    return ["billboard", "skyscraper", "rectangle", "tile"].includes(word)
+  })
+  if (!placementType) placementType = "default"
+  const placementL10NKey = `alt_prefix_${placementType}_ad_image` as MozAdsLocalizedStringKey
+  fullAltText += l(placementL10NKey)
+
+  const placementNumber = Number.parseInt(words[words.length - 1])
+  if (!Number.isNaN(placementNumber)) fullAltText += ` ${placementNumber}`
+
+  if (altText) fullAltText += `: ${altText}`
+  return fullAltText
+}
+
 export function renderPlacement(element: HTMLElement, { placement, onClick, onError, onLoad, onReport }: MozAdsRenderPlacementProps) {
   renderSpinner()
   renderAd()
@@ -328,7 +346,8 @@ export function renderPlacement(element: HTMLElement, { placement, onClick, onEr
       })
 
       img.dataset.placementId = placement.placementId
-      img.alt = (placement.content as ImageAd)?.alt_text ?? l("ad_image_default_alt")
+      const imageAd = placement.content as ImageAd
+      img.alt = imageAd.alt_text = buildAltText(placement.placementId, imageAd.alt_text)
       img.src = imageUrl
     }
   }

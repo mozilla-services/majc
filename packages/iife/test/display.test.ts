@@ -110,7 +110,7 @@ describe("iife/display.ts", () => {
     expect(link?.href).toEqual("https://getpocket.com/")
     const img = link?.querySelector<HTMLImageElement>(".moz-ads-placement-img[data-placement-id=\"pocket_billboard_5\"]")
     expect(img).toBeInstanceOf(HTMLImageElement)
-    expect(img?.alt).toEqual("Advertiser Name")
+    expect(img?.alt).toEqual("Billboard Ad 5: Advertiser Name")
     expect(img?.src).toEqual("https://example.com/image")
     img?.dispatchEvent(new Event("load"))
     const reportButton = link?.querySelector<HTMLButtonElement>(".moz-ads-placement-report-button")
@@ -163,7 +163,7 @@ describe("iife/display.ts", () => {
     expect(link).toBeInstanceOf(HTMLAnchorElement)
     const img = link?.querySelector<HTMLImageElement>(".moz-ads-placement-img[data-placement-id=\"pocket_billboard_6\"]")
     expect(img).toBeInstanceOf(HTMLImageElement)
-    expect(img?.alt).toEqual("Mozilla Ad")
+    expect(img?.alt).toEqual("Billboard Ad 6")
     expect(img?.src).toEqual(fallbackData.image_url)
   })
 
