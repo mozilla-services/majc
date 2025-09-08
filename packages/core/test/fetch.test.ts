@@ -6,12 +6,13 @@ import * as gpp from "../src/gpp"
 
 import { mockGetAdsPartialResponse, mockGetAdsResponse } from "./mocks/mockGetAdsResponse"
 
-import { tick } from "@/jest.setup"
+import { tick, wait } from "@/jest.setup"
 
 import { setConfigValue } from "../src/config"
 import { IABFixedSize } from "../src/constants"
 import { buildPlacementsRequest, fetchAds, FetchAdsError, FetchAdsParams } from "../src/fetch"
 import { MozAdsPlacements, MozAdsPlacementWithContent } from "../src/types"
+import { MockDate } from "./mocks/mockDate"
 
 jest.mock("@heyapi", () => {
   return {
@@ -210,7 +211,7 @@ describe("core/fetch.ts", () => {
     // @ts-expect-error Jest types create difficult to resolve union for test code
     const getAdsMock = jest.spyOn(heyapi, "getAds").mockResolvedValueOnce({})
     const getFallbackAdsMock = jest.spyOn(fallback, "getFallbackAds").mockImplementationOnce(() => {
-      throw new Error("Something went wrong")
+      throw new Error("test-error")
     })
     const consoleErrorMock = jest.spyOn(globalThis.console, "error")
     const placementsWithContent = fetchAds(params)
@@ -239,18 +240,22 @@ describe("core/fetch.ts", () => {
     expect(getAdsMock).not.toHaveBeenCalled()
   })
 
-  test("fetchAds gets fallback ads when an error occurs getting the GPP consent string when enabled", async () => {
+  test("fetchAds gets ads with an empty GPP consent string when GPP could not be loaded and there is no prior-cached GPP consent string", async () => {
     setConfigValue("gppEnabled", true)
     // @ts-expect-error Jest types create difficult to resolve union for test code
     const getAdsMock = jest.spyOn(heyapi, "getAds").mockResolvedValueOnce({ data: mockGetAdsResponse })
-    const getGPPPingMock = jest.spyOn(gpp, "getGPPPing").mockImplementationOnce(() => {
-      throw new Error("test-error")
-    })
-    const getFallbackAdsMock = jest.spyOn(fallback, "getFallbackAds")
+    const gppWrapperPingMock = jest.spyOn(gpp.gppWrapper, "ping")
+
     fetchAds(params)
-    await tick()
-    expect(getAdsMock).not.toHaveBeenCalled()
-    expect(getGPPPingMock).toHaveBeenCalledTimes(1)
-    expect(getFallbackAdsMock).toHaveBeenCalledTimes(1)
+    expect(gppWrapperPingMock).toHaveBeenCalledTimes(1)
+
+    MockDate.currentTimeMs += 250 // Global time t+250ms
+    await wait(250)
+
+    expect(getAdsMock).toHaveBeenCalledWith(expect.objectContaining({
+      body: expect.objectContaining({
+        consent: { "gpp": "" },
+      }),
+    }))
   })
 })

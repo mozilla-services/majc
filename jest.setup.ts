@@ -4,6 +4,8 @@ import mockConsole from "./packages/core/test/mocks/mockConsole"
 import { MockDate } from "./packages/core/test/mocks/mockDate"
 import { MockImage } from "./packages/core/test/mocks/mockImage"
 
+import "./packages/core/src/polyfills"
+
 export function wait(ms?: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms))
 }

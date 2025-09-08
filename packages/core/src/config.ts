@@ -5,7 +5,7 @@ export interface MozAdsConfig {
 
 const config: MozAdsConfig = {
   gppEnabled: false,
-  gppReadyTimeout: 10_000,
+  gppReadyTimeout: 250,
 }
 
 export function getConfig(): MozAdsConfig {

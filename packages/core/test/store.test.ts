@@ -4,6 +4,9 @@ import { getItemFromStore, getOrGenerateContextId, removeItemFromStore, setItemI
 describe("core/store.ts", () => {
   afterEach(() => {
     jest.clearAllMocks()
+
+    mockLocalStorage.clear()
+    mockSessionStorage.clear()
   })
 
   Object.defineProperty(globalThis, "localStorage", {

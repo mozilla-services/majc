@@ -8,7 +8,7 @@ describe("core/config.ts", () => {
   test("Gets the default config", () => {
     expect(getConfig()).toEqual({
       gppEnabled: false,
-      gppReadyTimeout: 10_000,
+      gppReadyTimeout: 250,
     })
   })
 
@@ -17,7 +17,7 @@ describe("core/config.ts", () => {
     expect(getConfigValue("gppEnabled")).toBeFalsy()
 
     expect(getConfigValue("gppReadyTimeout")).toBeDefined()
-    expect(getConfigValue("gppReadyTimeout")).toEqual(10_000)
+    expect(getConfigValue("gppReadyTimeout")).toEqual(250)
   })
 
   test("Sets the specified config values", () => {
@@ -27,7 +27,7 @@ describe("core/config.ts", () => {
     expect(getConfigValue("gppEnabled")).toBeTruthy()
 
     expect(getConfigValue("gppReadyTimeout")).toBeDefined()
-    expect(getConfigValue("gppReadyTimeout")).toEqual(10_000)
+    expect(getConfigValue("gppReadyTimeout")).toEqual(250)
     setConfigValue("gppReadyTimeout", 12_345)
     expect(getConfigValue("gppReadyTimeout")).toEqual(12_345)
   })
