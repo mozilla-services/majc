@@ -39,7 +39,7 @@
     "@types/jest": "^30.0.0",
     "@types/node": "^24.3.1",
     "@types/react": "^19.1.8",
-    "eslint": "^9.31.0",
+    "eslint": "^9.35.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
@@ -52,7 +52,7 @@
     "tslib": "^2.8.1",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.36.0"
+    "typescript-eslint": "^8.42.0"
   },
   "scripts": {
     "build": "tsup --env.NODE_ENV=development",

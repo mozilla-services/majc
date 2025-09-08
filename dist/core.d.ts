@@ -199,7 +199,7 @@ type GPPHasSectionCallback = (data: boolean, success: boolean) => void;
 type GPPPingCallback = (data: GPPPing, success: boolean) => void;
 type GPPRemoveEventListenerCallback = (data: boolean, success: boolean) => void;
 interface GPPEvent {
-    eventName: string;
+    eventName: GPPEventNameType;
     listenerId: number;
     data: unknown;
     pingData: GPPPing;
@@ -216,7 +216,8 @@ interface GPPPing {
     gppString: string;
     parsedSections: Record<string, unknown[]>;
 }
-type GPPFunction = <K extends keyof GPPCommand>(command: K, callback: GPPCommand[K], parameter?: unknown, version?: string) => void;
+type GPPFunction = <K extends keyof GPPCommand>(command: K, callback: GPPCommand[K], parameter?: unknown, version?: string) => K extends "addEventListener" ? GPPEvent : void;
+type GPPEventNameType = "listenerRegistered" | "listenerRemoved" | "cmpStatus" | "cmpDisplayStatus" | "signalStatus" | "error" | "sectionChange";
 type IABAdUnitFormatType = "Billboard" | "SmartphoneBanner300" | "SmartphoneBanner320" | "Leaderboard" | "SuperLeaderboardPushdown" | "Portrait" | "Skyscraper" | "MediumRectangle" | "TwentyBySixty" | "MobilePhoneInterstitial640" | "MobilePhoneInterstitial750" | "MobilePhoneInterstitial1080" | "FeaturePhoneSmallBanner" | "FeaturePhoneMediumBanner" | "FeaturePhoneLargeBanner";
 type NonIABAdUnitFormatType = "NewTab";
 type AdUnitFormatType = IABAdUnitFormatType | NonIABAdUnitFormatType;
@@ -470,7 +471,7 @@ declare class DefaultLogger implements Logger {
     private emitLog;
 }
 
-type MozAdsStoreKey = "contextId";
+type MozAdsStoreKey = "contextId" | "gppPing";
 declare enum StoreType {
     Persistent = 0,
     SessionOnly = 1
@@ -480,4 +481,4 @@ declare const setItemInStore: (key: MozAdsStoreKey, value: string, storeType?: S
 declare const removeItemFromStore: (key: MozAdsStoreKey, storeType?: StoreType) => void;
 declare const getOrGenerateContextId: (forceRegenerate?: boolean) => string;
 
-export { AdUnitFormatImpressionThreshold, type AdUnitFormatType, AdUnitFormatTypeLookup, type AdUnitFormatTypeLookupKey, CLOSE_ICON_SVG, DEFAULT_SERVICE_ENDPOINT, DefaultImpressionThreshold, DefaultLogReporter, type DefaultLogReporterConfig, DefaultLogger, DefaultMozAdsImpressionObserver, FALLBACK_BILLBOARD_SVG, FALLBACK_DINO_SVG_FRAGMENT, FALLBACK_DONATE_SVG_FRAGMENT, FALLBACK_MRECTANGLE_SVG, FALLBACK_SKYSCRAPER_SVG, FallbackAdURL, FetchAdsError, type FetchAdsParams, FixedSize, type GPPAddEventListenerCallback, type GPPCommand, type GPPEvent, type GPPFunction, type GPPGetFieldCallback, type GPPGetSectionCallback, type GPPHasSectionCallback, type GPPPing, type GPPPingCallback, type GPPRemoveEventListenerCallback, type HTTPSURLString, type HttpRequestMethod, type IABAdUnitFormatType, type IABContent, type IABContentTaxonomyType, IABFixedSize, INSTRUMENT_ENDPOINT, IS_BROWSER, IS_PRODUCTION, type ImpressionThreshold, LOG_EMIT_FLAG_DEFAULT, LOG_TO_CONSOLE_FLAG_DEFAULT, type LogEmitterOptions, type LogFields, type LogReporter, type LogType, type Logger, type LoggerConfig, LoggerLevel, type MozAdsConfig, type MozAdsContent, type MozAdsImpressionObserver, type MozAdsImpressionTracker, type MozAdsLocalizedStringKey, type MozAdsPlacementConfig, type MozAdsPlacementWithContent, type MozAdsPlacements, type MozAdsRenderPlacementErrorEvent, type MozAdsRenderPlacementEvent, type MozAdsRenderPlacementProps, type MozAdsRenderPlacementReportEvent, type MozAdsSize, type MozAdsStoreKey, type MozLogMessage, type NonIABAdUnitFormatType, NonIABFixedSize, type PlacementImpressionInfo, REPORT_ICON_SVG, SeverityLevel, StoreType, type TelemetryEventLabel, buildPlacementsRequest, defaultImpressionObserver, defaultLogReporter, fetchAds, getConfig, getConfigValue, getItemFromStore, getOrGenerateContextId, l, mapResponseToPlacementsWithContent, preloadImage, recordClick, removeItemFromStore, renderPlacement, setConfig, setConfigValue, setItemInStore };
+export { AdUnitFormatImpressionThreshold, type AdUnitFormatType, AdUnitFormatTypeLookup, type AdUnitFormatTypeLookupKey, CLOSE_ICON_SVG, DEFAULT_SERVICE_ENDPOINT, DefaultImpressionThreshold, DefaultLogReporter, type DefaultLogReporterConfig, DefaultLogger, DefaultMozAdsImpressionObserver, FALLBACK_BILLBOARD_SVG, FALLBACK_DINO_SVG_FRAGMENT, FALLBACK_DONATE_SVG_FRAGMENT, FALLBACK_MRECTANGLE_SVG, FALLBACK_SKYSCRAPER_SVG, FallbackAdURL, FetchAdsError, type FetchAdsParams, FixedSize, type GPPAddEventListenerCallback, type GPPCommand, type GPPEvent, type GPPEventNameType, type GPPFunction, type GPPGetFieldCallback, type GPPGetSectionCallback, type GPPHasSectionCallback, type GPPPing, type GPPPingCallback, type GPPRemoveEventListenerCallback, type HTTPSURLString, type HttpRequestMethod, type IABAdUnitFormatType, type IABContent, type IABContentTaxonomyType, IABFixedSize, INSTRUMENT_ENDPOINT, IS_BROWSER, IS_PRODUCTION, type ImpressionThreshold, LOG_EMIT_FLAG_DEFAULT, LOG_TO_CONSOLE_FLAG_DEFAULT, type LogEmitterOptions, type LogFields, type LogReporter, type LogType, type Logger, type LoggerConfig, LoggerLevel, type MozAdsConfig, type MozAdsContent, type MozAdsImpressionObserver, type MozAdsImpressionTracker, type MozAdsLocalizedStringKey, type MozAdsPlacementConfig, type MozAdsPlacementWithContent, type MozAdsPlacements, type MozAdsRenderPlacementErrorEvent, type MozAdsRenderPlacementEvent, type MozAdsRenderPlacementProps, type MozAdsRenderPlacementReportEvent, type MozAdsSize, type MozAdsStoreKey, type MozLogMessage, type NonIABAdUnitFormatType, NonIABFixedSize, type PlacementImpressionInfo, REPORT_ICON_SVG, SeverityLevel, StoreType, type TelemetryEventLabel, buildPlacementsRequest, defaultImpressionObserver, defaultLogReporter, fetchAds, getConfig, getConfigValue, getItemFromStore, getOrGenerateContextId, l, mapResponseToPlacementsWithContent, preloadImage, recordClick, removeItemFromStore, renderPlacement, setConfig, setConfigValue, setItemInStore };

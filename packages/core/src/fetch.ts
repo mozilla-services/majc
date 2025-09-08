@@ -4,7 +4,7 @@ import { DefaultLogger } from "./logger"
 import { getOrGenerateContextId } from "./store"
 import { GPPPing, MozAdsPlacements, MozAdsPlacementWithContent } from "./types"
 import { getFallbackAd, getFallbackAds } from "./fallback"
-import { getGPPPing } from "./gpp"
+import { gppWrapper } from "./gpp"
 import { getConfigValue } from "./config"
 
 const logger = new DefaultLogger({ name: "core.fetch" })
@@ -38,15 +38,15 @@ export const fetchAds = async ({
     ...placements,
   }
 
-  let gppPing: GPPPing | undefined
+  let gppPing: GPPPing | null | undefined
 
   const gppEnabled = getConfigValue("gppEnabled")
   if (gppEnabled) {
     try {
-      gppPing = await getGPPPing()
+      gppPing = await gppWrapper.ping()
     }
     catch {
-      return mapResponseToPlacementsWithContent(getFallbackAds(pendingPlacements), pendingPlacements)
+      gppPing = undefined
     }
   }
 
@@ -71,7 +71,7 @@ export const fetchAds = async ({
         body: {
           context_id: contextId,
           placements: buildPlacementsRequest(pendingPlacements),
-          consent: gppEnabled ? { gpp: gppPing?.gppString } : undefined,
+          consent: gppEnabled ? { gpp: gppPing?.gppString ?? "" } : undefined,
         },
       }
       try {
