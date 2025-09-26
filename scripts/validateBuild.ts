@@ -2,7 +2,7 @@ import { readFileSync, readdirSync } from "fs"
 
 export interface ExpectedBuildOutput {
   /**
-   * The relative path where we expect tsup to output build files.
+   * The relative path where we expect tsdown to output build files.
    */
   buildDir: string
   /**
@@ -17,19 +17,23 @@ export interface ExpectedBuildOutput {
 
 export class MissingBuildFileError extends Error {
   override name = "MissingBuildFileError"
+  public cause: Error
   constructor(
-    public cause: Error,
+    cause: Error,
   ) {
     super(cause.message, { cause })
+    this.cause = cause
   }
 }
 
 export class MissingClientOnlyDirectiveError extends Error {
   override name = "MissingClientOnlyDirectiveError"
+  public cause: Error
   constructor(
-    public cause: Error,
+    cause: Error,
   ) {
     super(cause.message, { cause })
+    this.cause = cause
   }
 }
 

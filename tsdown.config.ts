@@ -1,8 +1,8 @@
 /* eslint @stylistic/quote-props: ["error", "consistent"] */
 
-import { defineConfig, Options } from "tsup"
+import { defineConfig, type Options } from "tsdown"
 import { readFileSync, writeFileSync } from "fs"
-import { ExpectedBuildOutput, validateBuildFiles } from "./scripts/validateBuild.ts"
+import { type ExpectedBuildOutput, validateBuildFiles } from "./scripts/validateBuild.ts"
 
 const expectedBuildOutput: ExpectedBuildOutput = {
   buildDir: "dist/",
@@ -16,7 +16,7 @@ const expectedBuildOutput: ExpectedBuildOutput = {
     "heyapi.d.ts",
     "heyapi.js",
     "heyapi.mjs",
-    "iife.global.js",
+    "iife.iife.js",
   ],
   clientOnlyModules: [
     "react.js",
@@ -24,16 +24,16 @@ const expectedBuildOutput: ExpectedBuildOutput = {
   ],
 }
 
-// Get any environment variables passed to tsup and make them
+// Get any environment variables passed to tsdown and make them
 // available here.
-const env: Record<string, string> = process.argv.reduce((acc, curr) => {
+const env = process.argv.reduce((acc, curr) => {
   if (curr.startsWith("--env.")) {
     const [key, value] = curr.substring(6).split("=")
     acc[key] = value
   }
 
   return acc
-}, {})
+}, {} as Record<string, string>)
 
 const commonBundleConfig: Options = {
   target: "esnext",
@@ -46,20 +46,21 @@ const commonBundleConfig: Options = {
 
 const commonTypesConfig: Options = {
   target: "esnext",
-  dts: { only: true },
+  dts: true,
+  format: ["cjs"], // Generate .d.ts files (not .d.mts)
 }
 
 const configs: Options[] = [
   {
     name: "build",
-    splitting: true,
+    minify: true,
     entry: {
       "core": "packages/core/src/index.ts",
       "react": "packages/react/src/index.ts",
       "heyapi": "packages/heyapi/src/index.ts",
     },
     format: ["esm", "cjs"],
-    plugins: [prependDirective("\"use client\"", ["dist/react"])],
+    plugins: [prependDirective("\"use client\"", ["react"])],
     ...commonBundleConfig,
   },
   {
@@ -105,7 +106,9 @@ process.on("beforeExit", (code) => {
   console.log("[POST-BUILD] Validation successful! Build complete.")
 })
 
-function prependDirective(directive: string, filePatterns: string[]): NonNullable<Options["plugins"]>[number] {
+type PluginOption = NonNullable<Options["plugins"]>
+
+function prependDirective(directive: string, filePatterns: string[]): PluginOption {
   if (!Array.isArray(filePatterns)) {
     throw Error("FilePatterns given to prependDirective plugin must be an array.")
   }
@@ -113,13 +116,16 @@ function prependDirective(directive: string, filePatterns: string[]): NonNullabl
     name: "prepend-directive",
     // At the end of the build step, directly prepend the specified directive to files with specified pattern
 
-    buildEnd(ctx) {
-      for (const file of ctx.writtenFiles) {
-        for (const filePattern of filePatterns) {
-          if (file.name.startsWith(filePattern)) {
-            const fileContent = readFileSync(file.name, "utf8")
-            writeFileSync(file.name, `${directive};${fileContent}`)
-            console.log(`Prepended ${directive} directive to ${file.name}`)
+    writeBundle(_, bundle) {
+      for (const [fileName, file] of Object.entries(bundle)) {
+        if (file.type === "chunk") {
+          for (const filePattern of filePatterns) {
+            if (fileName.startsWith(filePattern)) {
+              const filePath = `dist/${fileName}`
+              const fileContent = readFileSync(filePath, "utf8")
+              writeFileSync(filePath, `${directive};\n${fileContent}`)
+              console.log(`Prepended ${directive} directive to ${filePath}`)
+            }
           }
         }
       }

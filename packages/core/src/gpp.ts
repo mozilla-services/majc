@@ -4,10 +4,12 @@ import { GPPEvent, GPPEventNameType, GPPFunction, GPPPing } from "./types"
 
 export class GPPError extends Error {
   override name = "GPPError"
+  public cause: Error
   constructor(
-    public cause: Error,
+    cause: Error,
   ) {
     super(cause.message, { cause })
+    this.cause = cause
   }
 }
 
@@ -124,7 +126,7 @@ class GPPWrapper implements GPPWrapperInterface {
     const attachedListeners = this.eventListeners[eventName]
     const listenerIds = attachedListeners?.get(listener) ?? []
     for (const listenerId of listenerIds) {
-      gppFunction("removeEventListener", () => {}, listenerId)
+      gppFunction("removeEventListener", () => { }, listenerId)
     }
 
     attachedListeners?.delete(listener)

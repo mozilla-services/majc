@@ -11,10 +11,12 @@ const logger = new DefaultLogger({ name: "core.fetch" })
 
 export class FetchAdsError extends Error {
   override name = "FetchAdsError"
+  public cause: Error
   constructor(
-    public cause: Error,
+    cause: Error,
   ) {
     super(cause.message, { cause })
+    this.cause = cause
   }
 }
 

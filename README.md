@@ -45,10 +45,10 @@ Depending on your project's setup, this package may be included in several diffe
 For webpages that want to simply include a `<script>` tag:
 
 ```html
-<script src="iife.global.js"></script>
+<script src="iife.iife.js"></script>
 ```
 
-The `iife.global.js` bundle may be found in this repo's `./dist` folder. This bundle exposes a single `mozAds` global containing the `renderPlacement` function as well as some useful constants such as standard IAB placement size definitions. Please see the example in `./examples/iife` for usage.
+The `iife.iife.js` bundle may be found in this repo's `./dist` folder. This bundle exposes a single `mozAds` global containing the `renderPlacement` function as well as some useful constants such as standard IAB placement size definitions. Please see the example in `./examples/iife` for usage.
 
 #### React
 

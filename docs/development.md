@@ -53,17 +53,17 @@ HUSKY=0 git commit -m "Your commit message"
 
 The build process is what allows our source code in `packages/` to be compacted into a small set of "minified" `.js` and `.mjs` files which can then be used in other projects.
 
-MAJC's build process is handled primarily through [`tsup`](https://github.com/egoist/tsup) and is configured via a top-level `tsup.config.ts` file. All bundled dist files created by the build process can be found in `dist/`.
+MAJC's build process is handled primarily through [`tsdown`](https://github.com/rolldown/tsdown) and is configured via a top-level `tsdown.config.ts` file. All bundled dist files created by the build process can be found in `dist/`.
 
-Currently, we have tsup configured with splitting enabled. As a result, you will also see some `chunk-{someHash}.js` files in `dist/`. These should not be imported or referenced directly by users of this library and just contain code which is referenced across multiple different dist files. This process of code splitting reduces duplicate code, overall bundle size, and helps processes like (treeshaking)[https://developer.mozilla.org/en-US/docs/Glossary/Tree_shaking] work more effectively.
+Currently, we have tsdown configured with splitting enabled. As a result, you will also see some `chunk-{someHash}.js` files in `dist/`. These should not be imported or referenced directly by users of this library and just contain code which is referenced across multiple different dist files. This process of code splitting reduces duplicate code, overall bundle size, and helps processes like (treeshaking)[https://developer.mozilla.org/en-US/docs/Glossary/Tree_shaking] work more effectively.
 
 ### Build validation
 
 At the end of the build process, a validation step is performed to verify that the files we expect to come out of the build process are properly created in our output directory.
 
-In `tsup.config.ts`, you fill find an `expectedBuildOutput` const sitting at the top of the file. This object defines what the expected output should be. A description of this object's attributes can be found in the interface definition in `scripts/validateBuild.ts`.
+In `tsdown.config.ts`, you fill find an `expectedBuildOutput` const sitting at the top of the file. This object defines what the expected output should be. A description of this object's attributes can be found in the interface definition in `scripts/validateBuild.ts`.
 
-Validation logic is handled by a `process.on('beforeExit', (...) => {...})` hook at the end of `tsup.config.ts`.
+Validation logic is handled by a `process.on('beforeExit', (...) => {...})` hook at the end of `tsdown.config.ts`.
 
 **Note**: A dry-run of this build process is performed during CI. As a result, any failure that occurs in the build validation will cause a failure in CI. This prevents us from merging code that fails to build.
 

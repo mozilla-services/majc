@@ -141,7 +141,7 @@ out
 
 .mars-api-temp
 
-.tsup/
+.tsdown/
 
 # Playwright
 /test-results/
