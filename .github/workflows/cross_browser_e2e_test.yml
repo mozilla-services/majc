@@ -3,12 +3,11 @@ permissions:
   contents: read
 on:
   push:
-    branches: [ main ]
+    branches: [ main, fix-playwright-tests-again-more-better ]
   pull_request:
     branches: [ main ]
 jobs:
   cross_browser_e2e_test:
-    if: false
     name: cross browser e2e test
     timeout-minutes: 20
     runs-on: ubuntu-latest
