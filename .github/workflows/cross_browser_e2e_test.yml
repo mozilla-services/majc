@@ -3,7 +3,7 @@ permissions:
   contents: read
 on:
   push:
-    branches: [ main, fix-playwright-tests-again-more-better ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 jobs:
