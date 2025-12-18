@@ -16,6 +16,7 @@ jobs:
       - name: Use default Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
       - run: npm ci
+      - run: npm run build
       - run: npm publish --provenance --access public
         env:
           NPM_ACCESS_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}   # See .npmrc for where this is used.
