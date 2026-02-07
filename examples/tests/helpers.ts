@@ -66,12 +66,12 @@ const getBoundingRectangle = async (locator: Locator): Promise<DOMRect> => {
 
 const altTexts = {
   tile: "Mozilla Ad",
-  billboard_1: "Brand Text mock_pocket_billboard_1 0",
-  billboard_2: "Brand Text mock_pocket_billboard_2 0",
-  skyscraper_1: "Brand Text mock_pocket_skyscraper_1 0",
-  skyscraper_2: "Brand Text mock_pocket_skyscraper_2 0",
-  rectangle_1: "Brand Text mock_pocket_rectangle_1 0",
-  rectangle_2: "Brand Text mock_pocket_rectangle_2 0",
+  billboard_1: "Brand Text mock_pocket_billboard_1, 0",
+  billboard_2: "Brand Text mock_pocket_billboard_2, 0",
+  skyscraper_1: "Brand Text mock_pocket_skyscraper_1, 0",
+  skyscraper_2: "Brand Text mock_pocket_skyscraper_2, 0",
+  rectangle_1: "Brand Text mock_pocket_rectangle_1, 0",
+  rectangle_2: "Brand Text mock_pocket_rectangle_2, 0",
 }
 
 export { altTexts, expectAdLayout, expectClickNavigation }
