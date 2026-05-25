@@ -23,8 +23,20 @@ export default {
   testEnvironment: "jsdom",
   testPathIgnorePatterns: ["examples/tests"],
   transform: {
-    "^.+.(ts|tsx)?$": ["ts-jest", {}],
+    "^.+\\.(ts|tsx)$": ["ts-jest", {}],
+    "^.+\\.js$": ["ts-jest", {
+      useESM: false,
+      tsconfig: {
+        allowJs: true,
+        module: "commonjs",
+        esModuleInterop: true,
+        allowSyntheticDefaultImports: true,
+      },
+    }],
   },
+  transformIgnorePatterns: [
+    "node_modules/(?!uuid/)",
+  ],
   moduleNameMapper: {
     "@/jest.setup": ["<rootDir>/jest.setup.ts"],
     "@/package.json": ["<rootDir>/package.json"],
